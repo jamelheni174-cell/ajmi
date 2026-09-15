@@ -1,0 +1,21 @@
+{
+  "name": "cabinet-ajmi-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Backend du site du Cabinet d'Avocat Ajmi — Node.js sans dépendance externe.",
+  "scripts": {
+    "start": "node index.js",
+    "admin": "node create-admin.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "better-sqlite3": "^12.11.1"
+  }
+}
