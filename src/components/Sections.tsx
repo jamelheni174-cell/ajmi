@@ -386,7 +386,7 @@ export function Galerie() {
         </Reveal>
 
         {/* Onglets de filtrage par catégorie */}
-        <div className="mt-10 flex flex-wrap gap-3 border-b border-white/10 pb-6">
+        <div className="mt-10 flex flex-nowrap overflow-x-auto sm:flex-wrap gap-2.5 sm:gap-3 border-b border-white/10 pb-4 sm:pb-6 scrollbar-none">
           {galerieCategories.map((cat) => (
             <button
               key={cat.key}

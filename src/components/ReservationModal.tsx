@@ -60,7 +60,7 @@ export function ReservationModal({ publication, onClose }: ReservationModalProps
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-lg rounded-2xl bg-[#0b0d12] p-8 text-paper shadow-2xl border border-amber-500/20"
+        className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-[#0b0d12] p-5 sm:p-8 text-paper shadow-2xl border border-amber-500/20"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Bouton Fermer */}
