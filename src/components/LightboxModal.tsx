@@ -54,7 +54,7 @@ export function LightboxModal({ item, items, onClose, onSelect }: LightboxModalP
       {/* Bouton Fermer */}
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 z-50 rounded-full bg-white/10 p-2.5 sm:p-3 text-white/80 transition hover:bg-white/20 hover:text-white"
+        className="absolute top-3 right-3 sm:top-4 sm:right-4 z-50 rounded-full bg-white/20 p-2 sm:p-3 text-white backdrop-blur-sm transition hover:bg-white/30"
         aria-label="Fermer"
       >
         <svg className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -69,7 +69,7 @@ export function LightboxModal({ item, items, onClose, onSelect }: LightboxModalP
             e.stopPropagation();
             if (prevItem) onSelect(prevItem);
           }}
-          className="absolute left-2 sm:left-4 md:left-8 z-50 rounded-full bg-white/20 p-2.5 sm:p-3 text-white transition hover:bg-white/30 backdrop-blur-sm shadow-lg"
+          className="absolute left-2 sm:left-4 md:left-8 z-50 rounded-full bg-white/20 p-2 sm:p-3 text-white transition hover:bg-white/35 backdrop-blur-sm shadow-lg"
           aria-label="Photo précédente"
         >
           <svg className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -80,23 +80,23 @@ export function LightboxModal({ item, items, onClose, onSelect }: LightboxModalP
 
       {/* Conteneur Média & Légende */}
       <div
-        className="relative flex max-h-[92vh] max-w-5xl flex-col items-center justify-center overflow-hidden rounded-2xl bg-black/40 p-2 shadow-2xl border border-white/10"
+        className="relative flex max-h-[92vh] max-w-5xl flex-col items-center justify-center overflow-hidden rounded-xl sm:rounded-2xl bg-black/40 p-2 sm:p-3 shadow-2xl border border-white/10"
         onClick={(e) => e.stopPropagation()}
       >
         <img
           src={item.src}
           alt={item.legende}
-          className="max-h-[60vh] sm:max-h-[72vh] w-auto max-w-full rounded-xl object-contain shadow-2xl transition-all duration-300"
+          className="max-h-[62vh] sm:max-h-[72vh] w-auto max-w-full rounded-lg sm:rounded-xl object-contain shadow-2xl transition-all duration-300"
         />
 
-        <div className="mt-3 flex w-full flex-col items-center justify-between gap-1.5 px-3 sm:px-6 pb-2 text-center md:flex-row md:text-left">
+        <div className="mt-2.5 sm:mt-3 flex w-full flex-col items-center justify-between gap-1.5 px-2 sm:px-4 pb-1 text-center md:flex-row md:text-left">
           <div>
-            <span className="inline-block rounded-full bg-navy/80 px-2.5 py-0.5 text-[9px] sm:text-[10px] font-medium uppercase tracking-widest text-amber-200/90 border border-amber-500/20 mb-1">
+            <span className="inline-block rounded-full bg-navy/80 px-2 sm:px-2.5 py-0.5 text-[9px] sm:text-[10px] font-medium uppercase tracking-widest text-amber-200/90 border border-amber-500/20 mb-1">
               {item.categoryLabel}
             </span>
-            <p className="font-serif text-sm sm:text-base font-light text-paper/90 leading-snug">{item.legende}</p>
+            <p className="font-serif text-xs sm:text-base font-light text-paper/90 leading-snug line-clamp-2">{item.legende}</p>
           </div>
-          <span className="text-[11px] text-paper/50 font-mono shrink-0">
+          <span className="text-[10px] sm:text-[11px] text-paper/50 font-mono shrink-0">
             {currentIndex + 1} / {items.length}
           </span>
         </div>
@@ -109,7 +109,7 @@ export function LightboxModal({ item, items, onClose, onSelect }: LightboxModalP
             e.stopPropagation();
             if (nextItem) onSelect(nextItem);
           }}
-          className="absolute right-2 sm:right-4 md:right-8 z-50 rounded-full bg-white/20 p-2.5 sm:p-3 text-white transition hover:bg-white/30 backdrop-blur-sm shadow-lg"
+          className="absolute right-2 sm:right-4 md:right-8 z-50 rounded-full bg-white/20 p-2 sm:p-3 text-white transition hover:bg-white/35 backdrop-blur-sm shadow-lg"
           aria-label="Photo suivante"
         >
           <svg className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

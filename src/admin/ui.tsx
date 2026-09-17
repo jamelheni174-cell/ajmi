@@ -10,7 +10,7 @@ export const Field = ({ label, children }: { label: string; children: ReactNode 
 );
 
 export const inputCls =
-  "w-full rounded-xl border border-[#dcd8cb] bg-white px-3.5 py-2.5 text-sm text-[#1e2766] outline-none transition focus:border-[#2e3d91] focus:ring-1 focus:ring-[#2e3d91]";
+  "w-full rounded-xl border border-[#dcd8cb] bg-white px-3.5 py-2.5 text-base sm:text-sm text-[#1e2766] outline-none transition focus:border-[#2e3d91] focus:ring-1 focus:ring-[#2e3d91]";
 
 export const Btn = ({
   children,
@@ -38,7 +38,7 @@ export const Btn = ({
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`rounded-xl px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.15em] transition duration-200 disabled:opacity-50 ${v}`}
+      className={`rounded-xl px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.12em] sm:tracking-[0.15em] transition duration-200 disabled:opacity-50 shrink-0 ${v}`}
     >
       {children}
     </button>
@@ -46,7 +46,7 @@ export const Btn = ({
 };
 
 export const Card = ({ children, className = "" }: { children: ReactNode; className?: string }) => (
-  <div className={`rounded-2xl border border-[#dcd8cb] bg-white p-6 shadow-sm ${className}`}>
+  <div className={`rounded-xl sm:rounded-2xl border border-[#dcd8cb] bg-white p-4 sm:p-6 shadow-sm ${className}`}>
     {children}
   </div>
 );

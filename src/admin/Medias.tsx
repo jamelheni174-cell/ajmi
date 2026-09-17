@@ -24,33 +24,33 @@ export function Medias() {
   };
 
   return (
-    <>
+    <div className="space-y-4 sm:space-y-6">
       <Card>
-        <h2 className="font-serif text-2xl">Médiathèque</h2>
-        <p className="mt-2 text-sm text-ink/70">
+        <h2 className="font-serif text-xl sm:text-2xl font-bold">Médiathèque</h2>
+        <p className="mt-2 text-xs sm:text-sm text-ink/70 leading-relaxed">
           Les images sont hébergées sur le serveur et accessibles depuis n'importe quel appareil. Copiez une adresse pour l'utiliser
           dans la galerie ou comme portrait.
         </p>
-        <label className="mt-4 inline-block cursor-pointer rounded bg-navy px-5 py-2.5 text-[11px] uppercase tracking-[0.15em] text-paper hover:bg-ink">
+        <label className="mt-4 inline-block cursor-pointer rounded-xl bg-navy px-4 py-2.5 sm:px-5 sm:py-2.5 text-[10px] sm:text-[11px] uppercase tracking-[0.15em] text-paper hover:bg-ink font-semibold shadow-sm transition">
           {busy ? "Envoi en cours…" : "+ Téléverser des images"}
           <input type="file" accept="image/*" multiple hidden disabled={busy} onChange={(e) => upload(e.target.files)} />
         </label>
-        {msg && <p className="mt-3 text-sm text-navy">{msg}</p>}
+        {msg && <p className="mt-3 text-xs sm:text-sm text-navy">{msg}</p>}
       </Card>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {imgs.map((i) => (
           <Card key={i.name}>
-            <img src={i.url} alt="" className="aspect-[4/3] w-full rounded object-cover" />
-            <p className="mt-2 truncate text-[10px] text-ink/50">{i.name}</p>
-            <div className="mt-3 flex gap-2">
+            <img src={i.url} alt="" className="aspect-[4/3] w-full rounded-xl object-cover border border-[#dcd8cb]" />
+            <p className="mt-2 truncate text-[10px] sm:text-[11px] text-ink/60 font-mono">{i.name}</p>
+            <div className="mt-3 flex flex-wrap gap-2">
               <Btn onClick={() => { navigator.clipboard.writeText(i.url); setMsg("Adresse copiée ✓"); }}>Copier l'URL</Btn>
               <Btn variant="danger" onClick={async () => { if (confirm("Supprimer cette image ?")) { await deleteImage(i.name); void load(); } }}>✕</Btn>
             </div>
           </Card>
         ))}
       </div>
-      {imgs.length === 0 && <Card><p className="text-sm text-ink/60">Aucune image sur le serveur.</p></Card>}
-    </>
+      {imgs.length === 0 && <Card><p className="text-xs sm:text-sm text-ink/60 text-center py-6">Aucune image sur le serveur.</p></Card>}
+    </div>
   );
 }

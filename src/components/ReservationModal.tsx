@@ -56,17 +56,17 @@ export function ReservationModal({ publication, onClose }: ReservationModalProps
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-3 sm:p-4 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-[#0b0d12] p-5 sm:p-8 text-paper shadow-2xl border border-amber-500/20"
+        className="relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-2xl bg-[#0b0d12] p-5 sm:p-8 text-paper shadow-2xl border border-amber-500/20"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Bouton Fermer */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 text-paper/60 transition hover:text-amber-400"
+          className="absolute top-4 right-4 sm:top-5 sm:right-5 p-1 text-paper/60 transition hover:text-amber-400"
           aria-label="Fermer"
         >
           <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -75,40 +75,40 @@ export function ReservationModal({ publication, onClose }: ReservationModalProps
         </button>
 
         {submittedRes ? (
-          <div className="text-center py-6">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-500/30">
-              <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="text-center py-4 sm:py-6">
+            <div className="mx-auto mb-4 flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-emerald-950/80 text-emerald-400 border border-emerald-500/30">
+              <svg className="h-7 w-7 sm:h-8 sm:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h3 className="font-serif text-2xl text-amber-300">Réservation Confirmée !</h3>
-            <p className="mt-2 text-sm text-paper/70">
+            <h3 className="font-serif text-xl sm:text-2xl text-amber-300">Réservation Confirmée !</h3>
+            <p className="mt-2 text-xs sm:text-sm text-paper/70">
               Votre commande pour <strong>« {publication.title} »</strong> a été enregistrée avec succès.
             </p>
 
-            <div className="my-6 rounded-xl bg-amber-500/10 p-4 border border-amber-500/30">
-              <p className="text-xs uppercase tracking-widest text-amber-400">Numéro de Réservation</p>
-              <p className="mt-1 font-mono text-2xl font-bold tracking-wider text-amber-200">{submittedRes.id}</p>
-              <p className="mt-2 text-[11px] text-paper/50">Conservez ce numéro pour le suivi de votre livraison.</p>
+            <div className="my-5 sm:my-6 rounded-xl bg-amber-500/10 p-4 border border-amber-500/30">
+              <p className="text-[10px] sm:text-xs uppercase tracking-widest text-amber-400 font-semibold">Numéro de Réservation</p>
+              <p className="mt-1 font-mono text-xl sm:text-2xl font-bold tracking-wider text-amber-200 break-all">{submittedRes.id}</p>
+              <p className="mt-2 text-[10px] sm:text-[11px] text-paper/50">Conservez ce numéro pour le suivi de votre livraison.</p>
             </div>
 
             <p className="text-xs text-paper/60">
               Le secrétariat du cabinet vous contactera au <strong>{submittedRes.telephone}</strong> pour finaliser les détails.
             </p>
 
-            <div className="mt-6 flex flex-col gap-2">
+            <div className="mt-6 flex flex-col gap-2.5">
               <button
                 onClick={() => {
                   onClose();
                   go(`/suivi?code=${encodeURIComponent(submittedRes.id)}`);
                 }}
-                className="w-full rounded-xl bg-amber-500 px-6 py-3 font-semibold uppercase tracking-wider text-black transition hover:bg-amber-400"
+                className="w-full rounded-xl bg-amber-500 px-6 py-3.5 text-xs font-semibold uppercase tracking-wider text-black transition hover:bg-amber-400 text-center"
               >
                 Suivre ma commande en ligne ➔
               </button>
               <button
                 onClick={onClose}
-                className="w-full rounded-xl border border-white/20 px-6 py-2.5 text-xs uppercase tracking-wider text-paper/70 hover:bg-white/10"
+                className="w-full rounded-xl border border-white/20 px-6 py-2.5 text-xs uppercase tracking-wider text-paper/70 hover:bg-white/10 text-center"
               >
                 Fermer
               </button>
@@ -116,25 +116,25 @@ export function ReservationModal({ publication, onClose }: ReservationModalProps
           </div>
         ) : (
           <div>
-            <div className="mb-6">
+            <div className="mb-5 sm:mb-6 pr-8">
               <span className="text-[10px] font-semibold uppercase tracking-[0.25em] text-amber-400">
                 Commande d'Ouvrage
               </span>
-              <h3 className="font-serif text-2xl text-paper mt-1">{publication.title}</h3>
+              <h3 className="font-serif text-xl sm:text-2xl text-paper mt-1 leading-snug">{publication.title}</h3>
               {publication.price && (
-                <p className="mt-1 text-sm font-semibold text-amber-400">{publication.price}</p>
+                <p className="mt-1 text-xs sm:text-sm font-semibold text-amber-400">{publication.price}</p>
               )}
             </div>
 
             {errorMsg && (
-              <div className="mb-4 rounded-lg bg-red-950/60 p-3 text-xs text-red-300 border border-red-500/30">
+              <div className="mb-4 rounded-xl bg-red-950/60 p-3 text-xs text-red-300 border border-red-500/30">
                 {errorMsg}
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-3.5 sm:space-y-4">
               <div>
-                <label className="block text-xs uppercase tracking-wider text-paper/70 mb-1">
+                <label className="block text-[10px] sm:text-xs uppercase tracking-wider text-paper/70 mb-1 font-semibold">
                   Nom &amp; Prénom *
                 </label>
                 <input
@@ -143,13 +143,13 @@ export function ReservationModal({ publication, onClose }: ReservationModalProps
                   value={nom}
                   onChange={(e) => setNom(e.target.value)}
                   placeholder="ex: Dr. Mohamed Mansour"
-                  className="w-full rounded-xl bg-white/5 px-4 py-2.5 text-sm text-paper border border-white/10 focus:border-amber-400 focus:outline-none"
+                  className="w-full rounded-xl bg-white/5 px-3.5 sm:px-4 py-2.5 sm:py-3 text-base sm:text-sm text-paper border border-white/10 focus:border-amber-400 focus:outline-none"
                 />
               </div>
 
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="block text-xs uppercase tracking-wider text-paper/70 mb-1">
+                  <label className="block text-[10px] sm:text-xs uppercase tracking-wider text-paper/70 mb-1 font-semibold">
                     Téléphone *
                   </label>
                   <input
@@ -158,24 +158,24 @@ export function ReservationModal({ publication, onClose }: ReservationModalProps
                     value={telephone}
                     onChange={(e) => setTelephone(e.target.value)}
                     placeholder="+216 98 000 000"
-                    className="w-full rounded-xl bg-white/5 px-4 py-2.5 text-sm text-paper border border-white/10 focus:border-amber-400 focus:outline-none"
+                    className="w-full rounded-xl bg-white/5 px-3.5 sm:px-4 py-2.5 sm:py-3 text-base sm:text-sm text-paper border border-white/10 focus:border-amber-400 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs uppercase tracking-wider text-paper/70 mb-1">Email</label>
+                  <label className="block text-[10px] sm:text-xs uppercase tracking-wider text-paper/70 mb-1 font-semibold">Email</label>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="adresse@exemple.com"
-                    className="w-full rounded-xl bg-white/5 px-4 py-2.5 text-sm text-paper border border-white/10 focus:border-amber-400 focus:outline-none"
+                    className="w-full rounded-xl bg-white/5 px-3.5 sm:px-4 py-2.5 sm:py-3 text-base sm:text-sm text-paper border border-white/10 focus:border-amber-400 focus:outline-none"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <div className="grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-3">
                 <div className="sm:col-span-2">
-                  <label className="block text-xs uppercase tracking-wider text-paper/70 mb-1">
+                  <label className="block text-[10px] sm:text-xs uppercase tracking-wider text-paper/70 mb-1 font-semibold">
                     Adresse de livraison
                   </label>
                   <input
@@ -183,39 +183,39 @@ export function ReservationModal({ publication, onClose }: ReservationModalProps
                     value={adresse}
                     onChange={(e) => setAdresse(e.target.value)}
                     placeholder="Ville, Rue, Code Postal"
-                    className="w-full rounded-xl bg-white/5 px-4 py-2.5 text-sm text-paper border border-white/10 focus:border-amber-400 focus:outline-none"
+                    className="w-full rounded-xl bg-white/5 px-3.5 sm:px-4 py-2.5 sm:py-3 text-base sm:text-sm text-paper border border-white/10 focus:border-amber-400 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs uppercase tracking-wider text-paper/70 mb-1">Quantité</label>
+                  <label className="block text-[10px] sm:text-xs uppercase tracking-wider text-paper/70 mb-1 font-semibold">Quantité</label>
                   <input
                     type="number"
                     min={1}
                     max={50}
                     value={quantite}
                     onChange={(e) => setQuantite(Math.max(1, parseInt(e.target.value) || 1))}
-                    className="w-full rounded-xl bg-white/5 px-4 py-2.5 text-sm text-paper border border-white/10 focus:border-amber-400 focus:outline-none text-center"
+                    className="w-full rounded-xl bg-white/5 px-3.5 sm:px-4 py-2.5 sm:py-3 text-base sm:text-sm text-paper border border-white/10 focus:border-amber-400 focus:outline-none text-center"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider text-paper/70 mb-1">
+                <label className="block text-[10px] sm:text-xs uppercase tracking-wider text-paper/70 mb-1 font-semibold">
                   Remarques / Instructions (Optionnel)
                 </label>
                 <textarea
                   rows={2}
                   value={remarques}
                   onChange={(e) => setRemarques(e.target.value)}
-                  placeholder="Dedicasse souhaitée, précision de livraison..."
-                  className="w-full rounded-xl bg-white/5 px-4 py-2.5 text-sm text-paper border border-white/10 focus:border-amber-400 focus:outline-none"
+                  placeholder="Dédicace souhaitée, précision de livraison..."
+                  className="w-full rounded-xl bg-white/5 px-3.5 sm:px-4 py-2.5 sm:py-3 text-base sm:text-sm text-paper border border-white/10 focus:border-amber-400 focus:outline-none"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-6 w-full rounded-xl bg-amber-500 py-3.5 text-xs font-semibold uppercase tracking-widest text-black transition hover:bg-amber-400 disabled:opacity-50"
+                className="mt-4 sm:mt-6 w-full rounded-xl bg-amber-500 py-3.5 text-xs font-semibold uppercase tracking-widest text-black transition hover:bg-amber-400 disabled:opacity-50 text-center shadow-md"
               >
                 {loading ? "Enregistrement en cours..." : "Confirmer la Réservation"}
               </button>

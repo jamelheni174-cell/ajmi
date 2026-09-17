@@ -62,8 +62,8 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
 
   if (checking)
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#ece9e2] text-[#1e2766]">
-        <p className="text-xs uppercase tracking-[0.3em] font-semibold">Vérification de la session...</p>
+      <div className="flex min-h-screen items-center justify-center bg-[#ece9e2] text-[#1e2766] px-4">
+        <p className="text-xs uppercase tracking-[0.3em] font-semibold text-center">Vérification de la session...</p>
       </div>
     );
 
@@ -175,22 +175,22 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
     <div className="min-h-screen bg-[#ece9e2] text-[#1e2766]">
       {/* Header Institutionnel (#1e2766) */}
       <header className="sticky top-0 z-20 border-b border-[#2e3d91]/50 bg-[#1e2766] text-[#ece9e2] shadow-lg">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-6 py-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-xl font-serif font-bold text-white border border-white/20">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 sm:px-6 py-3 sm:py-4">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-white/10 text-lg sm:text-xl font-serif font-bold text-white border border-white/20 shrink-0">
               A<span className="text-[#aeb9ec]">.</span>
             </div>
             <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#aeb9ec]">
+              <p className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.25em] sm:tracking-[0.3em] text-[#aeb9ec]">
                 Panneau d'Administration
               </p>
-              <h1 className="font-serif text-lg font-bold text-white">Cabinet Me Mohamed Anouar Ajmi</h1>
-              <p className="mt-0.5 text-[10px] uppercase tracking-[0.15em] text-[#ece9e2]/70">
+              <h1 className="font-serif text-base sm:text-lg font-bold text-white leading-tight">Cabinet Me Mohamed Anouar Ajmi</h1>
+              <p className="mt-0.5 text-[9px] sm:text-[10px] uppercase tracking-[0.12em] sm:tracking-[0.15em] text-[#ece9e2]/70">
                 {online ? "● En ligne · synchronisé" : "○ Mode local autonome"}
               </p>
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             <Btn onClick={exportJson} variant="headerGhost">
               Exporter
             </Btn>
@@ -212,13 +212,13 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
             </Btn>
             <a
               href="#/admin/setup"
-              className="rounded-xl border border-white/20 bg-white/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.15em] text-white hover:bg-white/20 transition"
+              className="rounded-xl border border-white/20 bg-white/10 px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.12em] sm:tracking-[0.15em] text-white hover:bg-white/20 transition"
             >
               Serveur
             </a>
             <a
               href="#/"
-              className="rounded-xl border border-[#aeb9ec]/40 bg-white/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.15em] text-[#aeb9ec] hover:bg-white/20 transition"
+              className="rounded-xl border border-[#aeb9ec]/40 bg-white/10 px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.12em] sm:tracking-[0.15em] text-[#aeb9ec] hover:bg-white/20 transition"
             >
               Voir le site ↗
             </a>
@@ -234,12 +234,12 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
         </div>
 
         {/* Barre d'onglets */}
-        <nav className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-6 pb-3 pt-1 border-t border-white/10">
+        <nav className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-4 sm:px-6 pb-2.5 pt-1 border-t border-white/10 scrollbar-none touch-pan-x">
           {TABS.filter((t) => online || !ONLINE_TABS.includes(t as (typeof ONLINE_TABS)[number])).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`relative whitespace-nowrap rounded-xl px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.15em] transition duration-200 ${
+              className={`relative whitespace-nowrap rounded-xl px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.12em] sm:tracking-[0.15em] transition duration-200 shrink-0 ${
                 tab === t
                   ? "bg-[#2e3d91] text-white shadow-sm font-bold border border-white/20"
                   : "text-[#ece9e2]/80 hover:bg-white/10 hover:text-white"
@@ -247,7 +247,7 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
             >
               {t}
               {t === "Réservations" && pendingReservationsCount > 0 && (
-                <span className="ml-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-amber-400 text-[10px] font-bold text-[#1e2766] shadow-sm">
+                <span className="ml-1.5 inline-flex h-4 w-4 sm:h-5 sm:w-5 items-center justify-center rounded-full bg-amber-400 text-[9px] sm:text-[10px] font-bold text-[#1e2766] shadow-sm">
                   {pendingReservationsCount}
                 </span>
               )}
@@ -257,21 +257,21 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
       </header>
 
       {toast && (
-        <div className="fixed bottom-6 right-6 z-30 rounded-xl bg-[#1e2766] px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-[#ece9e2] shadow-2xl border border-[#2e3d91]">
+        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-30 rounded-xl bg-[#1e2766] px-4 py-3 sm:px-6 sm:py-3.5 text-xs font-bold uppercase tracking-wider text-[#ece9e2] shadow-2xl border border-[#2e3d91] max-w-[90vw]">
           {toast}
         </div>
       )}
 
-      <main className="mx-auto max-w-7xl space-y-6 px-6 py-10">
+      <main className="mx-auto max-w-7xl space-y-4 sm:space-y-6 px-4 sm:px-6 py-6 sm:py-10">
         {tab === "Accueil" && (
           <>
             <Card>
-              <h2 className="font-serif text-xl font-bold text-[#1e2766] mb-4">Section En-tête (Hero)</h2>
-              <div className="grid gap-4 md:grid-cols-2">
+              <h2 className="font-serif text-lg sm:text-xl font-bold text-[#1e2766] mb-4">Section En-tête (Hero)</h2>
+              <div className="grid gap-3 sm:gap-4 md:grid-cols-2">
                 <Field label="Sur-titre (Kicker)">
                   <input className={inputCls} value={content.hero.kicker} onChange={(e) => up({ hero: { ...content.hero, kicker: e.target.value } })} />
                 </Field>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <Field label="Titre principal">
                     <input className={inputCls} value={content.hero.titre} onChange={(e) => up({ hero: { ...content.hero, titre: e.target.value } })} />
                   </Field>
@@ -290,7 +290,7 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
               <Card>
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <h2 className="font-serif text-xl font-bold text-[#1e2766]">Historique des publications</h2>
+                    <h2 className="font-serif text-lg sm:text-xl font-bold text-[#1e2766]">Historique des publications</h2>
                     <p className="mt-1 text-xs text-[#1e2766]/60">Les 10 dernières versions publiées peuvent être restaurées.</p>
                   </div>
                   <Btn onClick={async () => setHist(await fetchHistory())}>Charger l'historique</Btn>
@@ -298,7 +298,7 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
                 {hist.length > 0 && (
                   <ul className="mt-4 divide-y divide-[#dcd8cb] border-t border-[#dcd8cb]">
                     {hist.map((h) => (
-                      <li key={h.i} className="flex items-center justify-between py-3 text-sm">
+                      <li key={h.i} className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 py-3 text-xs sm:text-sm">
                         <span>{new Date(h.at).toLocaleString("fr-FR")}</span>
                         <Btn
                           onClick={async () => {
@@ -315,11 +315,11 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
               </Card>
             )}
             <Card>
-              <h2 className="font-serif text-xl font-bold text-[#1e2766] mb-4">Chiffres clés du cabinet</h2>
-              <div className="grid gap-3 md:grid-cols-2">
+              <h2 className="font-serif text-lg sm:text-xl font-bold text-[#1e2766] mb-4">Chiffres clés du cabinet</h2>
+              <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
                 {content.chiffres.map((c, i) => (
                   <div key={i} className="flex items-end gap-2">
-                    <input className={`${inputCls} w-24 font-bold text-[#2e3d91]`} value={c.v} onChange={(e) => cc.edit(i, { v: e.target.value })} />
+                    <input className={`${inputCls} w-20 sm:w-24 font-bold text-[#2e3d91]`} value={c.v} onChange={(e) => cc.edit(i, { v: e.target.value })} />
                     <input className={inputCls} value={c.l} onChange={(e) => cc.edit(i, { l: e.target.value })} />
                     <Btn variant="danger" onClick={() => cc.del(i)}>✕</Btn>
                   </div>
@@ -332,16 +332,16 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
 
         {tab === "Cabinet" && (
           <Card>
-            <h2 className="font-serif text-xl font-bold text-[#1e2766] mb-4">Présentation du Cabinet</h2>
+            <h2 className="font-serif text-lg sm:text-xl font-bold text-[#1e2766] mb-4">Présentation du Cabinet</h2>
             <div className="space-y-4">
               <Field label="Titre de section">
                 <input className={inputCls} value={content.cabinet.titre} onChange={(e) => up({ cabinet: { ...content.cabinet, titre: e.target.value } })} />
               </Field>
               <Field label="Paragraphe 1">
-                <textarea rows={5} className={inputCls} value={content.cabinet.p1} onChange={(e) => up({ cabinet: { ...content.cabinet, p1: e.target.value } })} />
+                <textarea rows={4} className={inputCls} value={content.cabinet.p1} onChange={(e) => up({ cabinet: { ...content.cabinet, p1: e.target.value } })} />
               </Field>
               <Field label="Paragraphe 2">
-                <textarea rows={5} className={inputCls} value={content.cabinet.p2} onChange={(e) => up({ cabinet: { ...content.cabinet, p2: e.target.value } })} />
+                <textarea rows={4} className={inputCls} value={content.cabinet.p2} onChange={(e) => up({ cabinet: { ...content.cabinet, p2: e.target.value } })} />
               </Field>
               <Field label="Citation mise en avant">
                 <textarea rows={3} className={inputCls} value={content.cabinet.citation} onChange={(e) => up({ cabinet: { ...content.cabinet, citation: e.target.value } })} />
@@ -353,15 +353,15 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
         {tab === "Domaines" &&
           content.domaines.map((dd, i) => (
             <Card key={i}>
-              <div className="mb-3 flex items-center justify-between">
-                <span className="font-serif text-lg font-bold text-[#1e2766]">{dd.title || "Sans titre"}</span>
-                <div className="flex gap-2">
+              <div className="mb-3 flex items-center justify-between gap-2">
+                <span className="font-serif text-base sm:text-lg font-bold text-[#1e2766]">{dd.title || "Sans titre"}</span>
+                <div className="flex gap-1.5 sm:gap-2">
                   <Btn onClick={() => dc.move(i, -1)}>↑</Btn>
                   <Btn onClick={() => dc.move(i, 1)}>↓</Btn>
                   <Btn variant="danger" onClick={() => dc.del(i)}>Supprimer</Btn>
                 </div>
               </div>
-              <div className="grid gap-3 md:grid-cols-[90px_1fr]">
+              <div className="grid gap-3 sm:grid-cols-[90px_1fr]">
                 <Field label="N°"><input className={inputCls} value={dd.n} onChange={(e) => dc.edit(i, { n: e.target.value })} /></Field>
                 <Field label="Titre du domaine"><input className={inputCls} value={dd.title} onChange={(e) => dc.edit(i, { title: e.target.value })} /></Field>
               </div>
@@ -394,11 +394,11 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
 
         {tab === "Avocat" && (
           <Card>
-            <h2 className="font-serif text-xl font-bold text-[#1e2766] mb-4">Profil de Maître Mohamed Anouar Ajmi</h2>
+            <h2 className="font-serif text-lg sm:text-xl font-bold text-[#1e2766] mb-4">Profil de Maître Mohamed Anouar Ajmi</h2>
             <div className="grid gap-5 md:grid-cols-[220px_1fr]">
-              <div>
+              <div className="max-w-[220px] mx-auto md:mx-0">
                 <img src={content.avocat.portrait} alt="" className="aspect-[4/5] w-full rounded-2xl object-cover border border-[#dcd8cb] shadow-sm" />
-                <label className="mt-3 block cursor-pointer rounded-xl border border-[#dcd8cb] bg-[#ece9e2]/50 px-4 py-2.5 text-center text-[11px] font-semibold uppercase tracking-[0.15em] text-[#1e2766] hover:bg-[#ece9e2]">
+                <label className="mt-3 block cursor-pointer rounded-xl border border-[#dcd8cb] bg-[#ece9e2]/50 px-4 py-2.5 text-center text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.15em] text-[#1e2766] hover:bg-[#ece9e2]">
                   Changer le portrait
                   <input
                     type="file"
@@ -431,8 +431,8 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
 
         {tab === "Parcours" && (
           <>
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-serif text-xl font-bold text-[#1e2766]">Expériences &amp; Engagements</h2>
+            <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <h2 className="font-serif text-lg sm:text-xl font-bold text-[#1e2766]">Expériences &amp; Engagements</h2>
               <Btn onClick={ec.add}>+ Ajouter une expérience</Btn>
             </div>
             {content.experiences.map((ex, i) => (
@@ -453,15 +453,15 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
 
         {tab === "Publications" && (
           <>
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="font-serif text-2xl font-bold text-[#1e2766]">Gestionnaire des Publications &amp; Ouvrages</h2>
+            <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#1e2766]">Gestionnaire des Publications &amp; Ouvrages</h2>
               <Btn onClick={pc.add} variant="primary">+ Ajouter une publication</Btn>
             </div>
             {content.publications.map((p, i) => (
               <Card key={i}>
-                <div className="flex items-center justify-between mb-4 border-b border-[#dcd8cb] pb-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 border-b border-[#dcd8cb] pb-3">
                   <span className="font-mono text-xs uppercase tracking-wider font-bold text-[#2e3d91]">
-                    Publication #{i + 1} {p.featured ? "— [OUVRAGE MAJEUR EN VEDETTE]" : ""}
+                    Publication #{i + 1} {p.featured ? "— [OUVRAGE EN VEDETTE]" : ""}
                   </span>
                   <label className="flex items-center gap-2 text-xs text-[#1e2766] font-semibold cursor-pointer">
                     <input
@@ -473,7 +473,7 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
                   </label>
                 </div>
 
-                <div className="grid gap-4 md:grid-cols-2">
+                <div className="grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2">
                   <Field label="Identifiant Route (slug)">
                     <input className={inputCls} value={p.id || ""} placeholder="ex: ouvrage-2026" onChange={(e) => pc.edit(i, { id: e.target.value })} />
                   </Field>
@@ -530,7 +530,7 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
               </label>
               <p className="mt-2 text-xs text-[#1e2766]/60">Les images sont redimensionnées automatiquement (1400 px max).</p>
             </Card>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {content.galerie.map((g, i) => (
                 <Card key={i}>
                   <img src={g.src} alt="" className="aspect-[4/3] w-full rounded-xl object-cover border border-[#dcd8cb]" onError={(e) => ((e.target as HTMLImageElement).style.opacity = "0.2")} />
@@ -562,8 +562,8 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
 
         {tab === "Contact" && (
           <Card>
-            <h2 className="font-serif text-xl font-bold text-[#1e2766] mb-4">Coordonnées du Cabinet</h2>
-            <div className="grid gap-4 md:grid-cols-2">
+            <h2 className="font-serif text-lg sm:text-xl font-bold text-[#1e2766] mb-4">Coordonnées du Cabinet</h2>
+            <div className="grid gap-3 sm:gap-4 grid-cols-1 md:grid-cols-2">
               <Field label="Téléphone (affiché)"><input className={inputCls} value={content.contact.phone} onChange={(e) => up({ contact: { ...content.contact, phone: e.target.value } })} /></Field>
               <Field label="Téléphone (lien tel:)"><input className={inputCls} value={content.contact.phoneHref} onChange={(e) => up({ contact: { ...content.contact, phoneHref: e.target.value } })} /></Field>
               <Field label="Email"><input className={inputCls} value={content.contact.email} onChange={(e) => up({ contact: { ...content.contact, email: e.target.value } })} /></Field>

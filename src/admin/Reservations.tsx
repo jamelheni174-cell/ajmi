@@ -68,17 +68,17 @@ export function ReservationsAdmin() {
   const pendingCount = list.filter((r) => r.statut === "en_attente").length;
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
           <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#2e3d91]">
             Suivi des Commandes d'Ouvrages
           </span>
-          <h2 className="font-serif text-2xl font-bold text-[#1e2766]">Tableau de Bord des Réservations</h2>
+          <h2 className="font-serif text-xl sm:text-2xl font-bold text-[#1e2766]">Tableau de Bord des Réservations</h2>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
           {pendingCount > 0 && (
-            <span className="rounded-full bg-[#2e3d91] px-4 py-1 text-xs font-bold text-[#ece9e2] shadow-md">
+            <span className="rounded-full bg-[#2e3d91] px-3.5 py-1 text-xs font-bold text-[#ece9e2] shadow-md">
               {pendingCount} commande{pendingCount > 1 ? "s" : ""} en attente
             </span>
           )}
@@ -90,13 +90,13 @@ export function ReservationsAdmin() {
 
       {/* Filtres & Recherche */}
       <Card>
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
             {["all", "en_attente", "confirmee", "livree", "annulee"].map((st) => (
               <button
                 key={st}
                 onClick={() => setFilterStatut(st)}
-                className={`rounded-xl px-4 py-2 text-xs font-semibold uppercase tracking-wider transition ${
+                className={`rounded-xl px-3 py-1.5 sm:px-4 sm:py-2 text-[11px] sm:text-xs font-semibold uppercase tracking-wider transition ${
                   filterStatut === st
                     ? "bg-[#1e2766] text-[#ece9e2] shadow-md"
                     : "bg-[#ece9e2]/50 text-[#1e2766]/70 hover:bg-[#ece9e2] hover:text-[#1e2766]"
@@ -112,7 +112,7 @@ export function ReservationsAdmin() {
             placeholder="Rechercher nom, tél, réf..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full max-w-xs rounded-xl border border-[#dcd8cb] bg-white px-4 py-2 text-xs text-[#1e2766] outline-none focus:border-[#2e3d91]"
+            className="w-full sm:max-w-xs rounded-xl border border-[#dcd8cb] bg-white px-4 py-2.5 sm:py-2 text-base sm:text-xs text-[#1e2766] outline-none focus:border-[#2e3d91]"
           />
         </div>
       </Card>
@@ -129,31 +129,31 @@ export function ReservationsAdmin() {
           </div>
         </Card>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3 sm:space-y-4">
           {filtered.map((res) => {
             const badge = STATUT_BADGES[res.statut] || STATUT_BADGES.en_attente;
             return (
               <Card key={res.id}>
                 <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
-                  <div className="space-y-2">
-                    <div className="flex flex-wrap items-center gap-3">
-                      <span className="font-mono text-base font-bold text-[#2e3d91] bg-[#ece9e2] px-3 py-1 rounded-lg">
+                  <div className="space-y-2 flex-1">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                      <span className="font-mono text-sm sm:text-base font-bold text-[#2e3d91] bg-[#ece9e2] px-2.5 py-1 rounded-lg break-all">
                         {res.id}
                       </span>
-                      <span className={`rounded-full px-3 py-0.5 text-[10px] font-semibold uppercase tracking-wider border ${badge.cls}`}>
+                      <span className={`rounded-full px-2.5 py-0.5 text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider border ${badge.cls}`}>
                         {badge.label}
                       </span>
-                      <span className="text-[11px] text-[#1e2766]/50 font-mono">
+                      <span className="text-[10px] sm:text-[11px] text-[#1e2766]/50 font-mono">
                         {new Date(res.created_at).toLocaleString("fr-FR")}
                       </span>
                     </div>
 
-                    <h3 className="font-serif text-xl font-bold text-[#1e2766]">{res.publication_title}</h3>
+                    <h3 className="font-serif text-lg sm:text-xl font-bold text-[#1e2766]">{res.publication_title}</h3>
                     <p className="text-xs font-semibold text-[#2e3d91]">
                       Quantité commandée : <span className="text-[#1e2766]">{res.quantite} exemplaire(s)</span>
                     </p>
 
-                    <div className="mt-4 rounded-xl bg-[#ece9e2]/50 p-4 space-y-2 text-xs text-[#1e2766] border border-[#dcd8cb]">
+                    <div className="mt-3 sm:mt-4 rounded-xl bg-[#ece9e2]/50 p-3 sm:p-4 space-y-2 text-xs text-[#1e2766] border border-[#dcd8cb]">
                       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                         <p>
                           <strong className="text-[#1e2766]">Client :</strong> {res.nom}
@@ -167,7 +167,7 @@ export function ReservationsAdmin() {
                       </div>
 
                       {res.email && (
-                        <p>
+                        <p className="break-all">
                           <strong className="text-[#1e2766]">Email :</strong> {res.email}
                         </p>
                       )}
@@ -185,18 +185,20 @@ export function ReservationsAdmin() {
                   </div>
 
                   {/* Actions & Statut */}
-                  <div className="flex flex-col items-end gap-3 min-w-[200px]">
-                    <label className="text-[10px] font-semibold uppercase tracking-wider text-[#1e2766]/60">Changer l'état</label>
-                    <select
-                      value={res.statut}
-                      onChange={(e) => handleStatusChange(res.id, e.target.value as ReservationStatus)}
-                      className="w-full rounded-xl bg-white px-3.5 py-2.5 text-xs font-bold text-[#1e2766] border border-[#dcd8cb] focus:border-[#2e3d91] focus:ring-1 focus:ring-[#2e3d91] shadow-sm cursor-pointer outline-none transition"
-                    >
-                      <option value="en_attente" className="py-2 font-semibold text-[#1e2766]">En attente</option>
-                      <option value="confirmee" className="py-2 font-semibold text-[#2e3d91]">✓ Confirmée</option>
-                      <option value="livree" className="py-2 font-semibold text-emerald-800">✓ Livrée</option>
-                      <option value="annulee" className="py-2 font-semibold text-red-700">✕ Annulée</option>
-                    </select>
+                  <div className="flex flex-col sm:flex-row md:flex-col items-stretch md:items-end gap-2.5 w-full md:w-auto md:min-w-[200px] border-t md:border-t-0 border-[#dcd8cb] pt-3 md:pt-0">
+                    <div className="w-full">
+                      <label className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-[#1e2766]/60 block mb-1">Changer l'état</label>
+                      <select
+                        value={res.statut}
+                        onChange={(e) => handleStatusChange(res.id, e.target.value as ReservationStatus)}
+                        className="w-full rounded-xl bg-white px-3.5 py-2.5 text-base sm:text-xs font-bold text-[#1e2766] border border-[#dcd8cb] focus:border-[#2e3d91] focus:ring-1 focus:ring-[#2e3d91] shadow-sm cursor-pointer outline-none transition"
+                      >
+                        <option value="en_attente" className="py-2 font-semibold text-[#1e2766]">En attente</option>
+                        <option value="confirmee" className="py-2 font-semibold text-[#2e3d91]">✓ Confirmée</option>
+                        <option value="livree" className="py-2 font-semibold text-emerald-800">✓ Livrée</option>
+                        <option value="annulee" className="py-2 font-semibold text-red-700">✕ Annulée</option>
+                      </select>
+                    </div>
 
                     <Btn variant="danger" onClick={() => handleDelete(res.id)}>
                       Supprimer
