@@ -22,7 +22,9 @@ function BrandLogo({
   variant?: "dark" | "light";
   compact?: boolean;
 }) {
-  const size = compact ? "h-10 w-10 md:h-12 md:w-12" : "h-11 w-11 md:h-14 md:w-14";
+  const size = compact
+    ? "h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12"
+    : "h-9 w-9 sm:h-11 sm:w-11 md:h-14 md:w-14";
   return (
     <span className={cn("relative shrink-0", size)}>
       <img
@@ -62,12 +64,12 @@ function Brand({
   inverted?: boolean;
 }) {
   return (
-    <a href="#/" className="flex items-center gap-3 leading-none">
+    <a href="#/" className="flex items-center gap-2 sm:gap-3 leading-none">
       <BrandLogo variant={variant} compact={compact} />
       <span>
         <span
           className={cn(
-            "block text-[9px] uppercase tracking-[0.32em]",
+            "block text-[8px] sm:text-[9px] uppercase tracking-[0.24em] sm:tracking-[0.32em]",
             inverted ? "text-paper/60" : "text-ink/60",
           )}
         >
@@ -76,7 +78,7 @@ function Brand({
         <span
           className={cn(
             "mt-0.5 block font-serif leading-none tracking-wide transition-colors duration-500",
-            compact ? "text-2xl md:text-3xl" : "text-3xl md:text-4xl",
+            compact ? "text-xl sm:text-2xl md:text-3xl" : "text-2xl sm:text-3xl md:text-4xl",
             inverted ? "text-paper" : "text-ink",
           )}
         >
@@ -115,21 +117,21 @@ export function Nav({ route }: { route: string }) {
       >
         <div
           className={cn(
-            "mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 transition-all duration-500",
-            scrolled ? "py-2.5 md:py-3" : "py-3 md:py-4",
+            "mx-auto flex max-w-7xl items-center justify-between gap-2 sm:gap-4 px-4 sm:px-6 transition-all duration-500",
+            scrolled ? "py-2 sm:py-2.5 md:py-3" : "py-2.5 sm:py-3 md:py-4",
           )}
         >
           {/* Logo PNG dark sur fonds clairs — se compacte au scroll */}
           <div
             className={cn(
               "rounded-2xl transition-all duration-500",
-              scrolled ? "bg-stone/40 px-2 py-1 ring-1 ring-stone/60" : "bg-transparent px-0 py-0",
+              scrolled ? "bg-stone/40 px-1.5 py-0.5 sm:px-2 sm:py-1 ring-1 ring-stone/60" : "bg-transparent px-0 py-0",
             )}
           >
             <Brand variant="dark" compact={scrolled} />
           </div>
 
-          <div className="flex items-center gap-3 md:gap-4">
+          <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
             <a
               href={c.contact.phoneHref}
               className={cn(
@@ -143,7 +145,7 @@ export function Nav({ route }: { route: string }) {
             </a>
             <a
               href="#/contact"
-              className="rounded-xl bg-navy px-7 py-3 text-[11px] uppercase tracking-[0.2em] text-paper transition hover:bg-ink"
+              className="rounded-xl bg-navy px-4 py-2 sm:px-6 sm:py-2.5 md:px-7 md:py-3 text-[10px] sm:text-[11px] uppercase tracking-[0.18em] sm:tracking-[0.2em] text-paper transition hover:bg-ink shadow-sm"
             >
               RDV
             </a>
@@ -165,9 +167,10 @@ export function Nav({ route }: { route: string }) {
             </a>
             <button
               onClick={() => setOpen(true)}
-              className="ml-1 text-[13px] uppercase tracking-[0.2em] underline-offset-4 hover:underline"
+              className="ml-0.5 sm:ml-1 flex items-center gap-1 rounded-lg px-2 py-1 text-xs sm:text-[13px] uppercase tracking-[0.15em] sm:tracking-[0.2em] underline-offset-4 hover:underline"
+              aria-label="Ouvrir le menu"
             >
-              Menu <span className="font-serif text-xl">+</span>
+              Menu <span className="font-serif text-lg sm:text-xl font-bold">+</span>
             </button>
           </div>
         </div>
@@ -175,41 +178,52 @@ export function Nav({ route }: { route: string }) {
 
       {open && (
         <div className="fixed inset-0 z-[55] flex flex-col overflow-y-auto bg-paper text-ink">
-          <div className="flex shrink-0 items-center justify-between border-b border-stone/30 px-6 py-4">
+          <div className="flex shrink-0 items-center justify-between border-b border-stone/30 px-4 py-3 sm:px-6 sm:py-4">
             <Brand compact variant="dark" />
             <button
               onClick={() => setOpen(false)}
-              className="text-[13px] font-medium uppercase tracking-[0.2em] hover:text-navy"
+              className="flex items-center gap-1.5 rounded-lg bg-stone/40 px-3 py-1.5 text-xs sm:text-[13px] font-medium uppercase tracking-[0.2em] hover:bg-stone/70 hover:text-navy transition"
+              aria-label="Fermer le menu"
             >
-              Fermer <span className="font-serif text-xl">×</span>
+              Fermer <span className="font-serif text-lg sm:text-xl font-bold">×</span>
             </button>
           </div>
-          <nav className="flex flex-1 flex-col justify-center px-6 py-4 md:px-16">
+          <nav className="my-auto flex flex-1 flex-col justify-center px-5 py-4 sm:px-8 md:px-16 min-h-min">
             {PAGES.map((p, i) => (
               <a
                 key={p.path}
                 href={`#${p.path}`}
+                onClick={() => setOpen(false)}
                 className={cn(
-                  "group flex items-baseline gap-5 border-b border-stone/60 py-2.5 transition md:py-3.5",
+                  "group flex items-baseline gap-3 sm:gap-5 border-b border-stone/60 py-2 sm:py-2.5 transition md:py-3.5",
                   route === p.path ? "font-semibold text-navy" : "hover:text-navy",
                 )}
               >
-                <span className="font-mono text-[11px] tracking-[0.3em] text-ink/40">
+                <span className="font-mono text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-ink/40">
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span className="font-serif text-3xl leading-tight md:text-5xl">{p.label}</span>
+                <span className="font-serif text-2xl sm:text-3xl leading-tight md:text-5xl">{p.label}</span>
               </a>
             ))}
           </nav>
-          <div className="shrink-0 px-6 py-6 md:px-16">
-            <div className="flex flex-wrap items-center gap-x-8 gap-y-2 border-t border-stone pt-4 text-xs text-ink/70">
-              <a href={c.contact.phoneHref} className="hover:text-navy">
-                {c.contact.phone}
+          <div className="shrink-0 px-5 py-5 sm:px-8 md:px-16 border-t border-stone bg-paper/50">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-ink/70">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6">
+                <a href={c.contact.phoneHref} className="hover:text-navy font-medium">
+                  {c.contact.phone}
+                </a>
+                <a href={`mailto:${c.contact.email}`} className="break-all hover:text-navy">
+                  {c.contact.email}
+                </a>
+                <span className="text-ink/60">{c.contact.address}</span>
+              </div>
+              <a
+                href="#/contact"
+                onClick={() => setOpen(false)}
+                className="mt-2 sm:mt-0 inline-block w-full sm:w-auto text-center rounded-xl bg-navy px-5 py-2.5 text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-paper transition hover:bg-ink"
+              >
+                Prendre Rendez-vous
               </a>
-              <a href={`mailto:${c.contact.email}`} className="break-all hover:text-navy">
-                {c.contact.email}
-              </a>
-              <span>{c.contact.address}</span>
             </div>
           </div>
         </div>
