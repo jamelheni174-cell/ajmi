@@ -17,6 +17,13 @@
 html { scroll-behavior: smooth; }
 body { @apply bg-paper text-ink font-sans antialiased; }
 
+/* Support arabe (résumés & titres d'ouvrages) */
+[lang="ar"], .dir-rtl {
+  font-family: "Noto Naskh Arabic", "Cormorant Garamond", Georgia, serif;
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
 ::selection { background: var(--color-navy); color: var(--color-paper); }
 
 .reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s ease, transform .8s ease; }
@@ -24,3 +31,23 @@ body { @apply bg-paper text-ink font-sans antialiased; }
 
 .marquee { animation: marquee 40s linear infinite; }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* Bandeau clients / références — défilement infini */
+.clients-marquee-mask {
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+.clients-marquee {
+  animation: clients-marquee 45s linear infinite;
+  will-change: transform;
+}
+.clients-marquee:hover {
+  animation-play-state: paused;
+}
+@keyframes clients-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-33.333%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .clients-marquee { animation: none; }
+}

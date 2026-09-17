@@ -4,18 +4,23 @@ export const contact = {
   email: "contact.anouarajmi@gmail.com",
   address: "Beb Brikcha – Résidence El Mabrouk, Bureau n°9, Monastir",
   linkedin: "https://www.linkedin.com/in/mohamed-anouar-ajmi",
+  domain: "avocatmedanouarajmi.com",
 };
 
 export const competences = [
   "Création de startups & sociétés",
+  "Droit de l'investissement",
+  "Droit social",
   "Structuration juridique",
   "Contrats commerciaux",
+  "Rédaction des contrats",
   "Régulation",
   "Contentieux commercial",
   "Responsabilité médicale",
   "Litiges liés aux services de santé",
   "Régimes matrimoniaux",
   "Gestion de patrimoine",
+  "Droit des biens",
   "Affaires familiales",
   "Droits humains",
   "Politiques publiques",
@@ -26,28 +31,63 @@ export const competences = [
 export const domaines = [
   {
     n: "01",
-    title: "Droit des Affaires & Startups",
-    text: "Accompagnement global des acteurs économiques, de la création d'entreprises et de sociétés jusqu'à la gestion des contrats, de la régulation et du contentieux commercial.",
+    title: "Droit des affaires",
+    text: "Accompagnement global des acteurs économiques : création de sociétés et de startups, droit social, droit de l'investissement, structuration juridique, régulation et contentieux commercial.",
+    items: [
+      "Création de sociétés & startups",
+      "Droit social",
+      "Droit de l'investissement",
+      "Structuration & gouvernance",
+      "Contentieux commercial",
+    ],
   },
   {
     n: "02",
-    title: "Droit Médical & Santé",
-    text: "Une expertise dédiée aux professionnels de la santé, aux structures médicales et à la gestion de la responsabilité et des litiges liés aux services de santé (Loi n°32-2024).",
+    title: "Droit de la famille",
+    text: "Conseil et représentation dans les affaires familiales : régimes matrimoniaux, divorce, filiation, successions et protection des intérêts familiaux.",
+    items: [
+      "Régimes matrimoniaux",
+      "Divorce & séparation",
+      "Filiation & autorité parentale",
+      "Successions",
+      "Médiation familiale",
+    ],
   },
   {
     n: "03",
-    title: "Droit de la Famille & des Biens",
-    text: "Conseil et représentation dans la gestion des patrimoines, des régimes matrimoniaux et des affaires familiales.",
+    title: "Droit médical",
+    text: "Expertise dédiée aux professionnels de santé, aux structures médicales et à la gestion de la responsabilité et des litiges liés aux services de santé (Loi n°32 du 19 juin 2024).",
+    items: [
+      "Responsabilité médicale",
+      "Droits des patients",
+      "Indemnisation des préjudices",
+      "Structures & établissements de santé",
+      "Contentieux sanitaire",
+    ],
   },
   {
     n: "04",
-    title: "Droits Humains & Politiques Publiques",
-    text: "Un ancrage fort aux côtés d'organisations de référence (Attalaki, Avocats Sans Frontières, ATFD) pour expertiser, concevoir et porter des réformes conformes aux standards internationaux.",
+    title: "Droit des biens",
+    text: "Conseil et contentieux en matière de patrimoine, propriété, copropriété, baux et gestion des biens immobiliers et mobiliers.",
+    items: [
+      "Propriété & copropriété",
+      "Baux civils & commerciaux",
+      "Gestion de patrimoine",
+      "Transactions immobilières",
+      "Litiges relatifs aux biens",
+    ],
   },
   {
     n: "05",
-    title: "Contentieux & Arbitrage",
-    text: "Prévention des risques et résolution des différends, tant en phase amiable que devant les juridictions.",
+    title: "Rédaction des contrats",
+    text: "Rédaction, négociation et sécurisation de l'ensemble de vos actes et conventions : contrats commerciaux, conventions d'associés, protocoles et actes authentiques.",
+    items: [
+      "Contrats commerciaux",
+      "Conventions d'associés",
+      "Protocoles d'accord",
+      "CGV & conditions contractuelles",
+      "Négociation & sécurisation",
+    ],
   },
 ];
 
@@ -95,7 +135,7 @@ export const publications: PublicationItem[] = [
     summary:
       "Une analyse juridique approfondie de la Loi n°32 du 19 juin 2024 relative aux droits des patients et à la responsabilité médicale et sanitaire en Tunisie. Cet ouvrage décortique les mécanismes d'indemnisation des préjudices corporels, moraux et matériels subis dans le cadre des prestations de soin public et privé.",
     summaryAr:
-      "دراسة قانونية معمقة حول القانون عدد 32 لسنة 2024 المتعلق بحقوق المرضى والمسؤولية الطبية والتحويض عن الأضرار الناجمة عن الخدمات الصحية في تونس.",
+      "دراسة قانونية معمقة حول القانون عدد 32 لسنة 2024 المتعلق بحقوق المرضى والمسؤولية الطبية والتعويض عن الأضرار الناجمة عن الخدمات الصحية في تونس.",
     sommaire: [
       "Chapitre 1 : Le cadre juridique réformé de la responsabilité médicale en Tunisie",
       "Chapitre 2 : Distinction entre faute médicale, aléa thérapeutique et défaut de sécurité",
@@ -154,13 +194,20 @@ export const clients: ClientItem[] = [
   { name: "Clinique Essouani Monastir", logo: "/images/logo-essouani.jpg" },
   { name: "ATTALAKI Organization", logo: "/images/logo-attalaki.jpg" },
   { name: "Association Tunisienne des Femmes Démocrates (ATFD)", logo: "/images/logo-atfd.jpg" },
+  { name: "Société Up Views", logo: "/images/logo-upviews.jpg" },
+  { name: "Santé Sud — Groupe SOS", logo: "/images/logo-santesud.jpg" },
   { name: "Société Nayssan pour la Création Théâtrale" },
   { name: "Société VIP Clean", logo: "/images/logo-vipclean.jpg" },
 ];
 
 export const valeurs = ["Disponibilité", "Réactivité", "Rigueur", "Indépendance", "Engagement"];
 
-export const portrait = "/images/486ba859-1ec9-45bd-8e18-8f29f9d98281.jpg";
+/** Portrait institutionnel (robe d'avocat) — photo réelle images/portrait-avocat.jpg */
+export const portrait = "/images/portrait-avocat.jpg";
+/** Logo cabinet — PNG dark (teal) pour fonds clairs */
+export const logoCabinet = "/images/logo-cabinet-dark.png";
+/** Logo cabinet — PNG light (blanc) pour fonds sombres */
+export const logoCabinetLight = "/images/logo-cabinet-light.png";
 
 export interface GalerieItem {
   id: string;
@@ -237,7 +284,7 @@ export const galerie: GalerieItem[] = [
   },
   {
     id: "g8",
-    src: "/images/486ba859-1ec9-45bd-8e18-8f29f9d98281.jpg",
+    src: "/images/portrait-avocat.jpg",
     legende: "Portrait institutionnel — Me Mohamed Anouar Ajmi",
     category: "tribunaux",
     categoryLabel: "Tribunaux & Droit",

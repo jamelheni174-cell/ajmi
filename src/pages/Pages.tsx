@@ -54,49 +54,6 @@ function HomeExperiences() {
   );
 }
 
-/** Bandeau portrait de l'avocat. */
-function HomeAvocat() {
-  const c = useContent();
-  return (
-    <section className="bg-navy text-paper">
-      <div className="mx-auto grid max-w-7xl items-center gap-12 px-6 py-24 md:grid-cols-12 md:py-32">
-        <Reveal className="md:col-span-5">
-          <div className="relative">
-            <Img src={mediaUrl(c.avocat.portrait)} alt={c.avocat.nom} className="aspect-[4/5] w-full max-w-md" imgClassName="grayscale-[15%]" />
-            <span className="absolute -bottom-5 -right-2 hidden h-20 w-20 items-center justify-center rounded-full bg-paper px-4 text-center text-[10px] uppercase tracking-[0.2em] text-navy md:flex">
-              Cour d'Appel
-            </span>
-          </div>
-        </Reveal>
-        <Reveal delay={150} className="md:col-span-7">
-          <p className="text-[11px] uppercase tracking-[0.3em] text-blue">L'avocat</p>
-          <h2 className="mt-5 font-serif text-4xl leading-tight md:text-5xl">{c.avocat.nom}</h2>
-          <p className="mt-3 text-sm font-light text-blue">
-            {c.avocat.l1} — {c.avocat.l2}
-          </p>
-          <p className="mt-8 max-w-xl font-light leading-[1.9] text-stone">
-            Une double culture du conseil et du contentieux, une pratique ancrée dans le droit des affaires et les droits humains, et une
-            présence internationale — notamment en tant que délégué de l'Ordre des Avocats de Tunis.
-          </p>
-          <div className="mt-10 flex flex-wrap gap-4">
-            <a href="#/avocat" className="rounded-xl bg-paper px-7 py-3 text-[11px] uppercase tracking-[0.22em] text-navy transition hover:bg-blue">
-              Rencontrer l'avocat
-            </a>
-            <a
-              href={c.contact.linkedin}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-xl border border-paper/40 px-7 py-3 text-[11px] uppercase tracking-[0.22em] transition hover:border-paper"
-            >
-              LinkedIn ↗
-            </a>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
 /** Publications récentes (3). */
 function HomePublications() {
   const c = useContent();
@@ -187,17 +144,18 @@ export function HomePage() {
   const c = useContent();
   return (
     <>
+      {/* Hero + présentation Cabinet/Avocat (photo + texte) bien visibles en haut */}
       <Hero />
       <Cabinet />
+      {/* Clients / références animés juste sous la présentation */}
+      <Clients variant="marquee" />
       <Chiffres />
       <Domaines />
       <Competences />
       <HomeExperiences />
-      <HomeAvocat />
       <HomePublications />
       <HomeGalerie />
       <HomeContact />
-      <Clients />
       <section className="bg-ink py-20 text-center text-paper">
         <p className="font-serif text-2xl italic md:text-3xl">« {c.cabinet.citation} »</p>
       </section>
@@ -211,16 +169,43 @@ export function CabinetPage() {
   const c = useContent();
   return (
     <>
-      <PageHeader kicker="Présentation" titre={c.cabinet.titre} intro={c.cabinet.p1} />
-      <section className="mx-auto max-w-7xl px-6 py-24">
-        <Reveal className="mx-auto max-w-3xl space-y-8 text-[15px] font-light leading-[1.95] text-ink/80 md:text-base">
-          <p>{c.cabinet.p2}</p>
-          <p className="border-l-2 border-navy pl-6 font-serif text-2xl italic leading-snug text-ink">« {c.cabinet.citation} »</p>
-        </Reveal>
+      <PageHeader kicker="Présentation" titre={c.cabinet.titre} intro={`${c.avocat.nom} — ${c.avocat.l1}`} />
+      {/* Présentation unifiée Cabinet + Avocat avec photo en haut */}
+      <section className="mx-auto max-w-7xl px-6 py-20">
+        <div className="grid items-start gap-12 md:grid-cols-12">
+          <Reveal className="md:col-span-5">
+            <img
+              src="/images/portrait-avocat.jpg"
+              alt={c.avocat.nom}
+              className="aspect-[4/5] w-full rounded-2xl object-cover object-top shadow-lg ring-1 ring-stone/60"
+              loading="eager"
+            />
+            <div className="mt-6 space-y-1">
+              <p className="font-serif text-2xl">{c.avocat.nom}</p>
+              <p className="text-sm font-light text-ink/70">{c.avocat.l1}</p>
+              <p className="text-sm font-light text-ink/70">{c.avocat.l2}</p>
+              <a
+                href={c.contact.linkedin}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-4 inline-block border-b border-ink pb-1 text-[11px] uppercase tracking-[0.25em]"
+              >
+                Profil LinkedIn ↗
+              </a>
+            </div>
+          </Reveal>
+          <Reveal delay={120} className="space-y-6 text-[15px] font-light leading-[1.95] text-ink/80 md:col-span-7 md:text-base">
+            <p>{c.cabinet.p1}</p>
+            <p>{c.cabinet.p2}</p>
+            <p className="border-l-2 border-navy pl-6 font-serif text-2xl italic leading-snug text-ink">
+              « {c.cabinet.citation} »
+            </p>
+          </Reveal>
+        </div>
       </section>
+      <Clients variant="marquee" />
       <Chiffres />
       <Valeurs />
-      <Clients />
       <PageCTA />
     </>
   );
@@ -264,16 +249,30 @@ export function ServicesPage() {
       <PageHeader
         kicker="Nos services"
         titre="Domaines d'intervention"
-        intro="Cinq pôles d'expertise, du conseil stratégique à la représentation devant les juridictions."
+        intro="Cinq pôles d'expertise structurés selon votre vision : droit des affaires, famille, médical, biens et rédaction des contrats."
       />
       <section className="mx-auto max-w-7xl px-6 py-24">
         <div className="space-y-px bg-stone">
           {c.domaines.map((d, i) => (
             <Reveal key={i} delay={i * 60} className="bg-paper">
-              <article className="grid gap-6 p-8 md:grid-cols-12 md:p-12">
+              <article className="grid gap-6 p-8 md:grid-cols-12 md:gap-10 md:p-12">
                 <p className="text-[11px] tracking-[0.3em] text-navy md:col-span-1">{d.n}</p>
-                <h2 className="font-serif text-3xl leading-tight md:col-span-4 md:text-4xl">{d.title}</h2>
-                <p className="text-[15px] font-light leading-[1.9] text-ink/75 md:col-span-7">{d.text}</p>
+                <div className="md:col-span-4">
+                  <h2 className="font-serif text-3xl leading-tight md:text-4xl">{d.title}</h2>
+                </div>
+                <div className="md:col-span-7">
+                  <p className="text-[15px] font-light leading-[1.9] text-ink/75">{d.text}</p>
+                  {d.items && d.items.length > 0 && (
+                    <ul className="mt-6 grid gap-2 sm:grid-cols-2">
+                      {d.items.map((item) => (
+                        <li key={item} className="flex items-start gap-2 text-sm text-ink/70">
+                          <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-navy" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
               </article>
             </Reveal>
           ))}
@@ -325,7 +324,12 @@ export function AvocatPage() {
       <section className="mx-auto max-w-7xl px-6 py-24">
         <div className="grid gap-14 md:grid-cols-12">
           <Reveal className="md:col-span-5">
-            <Img src={mediaUrl(c.avocat.portrait)} alt={c.avocat.nom} className="aspect-[4/5] w-full" />
+            <img
+              src="/images/portrait-avocat.jpg"
+              alt={c.avocat.nom}
+              className="aspect-[4/5] w-full rounded-2xl object-cover object-top shadow-lg ring-1 ring-stone/60"
+              loading="eager"
+            />
             <a
               href={c.contact.linkedin}
               target="_blank"

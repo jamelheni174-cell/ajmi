@@ -100,19 +100,103 @@ export function Hero() {
 
 export function Cabinet() {
   const c = useContent();
+  const [lightboxImg, setLightboxImg] = useState<GalerieItem | null>(null);
+
+  /** Portrait réel : images/portrait-avocat.jpg (robe d'avocat) */
+  const portraitSrc = "/images/portrait-avocat.jpg";
+
+  const openPortrait = () => {
+    setLightboxImg({
+      id: "cabinet-portrait",
+      src: portraitSrc,
+      legende: `${c.avocat.nom} — ${c.avocat.l1}`,
+      category: "tribunaux",
+      categoryLabel: "Cabinet Ajmi",
+    });
+  };
+
   return (
-    <section id="cabinet" className="mx-auto max-w-7xl px-6 py-28 md:py-40">
-      <div className="grid gap-16 md:grid-cols-12">
-        <Reveal className="md:col-span-4">
-          <Label>Présentation du Cabinet</Label>
-          <h2 className="font-serif text-4xl leading-tight md:text-5xl">{c.cabinet.titre}</h2>
+    <section id="cabinet" className="mx-auto max-w-7xl px-6 py-20 md:py-28">
+      <Reveal>
+        <Label>Présentation du Cabinet &amp; de l'Avocat</Label>
+      </Reveal>
+
+      <div className="mt-8 grid items-start gap-12 md:grid-cols-12 md:gap-16">
+        {/* Portrait réel (portrait-avocat.jpg) en évidence */}
+        <Reveal className="md:col-span-5">
+          <div
+            className="group relative cursor-pointer overflow-hidden rounded-2xl bg-stone/30 shadow-lg ring-1 ring-stone/60"
+            onClick={openPortrait}
+          >
+            <img
+              src={portraitSrc}
+              alt={c.avocat.nom}
+              className="aspect-[4/5] w-full object-cover object-top transition duration-500 group-hover:scale-[1.03]"
+              loading="eager"
+              decoding="async"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-6 text-paper">
+              <p className="text-[10px] uppercase tracking-[0.3em] text-blue">L'avocat</p>
+              <h3 className="mt-2 font-serif text-2xl md:text-3xl">{c.avocat.nom}</h3>
+              <p className="mt-1 text-sm font-light text-paper/80">{c.avocat.l1}</p>
+              <p className="text-sm font-light text-paper/70">{c.avocat.l2}</p>
+            </div>
+            <span className="absolute right-4 top-4 rounded-full bg-black/50 px-3 py-1 text-[10px] uppercase tracking-wider text-paper opacity-0 backdrop-blur transition group-hover:opacity-100">
+              Agrandir ↗
+            </span>
+          </div>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a
+              href="#/avocat"
+              className="rounded-xl bg-navy px-6 py-3 text-[11px] uppercase tracking-[0.2em] text-paper transition hover:bg-ink"
+            >
+              Profil complet
+            </a>
+            <a
+              href={c.contact.linkedin}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-xl border border-ink px-6 py-3 text-[11px] uppercase tracking-[0.2em] transition hover:bg-ink hover:text-paper"
+            >
+              LinkedIn ↗
+            </a>
+          </div>
         </Reveal>
-        <Reveal delay={150} className="md:col-span-7 md:col-start-6 space-y-6 text-[15px] font-light leading-[1.9] text-ink/80 md:text-base">
+
+        {/* Présentation fusionnée Cabinet + Avocat */}
+        <Reveal delay={120} className="md:col-span-7 space-y-6 text-[15px] font-light leading-[1.9] text-ink/80 md:text-base">
+          <h2 className="font-serif text-3xl leading-tight text-ink md:text-5xl">{c.cabinet.titre}</h2>
           <p>{c.cabinet.p1}</p>
           <p>{c.cabinet.p2}</p>
-          <p className="font-serif text-2xl italic leading-snug text-ink">« {c.cabinet.citation} »</p>
+          <p className="border-l-2 border-navy pl-6 font-serif text-2xl italic leading-snug text-ink">
+            « {c.cabinet.citation} »
+          </p>
+
+          <div className="grid gap-4 border-t border-stone pt-8 sm:grid-cols-2">
+            {[
+              { t: "Conseil", d: "Startups, sociétés, contrats & investissement" },
+              { t: "Contentieux", d: "Représentation devant les juridictions" },
+              { t: "Droit médical", d: "Responsabilité & indemnisation (Loi 32-2024)" },
+              { t: "Engagement", d: "Droits humains & politiques publiques" },
+            ].map((x) => (
+              <div key={x.t} className="rounded-xl bg-stone/40 px-5 py-4">
+                <p className="text-[11px] uppercase tracking-[0.25em] text-navy">{x.t}</p>
+                <p className="mt-1 text-sm text-ink/75">{x.d}</p>
+              </div>
+            ))}
+          </div>
         </Reveal>
       </div>
+
+      {lightboxImg && (
+        <LightboxModal
+          item={lightboxImg}
+          items={[lightboxImg]}
+          onClose={() => setLightboxImg(null)}
+          onSelect={(i) => setLightboxImg(i)}
+        />
+      )}
     </section>
   );
 }
@@ -141,13 +225,42 @@ export function Domaines() {
         <Reveal>
           <Label>Domaines d'intervention</Label>
           <h2 className="font-serif text-4xl md:text-6xl">Expertises &amp; Conseils</h2>
+          <p className="mt-6 max-w-2xl text-base font-light leading-relaxed text-ink/70">
+            Cinq pôles d'expertise structurés pour répondre aux besoins des entreprises, des familles, des professionnels de santé et des particuliers.
+          </p>
         </Reveal>
-        <div className="mt-16 grid gap-px bg-stone md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-16 space-y-px bg-stone">
           {c.domaines.map((d, i) => (
-            <Reveal key={i} delay={i * 80} className="bg-paper p-10">
-              <span className="font-serif text-3xl text-navy">{d.n}</span>
-              <h3 className="mt-6 font-serif text-2xl">{d.title}</h3>
-              <p className="mt-4 text-sm font-light leading-relaxed text-ink/75">{d.text}</p>
+            <Reveal key={i} delay={i * 60} className="bg-paper">
+              <article className="grid gap-6 p-8 md:grid-cols-12 md:gap-10 md:p-12">
+                <div className="md:col-span-1">
+                  <span className="font-serif text-3xl text-navy md:text-4xl">{d.n}</span>
+                </div>
+                <div className="md:col-span-4">
+                  <h3 className="font-serif text-2xl leading-tight md:text-3xl">{d.title}</h3>
+                  <a
+                    href="#/services"
+                    className="mt-4 inline-block border-b border-navy/40 pb-0.5 text-[11px] uppercase tracking-[0.2em] text-navy/70 transition hover:border-navy hover:text-navy"
+                  >
+                    En savoir +
+                  </a>
+                </div>
+                <div className="md:col-span-7">
+                  <p className="text-[15px] font-light leading-[1.85] text-ink/75">{d.text}</p>
+                  {d.items && d.items.length > 0 && (
+                    <ul className="mt-5 flex flex-wrap gap-2">
+                      {d.items.map((item) => (
+                        <li
+                          key={item}
+                          className="rounded-full border border-stone bg-stone/40 px-3.5 py-1.5 text-[11px] tracking-wide text-ink/70"
+                        >
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </article>
             </Reveal>
           ))}
         </div>
@@ -242,6 +355,22 @@ export function Publications() {
   const others = c.publications.filter((p) => p !== featured);
   const [selectedPubForOrder, setSelectedPubForOrder] = useState<PublicationItem | null>(null);
 
+  const asPubItem = (p: typeof featured): PublicationItem => ({
+    id: p.id || "pub",
+    type: p.type,
+    title: p.title,
+    meta: p.meta,
+    featured: p.featured,
+    titleAr: p.titleAr,
+    isbn: p.isbn,
+    price: p.price,
+    publisher: p.publisher,
+    coverImage: p.coverImage,
+    summary: p.summary,
+    summaryAr: p.summaryAr,
+    sommaire: p.sommaire,
+  });
+
   return (
     <section id="publications" className="bg-stone/30">
       <div className="mx-auto max-w-7xl px-6 py-28 md:py-36">
@@ -285,7 +414,12 @@ export function Publications() {
                 </div>
 
                 {featured.titleAr && (
-                  <h3 className="font-serif text-2xl md:text-3xl text-amber-200 dir-rtl text-right">
+                  <h3
+                    lang="ar"
+                    dir="rtl"
+                    className="font-serif text-2xl text-amber-200 md:text-3xl"
+                    style={{ direction: "rtl", textAlign: "right", unicodeBidi: "isolate" }}
+                  >
                     {featured.titleAr}
                   </h3>
                 )}
@@ -308,7 +442,7 @@ export function Publications() {
 
                 <div className="flex flex-wrap gap-4 pt-2">
                   <button
-                    onClick={() => setSelectedPubForOrder(featured)}
+                    onClick={() => setSelectedPubForOrder(asPubItem(featured))}
                     className="rounded-xl bg-amber-500 px-8 py-3.5 text-xs font-semibold uppercase tracking-widest text-black transition hover:bg-amber-400 shadow-lg"
                   >
                     Commander / Réserver l'ouvrage
@@ -373,8 +507,18 @@ export function Galerie() {
 
   if (!c.galerie.length) return null;
 
+  const toGalerie = (g: (typeof c.galerie)[0], i: number): GalerieItem => ({
+    id: g.id || `photo-${i}`,
+    src: g.src,
+    legende: g.legende,
+    category: (g.category as GalerieItem["category"]) || "tribunaux",
+    categoryLabel: g.categoryLabel || "Galerie",
+    tall: !!g.tall,
+  });
+
+  const allPhotos = c.galerie.map(toGalerie);
   const filteredPhotos =
-    activeCategory === "all" ? c.galerie : c.galerie.filter((g) => g.category === activeCategory);
+    activeCategory === "all" ? allPhotos : allPhotos.filter((g) => g.category === activeCategory);
 
   return (
     <section id="galerie" className="bg-ink text-paper">
@@ -462,8 +606,73 @@ export function Valeurs() {
   );
 }
 
-export function Clients() {
+/** Bandeau clients animé (marquee) — placé sous la présentation Cabinet & Avocat */
+export function Clients({
+  variant = "section",
+}: {
+  /** "marquee" = bandeau compact animé ; "section" = grille complète */
+  variant?: "marquee" | "section";
+}) {
   const c = useContent();
+  const items = c.clients.map((x, i) => {
+    const name = typeof x === "string" ? x : x.name;
+    const logo = typeof x === "string" ? undefined : x.logo;
+    return { name, logo, key: `${name}-${i}` };
+  });
+
+  if (variant === "marquee") {
+    // Double the list for seamless infinite scroll
+    const loop = [...items, ...items, ...items];
+    return (
+      <section
+        id="clients-marquee"
+        className="overflow-hidden border-y border-stone bg-stone/30 py-10 md:py-12"
+        aria-label="Ils nous ont fait confiance"
+      >
+        <div className="mx-auto mb-6 max-w-7xl px-6">
+          <p className="text-center text-[11px] uppercase tracking-[0.3em] text-navy/70">
+            Ils nous ont fait confiance
+          </p>
+        </div>
+        <div className="clients-marquee-mask relative">
+          <div className="clients-marquee flex w-max items-center gap-10 md:gap-16">
+            {loop.map((item, i) => (
+              <div
+                key={`${item.key}-${i}`}
+                className="flex h-20 w-44 shrink-0 flex-col items-center justify-center gap-2 md:h-24 md:w-52"
+                title={item.name}
+              >
+                {item.logo ? (
+                  <img
+                    src={item.logo}
+                    alt={item.name}
+                    className="max-h-14 max-w-[140px] object-contain opacity-90 transition duration-300 hover:opacity-100 md:max-h-16 md:max-w-[160px]"
+                    loading="lazy"
+                    onError={(e) => {
+                      const el = e.target as HTMLImageElement;
+                      el.style.display = "none";
+                      const fallback = el.nextElementSibling as HTMLElement | null;
+                      if (fallback) fallback.classList.remove("hidden");
+                    }}
+                  />
+                ) : null}
+                <span
+                  className={
+                    item.logo
+                      ? "hidden text-center font-serif text-sm text-ink/70"
+                      : "text-center font-serif text-base text-ink/80 md:text-lg"
+                  }
+                >
+                  {item.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="border-t border-stone">
       <div className="mx-auto max-w-7xl px-6 py-28">
@@ -474,30 +683,28 @@ export function Clients() {
             au quotidien.
           </p>
         </Reveal>
-        <ul className="mt-14 grid gap-px bg-stone sm:grid-cols-2 lg:grid-cols-3">
-          {c.clients.map((x, i) => {
-            const name = typeof x === "string" ? x : x.name;
-            const logo = typeof x === "string" ? undefined : x.logo;
-            return (
-              <Reveal key={i} delay={i * 60} className="bg-paper">
-                <li className="flex h-36 flex-col items-center justify-center gap-3 px-6 text-center">
-                  {logo ? (
-                    <>
-                      <img
-                        src={logo}
-                        alt={name}
-                        className="h-14 max-w-[140px] object-contain"
-                        onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-                      />
-                      <span className="text-xs font-light text-ink/60 uppercase tracking-widest">{name}</span>
-                    </>
-                  ) : (
-                    <span className="font-serif text-xl md:text-2xl">{name}</span>
-                  )}
-                </li>
-              </Reveal>
-            );
-          })}
+        <ul className="mt-14 grid gap-px bg-stone sm:grid-cols-2 lg:grid-cols-4">
+          {items.map((item, i) => (
+            <Reveal key={item.key} delay={i * 60} className="bg-paper">
+              <li className="flex h-40 flex-col items-center justify-center gap-3 px-6 text-center">
+                {item.logo ? (
+                  <>
+                    <img
+                      src={item.logo}
+                      alt={item.name}
+                      className="h-16 max-w-[160px] object-contain"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = "none";
+                      }}
+                    />
+                    <span className="text-[10px] font-light uppercase tracking-widest text-ink/55">{item.name}</span>
+                  </>
+                ) : (
+                  <span className="font-serif text-xl md:text-2xl">{item.name}</span>
+                )}
+              </li>
+            </Reveal>
+          ))}
         </ul>
       </div>
     </section>
@@ -599,8 +806,20 @@ export function Footer() {
 
         <div className="mt-16 grid gap-10 border-t border-paper/10 pt-12 md:grid-cols-4">
           <div>
-            <p className="font-serif text-xl text-paper">Cabinet <span className="italic">Ajmi</span></p>
+            <div className="flex items-center gap-3">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-paper/10 p-1.5 ring-1 ring-paper/20">
+                <img
+                  src="/images/logo-cabinet-light.png"
+                  alt="Logo Cabinet Ajmi"
+                  className="h-full w-full object-contain"
+                />
+              </span>
+              <p className="font-serif text-xl text-paper">
+                Cabinet <span className="italic">Ajmi</span>
+              </p>
+            </div>
             <p className="mt-3 text-sm font-light leading-relaxed">{c.avocat.l1}</p>
+            <p className="mt-1 text-sm font-light leading-relaxed">{c.avocat.nom}</p>
           </div>
           <div>
             <p className="mb-4 text-[10px] uppercase tracking-[0.25em] text-gold">Navigation</p>

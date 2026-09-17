@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchReservations, getLocalReservations, type Reservation, type ReservationStatus } from "../backend";
+import { fetchReservations, type Reservation, type ReservationStatus } from "../backend";
 import { go } from "../router";
 
 const STEPS: { status: ReservationStatus; label: string; desc: string }[] = [
