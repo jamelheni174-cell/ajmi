@@ -122,7 +122,12 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
     </Card>
   );
 
-  const dc = listCtl<Content["domaines"][0]>("domaines", content.domaines, { n: "06", title: "Nouveau domaine", text: "" });
+  const dc = listCtl<Content["domaines"][0]>("domaines", content.domaines, {
+    n: "06",
+    title: "Nouveau domaine",
+    text: "",
+    items: [],
+  });
   const ec = listCtl<Content["experiences"][0]>("experiences", content.experiences, { role: "", org: "" });
   const pc = listCtl<Content["publications"][0]>("publications", content.publications, { type: "Article", title: "", meta: "" });
   const gc = listCtl<Photo>("galerie", content.galerie, { src: "", legende: "", tall: false });
@@ -362,6 +367,24 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
               </div>
               <div className="mt-3">
                 <Field label="Description détaillée"><textarea rows={3} className={inputCls} value={dd.text} onChange={(e) => dc.edit(i, { text: e.target.value })} /></Field>
+              </div>
+              <div className="mt-3">
+                <Field label="Sous-rubriques (une par ligne)">
+                  <textarea
+                    rows={4}
+                    className={inputCls}
+                    value={(dd.items || []).join("\n")}
+                    placeholder={"Création de sociétés & startups\nDroit social\n…"}
+                    onChange={(e) =>
+                      dc.edit(i, {
+                        items: e.target.value
+                          .split("\n")
+                          .map((s) => s.trim())
+                          .filter(Boolean),
+                      })
+                    }
+                  />
+                </Field>
               </div>
             </Card>
           ))}

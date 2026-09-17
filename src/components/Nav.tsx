@@ -3,11 +3,87 @@ import { cn } from "../utils/cn";
 import { PAGES } from "../router";
 import { useContent } from "../store";
 
+const LOGO_DARK = "/images/logo-cabinet-dark.png";
+const LOGO_LIGHT = "/images/logo-cabinet-light.png";
+
 function Icon({ d }: { d: string }) {
   return (
     <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.6">
       <path d={d} strokeLinecap="round" strokeLinejoin="round" />
     </svg>
+  );
+}
+
+/** Logo PNG dark/light — bascule au scroll (et version claire sur fond sombre) */
+function BrandLogo({
+  variant = "dark",
+  compact,
+}: {
+  variant?: "dark" | "light";
+  compact?: boolean;
+}) {
+  const size = compact ? "h-10 w-10 md:h-12 md:w-12" : "h-11 w-11 md:h-14 md:w-14";
+  return (
+    <span className={cn("relative shrink-0", size)}>
+      <img
+        src={LOGO_DARK}
+        alt=""
+        aria-hidden
+        className={cn(
+          "absolute inset-0 h-full w-full object-contain transition-opacity duration-500",
+          variant === "dark" ? "opacity-100" : "opacity-0",
+        )}
+      />
+      <img
+        src={LOGO_LIGHT}
+        alt=""
+        aria-hidden
+        className={cn(
+          "absolute inset-0 h-full w-full object-contain transition-opacity duration-500",
+          variant === "light" ? "opacity-100" : "opacity-0",
+        )}
+      />
+      <img
+        src={variant === "light" ? LOGO_LIGHT : LOGO_DARK}
+        alt="Logo Cabinet Ajmi"
+        className="h-full w-full object-contain opacity-0"
+      />
+    </span>
+  );
+}
+
+function Brand({
+  compact,
+  variant = "dark",
+  inverted,
+}: {
+  compact?: boolean;
+  variant?: "dark" | "light";
+  inverted?: boolean;
+}) {
+  return (
+    <a href="#/" className="flex items-center gap-3 leading-none">
+      <BrandLogo variant={variant} compact={compact} />
+      <span>
+        <span
+          className={cn(
+            "block text-[9px] uppercase tracking-[0.32em]",
+            inverted ? "text-paper/60" : "text-ink/60",
+          )}
+        >
+          Cabinet d'Avocat
+        </span>
+        <span
+          className={cn(
+            "mt-0.5 block font-serif leading-none tracking-wide transition-colors duration-500",
+            compact ? "text-2xl md:text-3xl" : "text-3xl md:text-4xl",
+            inverted ? "text-paper" : "text-ink",
+          )}
+        >
+          Ajmi
+        </span>
+      </span>
+    </a>
   );
 }
 
@@ -19,7 +95,7 @@ export function Nav({ route }: { route: string }) {
   useEffect(() => {
     const f = () => setScrolled(window.scrollY > 40);
     f();
-    window.addEventListener("scroll", f);
+    window.addEventListener("scroll", f, { passive: true });
     return () => window.removeEventListener("scroll", f);
   }, []);
   useEffect(() => setOpen(false), [route]);
@@ -32,19 +108,36 @@ export function Nav({ route }: { route: string }) {
       <header
         className={cn(
           "fixed inset-x-0 top-0 z-50 text-ink transition-all duration-500",
-          scrolled ? "border-b border-stone bg-paper/95 backdrop-blur" : "bg-transparent",
+          scrolled
+            ? "border-b border-stone/80 bg-paper/95 py-0 shadow-[0_8px_30px_rgba(30,39,102,0.06)] backdrop-blur-md"
+            : "bg-transparent",
         )}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
-          <a href="#/" className="leading-none">
-            <span className="block text-[9px] uppercase tracking-[0.32em] text-ink/60">Cabinet d'Avocat</span>
-            <span className="mt-0.5 block font-serif text-3xl leading-none tracking-wide md:text-4xl">Ajmi</span>
-          </a>
+        <div
+          className={cn(
+            "mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 transition-all duration-500",
+            scrolled ? "py-2.5 md:py-3" : "py-3 md:py-4",
+          )}
+        >
+          {/* Logo PNG dark sur fonds clairs — se compacte au scroll */}
+          <div
+            className={cn(
+              "rounded-2xl transition-all duration-500",
+              scrolled ? "bg-stone/40 px-2 py-1 ring-1 ring-stone/60" : "bg-transparent px-0 py-0",
+            )}
+          >
+            <Brand variant="dark" compact={scrolled} />
+          </div>
 
           <div className="flex items-center gap-3 md:gap-4">
             <a
               href={c.contact.phoneHref}
-              className="hidden rounded-full border border-ink px-6 py-3 text-sm tracking-wide transition hover:bg-ink hover:text-paper md:inline-block"
+              className={cn(
+                "hidden rounded-full border px-6 py-3 text-sm tracking-wide transition md:inline-block",
+                scrolled
+                  ? "border-ink/20 hover:border-ink hover:bg-ink hover:text-paper"
+                  : "border-ink hover:bg-ink hover:text-paper",
+              )}
             >
               {c.contact.phone}
             </a>
@@ -80,15 +173,14 @@ export function Nav({ route }: { route: string }) {
         </div>
       </header>
 
-      {/* Menu plein écran avec défilement sécurisé */}
       {open && (
-        <div className="fixed inset-0 z-[55] flex flex-col bg-paper text-ink overflow-y-auto">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-stone/30 shrink-0">
-            <span className="leading-none">
-              <span className="block text-[9px] uppercase tracking-[0.32em] text-ink/60">Cabinet d'Avocat</span>
-              <span className="mt-0.5 block font-serif text-3xl">Ajmi</span>
-            </span>
-            <button onClick={() => setOpen(false)} className="text-[13px] font-medium uppercase tracking-[0.2em] hover:text-navy">
+        <div className="fixed inset-0 z-[55] flex flex-col overflow-y-auto bg-paper text-ink">
+          <div className="flex shrink-0 items-center justify-between border-b border-stone/30 px-6 py-4">
+            <Brand compact variant="dark" />
+            <button
+              onClick={() => setOpen(false)}
+              className="text-[13px] font-medium uppercase tracking-[0.2em] hover:text-navy"
+            >
               Fermer <span className="font-serif text-xl">×</span>
             </button>
           </div>
@@ -98,19 +190,25 @@ export function Nav({ route }: { route: string }) {
                 key={p.path}
                 href={`#${p.path}`}
                 className={cn(
-                  "group flex items-baseline gap-5 border-b border-stone/60 py-2.5 md:py-3.5 transition",
-                  route === p.path ? "text-navy font-semibold" : "hover:text-navy",
+                  "group flex items-baseline gap-5 border-b border-stone/60 py-2.5 transition md:py-3.5",
+                  route === p.path ? "font-semibold text-navy" : "hover:text-navy",
                 )}
               >
-                <span className="text-[11px] font-mono tracking-[0.3em] text-ink/40">{String(i + 1).padStart(2, "0")}</span>
-                <span className="font-serif text-3xl md:text-5xl leading-tight">{p.label}</span>
+                <span className="font-mono text-[11px] tracking-[0.3em] text-ink/40">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className="font-serif text-3xl leading-tight md:text-5xl">{p.label}</span>
               </a>
             ))}
           </nav>
-          <div className="px-6 py-6 md:px-16 shrink-0">
+          <div className="shrink-0 px-6 py-6 md:px-16">
             <div className="flex flex-wrap items-center gap-x-8 gap-y-2 border-t border-stone pt-4 text-xs text-ink/70">
-              <a href={c.contact.phoneHref} className="hover:text-navy">{c.contact.phone}</a>
-              <a href={`mailto:${c.contact.email}`} className="break-all hover:text-navy">{c.contact.email}</a>
+              <a href={c.contact.phoneHref} className="hover:text-navy">
+                {c.contact.phone}
+              </a>
+              <a href={`mailto:${c.contact.email}`} className="break-all hover:text-navy">
+                {c.contact.email}
+              </a>
               <span>{c.contact.address}</span>
             </div>
           </div>

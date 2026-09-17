@@ -14,6 +14,13 @@ export default function App() {
   const route = useRoute();
 
   useEffect(() => {
+    // Purge anciens caches locaux pour forcer logos / portrait / domaines à jour
+    try {
+      localStorage.removeItem("ajmi-content-v1");
+      localStorage.removeItem("ajmi-content-v2");
+    } catch {
+      /* ignore */
+    }
     void (async () => {
       if (!(await ping())) return;
       const c = await fetchContent();

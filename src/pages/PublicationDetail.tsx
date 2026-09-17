@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { publications, type PublicationItem, type GalerieItem } from "../data";
+import { publications, type GalerieItem } from "../data";
 import { go } from "../router";
 import { ReservationModal } from "../components/ReservationModal";
 import { LightboxModal } from "../components/LightboxModal";
@@ -111,7 +111,12 @@ export function PublicationDetail({ publicationId }: PublicationDetailProps) {
 
               {/* Titre Arabe si présent */}
               {pub.titleAr && (
-                <h2 className="font-serif text-3xl leading-snug text-right text-navy dir-rtl mb-2">
+                <h2
+                  lang="ar"
+                  dir="rtl"
+                  className="mb-2 font-serif text-3xl leading-snug text-navy"
+                  style={{ direction: "rtl", textAlign: "right", unicodeBidi: "isolate" }}
+                >
                   {pub.titleAr}
                 </h2>
               )}
@@ -124,14 +129,19 @@ export function PublicationDetail({ publicationId }: PublicationDetailProps) {
               <p className="mt-3 text-sm text-ink/60 font-serif italic">{pub.meta}</p>
             </div>
 
-            {/* Résumé bilingue */}
+            {/* Résumé bilingue — arabe corrigé (التعويض) */}
             {pub.summary && (
               <div className="rounded-2xl bg-paper p-8 shadow-sm border border-stone/40 space-y-4">
                 <h3 className="font-serif text-xl font-semibold text-navy">Résumé de l'ouvrage</h3>
                 <p className="text-base leading-relaxed text-ink/80">{pub.summary}</p>
 
                 {pub.summaryAr && (
-                  <p className="text-base leading-relaxed text-ink/80 text-right dir-rtl border-t border-stone/20 pt-4 font-serif">
+                  <p
+                    lang="ar"
+                    dir="rtl"
+                    className="border-t border-stone/20 pt-4 text-base font-serif leading-relaxed text-ink/80"
+                    style={{ direction: "rtl", textAlign: "right", unicodeBidi: "isolate" }}
+                  >
                     {pub.summaryAr}
                   </p>
                 )}
