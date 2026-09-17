@@ -174,11 +174,11 @@ export function CabinetPage() {
       <section className="mx-auto max-w-7xl px-6 py-20">
         <div className="grid items-start gap-12 md:grid-cols-12">
           <Reveal className="md:col-span-5">
-            <Img
-              src={mediaUrl(c.avocat.portrait)}
+            <img
+              src="/images/portrait-avocat.jpg"
               alt={c.avocat.nom}
-              className="aspect-[4/5] w-full rounded-2xl"
-              imgClassName="object-cover object-top"
+              className="aspect-[4/5] w-full rounded-2xl object-cover object-top shadow-lg ring-1 ring-stone/60"
+              loading="eager"
             />
             <div className="mt-6 space-y-1">
               <p className="font-serif text-2xl">{c.avocat.nom}</p>
@@ -324,7 +324,12 @@ export function AvocatPage() {
       <section className="mx-auto max-w-7xl px-6 py-24">
         <div className="grid gap-14 md:grid-cols-12">
           <Reveal className="md:col-span-5">
-            <Img src={mediaUrl(c.avocat.portrait)} alt={c.avocat.nom} className="aspect-[4/5] w-full" />
+            <img
+              src="/images/portrait-avocat.jpg"
+              alt={c.avocat.nom}
+              className="aspect-[4/5] w-full rounded-2xl object-cover object-top shadow-lg ring-1 ring-stone/60"
+              loading="eager"
+            />
             <a
               href={c.contact.linkedin}
               target="_blank"

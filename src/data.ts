@@ -202,7 +202,7 @@ export const clients: ClientItem[] = [
 
 export const valeurs = ["Disponibilité", "Réactivité", "Rigueur", "Indépendance", "Engagement"];
 
-/** Portrait institutionnel (robe d'avocat) — photo réelle de présentation */
+/** Portrait institutionnel (robe d'avocat) — photo réelle images/portrait-avocat.jpg */
 export const portrait = "/images/portrait-avocat.jpg";
 /** Logo cabinet — PNG dark (teal) pour fonds clairs */
 export const logoCabinet = "/images/logo-cabinet-dark.png";
