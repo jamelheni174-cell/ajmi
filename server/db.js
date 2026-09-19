@@ -1,13 +1,33 @@
-import Database from "better-sqlite3";
 import fs from "node:fs";
 import path from "node:path";
 import { DATA_DIR, ensureDirs, hashPassword } from "./lib.js";
 
 ensureDirs();
 
-export const db = new Database(path.join(DATA_DIR, "ajmi.db"));
-db.pragma("journal_mode = WAL");
-db.pragma("foreign_keys = ON");
+/* --------------------------- Moteur SQLite ---------------------------
+   better-sqlite3 est utilisé quand il est installé (binaire pré-compilé
+   ou compilation locale). Sinon, repli sur le module SQLite intégré de
+   Node.js 22+ (`node:sqlite`), ce qui permet de faire tourner le backend
+   sans outillage de compilation native.
+--------------------------------------------------------------------- */
+
+async function openDatabase(file) {
+  try {
+    const { default: Database } = await import("better-sqlite3");
+    const d = new Database(file);
+    d.pragma("journal_mode = WAL");
+    d.pragma("foreign_keys = ON");
+    return d;
+  } catch {
+    const { DatabaseSync } = await import("node:sqlite");
+    const d = new DatabaseSync(file);
+    d.exec("PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;");
+    if (typeof d.pragma !== "function") d.pragma = (s) => d.exec(`PRAGMA ${s}`);
+    return d;
+  }
+}
+
+export const db = await openDatabase(path.join(DATA_DIR, "ajmi.db"));
 
 db.exec(`
   create table if not exists users (
