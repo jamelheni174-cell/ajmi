@@ -31,36 +31,21 @@ export function Hero() {
     <section id="top" className="flex min-h-screen flex-col bg-paper text-ink">
       <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-4 sm:px-6 pb-10 sm:pb-14 pt-28 sm:pt-36 md:pt-44">
         <Reveal>
-          <div className="grid items-end gap-8 sm:gap-10 md:grid-cols-12">
-            <div className="md:col-span-8">
-              <p className="mb-6 sm:mb-8 flex items-center gap-2 sm:gap-3 text-[10px] sm:text-[11px] uppercase tracking-[0.25em] sm:tracking-[0.35em] text-ink/60">
-                <span className="h-px w-6 sm:w-10 bg-navy shrink-0" />
-                <span className="truncate">{c.hero.kicker}</span>
-              </p>
-              <h1 className="font-serif text-[12vw] sm:text-6xl md:text-7xl lg:text-[5.6rem] leading-[0.98] sm:leading-[0.95] tracking-tight break-words">
-                {c.hero.titre}
-                <span className="italic text-navy"> &amp; </span>
-                <span className="break-words">{c.hero.titreItalic}</span>
-              </h1>
-            </div>
-            <div className="md:col-span-4">
-              <p className="max-w-sm font-serif text-lg sm:text-xl md:text-2xl leading-snug text-ink/80">{c.hero.sous}</p>
-              <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row sm:items-center gap-3">
-                <a
-                  href="#/contact"
-                  className="w-full sm:w-auto text-center rounded-xl bg-navy px-7 py-3.5 text-[11px] uppercase tracking-[0.22em] text-paper transition hover:bg-ink shadow-sm"
-                >
-                  Prendre RDV
-                </a>
-                <a
-                  href={c.contact.phoneHref}
-                  className="w-full sm:w-auto text-center rounded-full border border-ink px-6 py-3.5 text-sm transition hover:bg-ink hover:text-paper"
-                >
-                  {c.contact.phone}
-                </a>
-              </div>
-            </div>
+          <div className="max-w-3xl">
+            <p className="mb-6 sm:mb-8 flex items-center gap-2 sm:gap-3 text-[10px] sm:text-[11px] uppercase tracking-[0.25em] sm:tracking-[0.35em] text-ink/60">
+              <span className="h-px w-6 sm:w-10 bg-navy shrink-0" />
+              <span className="truncate">{c.hero.kicker}</span>
+            </p>
+            <h1 className="font-serif text-[9vw] sm:text-4xl md:text-5xl lg:text-[3.4rem] leading-[1.04] sm:leading-[1.02] tracking-tight break-words">
+              {c.hero.titre}
+              <span className="italic text-navy"> &amp; </span>
+              <span className="break-words">{c.hero.titreItalic}</span>
+            </h1>
           </div>
+          {/* Accroche centrée, en gras (Cormorant Garamond 600) */}
+          <p className="mx-auto mt-10 sm:mt-14 max-w-3xl text-center font-serif text-lg sm:text-xl md:text-2xl font-semibold leading-snug text-ink">
+            {c.hero.sous}
+          </p>
         </Reveal>
       </div>
 
