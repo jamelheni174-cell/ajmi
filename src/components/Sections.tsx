@@ -15,17 +15,6 @@ const Label = ({ children }: { children: string }) => (
 
 export function Hero() {
   const c = useContent();
-  const [lightboxImg, setLightboxImg] = useState<GalerieItem | null>(null);
-
-  const handleOpenHeroImage = () => {
-    setLightboxImg({
-      id: "hero-img",
-      src: "/images/hero.jpg",
-      legende: "Cabinet d'Avocat Me Mohamed Anouar Ajmi — Rigueur, Engagement & Expertise",
-      category: "tribunaux",
-      categoryLabel: "Cabinet Ajmi",
-    });
-  };
 
   return (
     <section id="top" className="flex min-h-screen flex-col bg-paper text-ink">
@@ -51,12 +40,9 @@ export function Hero() {
         </Reveal>
       </div>
 
-      {/* Bande visuelle bleu royal */}
-      <div
-        className="relative h-[26vh] sm:h-[34vh] min-h-[200px] sm:min-h-[240px] cursor-pointer overflow-hidden bg-navy md:h-[40vh] group"
-        onClick={handleOpenHeroImage}
-      >
-        <img src="/images/hero.jpg" alt="" className="absolute inset-0 h-full w-full object-cover opacity-35 transition duration-500 group-hover:scale-105" />
+      {/* Bande visuelle bleu royal — purement décorative (aucun agrandissement au clic) */}
+      <div className="relative h-[26vh] sm:h-[34vh] min-h-[200px] sm:min-h-[240px] overflow-hidden bg-navy md:h-[40vh]">
+        <img src="/images/hero.jpg" alt="" className="absolute inset-0 h-full w-full object-cover opacity-35" />
         <div className="absolute inset-0 bg-gradient-to-r from-navy via-navy/70 to-ink/80" />
         <div className="absolute inset-x-0 bottom-0 overflow-hidden border-t border-paper/10 py-3 sm:py-4">
           <div className="marquee flex whitespace-nowrap text-[10px] sm:text-[11px] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-blue/80">
@@ -68,15 +54,6 @@ export function Hero() {
           </div>
         </div>
       </div>
-
-      {lightboxImg && (
-        <LightboxModal
-          item={lightboxImg}
-          items={[lightboxImg]}
-          onClose={() => setLightboxImg(null)}
-          onSelect={(i) => setLightboxImg(i)}
-        />
-      )}
     </section>
   );
 }
