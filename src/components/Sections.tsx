@@ -465,7 +465,9 @@ export function Galerie() {
                   <span className="inline-block rounded-full bg-amber-400/90 px-2.5 py-0.5 text-[9px] uppercase tracking-wider text-black font-semibold w-fit mb-1">
                     {g.categoryLabel}
                   </span>
-                  <p className="text-xs text-paper font-light line-clamp-2">{g.legende}</p>
+                  {g.legende ? (
+                    <p className="text-xs text-paper font-light line-clamp-2">{g.legende}</p>
+                  ) : null}
                 </div>
               </figure>
             </Reveal>

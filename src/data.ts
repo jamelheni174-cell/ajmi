@@ -333,9 +333,9 @@ export const galerie: GalerieItem[] = [
   {
     id: "g14",
     src: "/images/94381ede-6677-4caa-93f9-fba46d6f1732.jpg",
-    legende: "Atelier de rédaction juridique pour la révision de la Loi Santé",
-    category: "tribunaux",
-    categoryLabel: "Tribunaux & Droit",
+    legende: "",
+    category: "conferences",
+    categoryLabel: "Conférences & Diplomatie",
     tall: false,
   },
   {
@@ -365,9 +365,9 @@ export const galerie: GalerieItem[] = [
   {
     id: "g18",
     src: "/images/cacdbc45-029c-45b3-95a8-485e87464d21.jpg",
-    legende: "Présentation officielle de l'ouvrage 2026 sur la responsabilité médicale",
-    category: "tribunaux",
-    categoryLabel: "Tribunaux & Droit",
+    legende: "",
+    category: "conferences",
+    categoryLabel: "Conférences & Diplomatie",
     tall: false,
   },
   {
