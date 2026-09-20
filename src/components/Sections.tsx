@@ -60,20 +60,9 @@ export function Hero() {
 
 export function Cabinet() {
   const c = useContent();
-  const [lightboxImg, setLightboxImg] = useState<GalerieItem | null>(null);
 
   /** Portrait réel : images/portrait-avocat.jpg (robe d'avocat) */
   const portraitSrc = "/images/portrait-avocat.jpg";
-
-  const openPortrait = () => {
-    setLightboxImg({
-      id: "cabinet-portrait",
-      src: portraitSrc,
-      legende: `${c.avocat.nom} — ${c.avocat.l1}`,
-      category: "tribunaux",
-      categoryLabel: "Cabinet Ajmi",
-    });
-  };
 
   return (
     <section id="cabinet" className="mx-auto max-w-7xl px-4 sm:px-6 py-14 sm:py-20 md:py-28">
@@ -84,14 +73,11 @@ export function Cabinet() {
       <div className="mt-6 sm:mt-8 grid items-start gap-8 sm:gap-12 md:grid-cols-12 md:gap-16">
         {/* Portrait réel (portrait-avocat.jpg) en évidence */}
         <Reveal className="md:col-span-5">
-          <div
-            className="group relative cursor-pointer overflow-hidden rounded-2xl bg-stone/30 shadow-lg ring-1 ring-stone/60"
-            onClick={openPortrait}
-          >
+          <div className="relative overflow-hidden rounded-2xl bg-stone/30 shadow-lg ring-1 ring-stone/60">
             <img
               src={portraitSrc}
               alt={c.avocat.nom}
-              className="aspect-[4/5] w-full object-cover object-top transition duration-500 group-hover:scale-[1.03]"
+              className="aspect-[4/5] w-full object-cover object-top"
               loading="eager"
               decoding="async"
             />
@@ -102,9 +88,6 @@ export function Cabinet() {
               <p className="mt-1 text-xs sm:text-sm font-light text-paper/80">{c.avocat.l1}</p>
               <p className="text-xs sm:text-sm font-light text-paper/70">{c.avocat.l2}</p>
             </div>
-            <span className="absolute right-3 top-3 sm:right-4 sm:top-4 rounded-full bg-black/50 px-3 py-1 text-[10px] uppercase tracking-wider text-paper opacity-90 sm:opacity-0 backdrop-blur transition sm:group-hover:opacity-100">
-              Agrandir ↗
-            </span>
           </div>
           <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-3">
             <a
@@ -148,15 +131,6 @@ export function Cabinet() {
           </div>
         </Reveal>
       </div>
-
-      {lightboxImg && (
-        <LightboxModal
-          item={lightboxImg}
-          items={[lightboxImg]}
-          onClose={() => setLightboxImg(null)}
-          onSelect={(i) => setLightboxImg(i)}
-        />
-      )}
     </section>
   );
 }
@@ -259,30 +233,14 @@ export function Competences() {
 
 export function Parcours() {
   const c = useContent();
-  const [lightboxImg, setLightboxImg] = useState<GalerieItem | null>(null);
-
-  const handleZoomPortrait = () => {
-    setLightboxImg({
-      id: "portrait-img",
-      src: mediaUrl(c.avocat.portrait),
-      legende: c.avocat.nom + " — " + c.avocat.l1,
-      category: "tribunaux",
-      categoryLabel: "Avocat",
-    });
-  };
 
   return (
     <section id="parcours" className="border-t border-stone">
       <div className="mx-auto grid max-w-7xl gap-10 sm:gap-16 px-4 sm:px-6 py-16 sm:py-28 md:grid-cols-12 md:py-36">
         <Reveal className="md:col-span-4">
           <Label>L'avocat</Label>
-          <div className="cursor-pointer group relative overflow-hidden rounded-xl mb-6 sm:mb-8 max-w-xs mx-auto md:mx-0" onClick={handleZoomPortrait}>
-            <Img src={mediaUrl(c.avocat.portrait)} alt={c.avocat.nom} className="aspect-[4/5] w-full transition duration-500 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-black/30 opacity-90 sm:opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
-              <span className="rounded-full bg-white/90 px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider text-black">
-                Zoomer HD ↗
-              </span>
-            </div>
+          <div className="relative overflow-hidden rounded-xl mb-6 sm:mb-8 max-w-xs mx-auto md:mx-0">
+            <Img src={mediaUrl(c.avocat.portrait)} alt={c.avocat.nom} className="aspect-[4/5] w-full" />
           </div>
           <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl">{c.avocat.nom}</h2>
           <p className="mt-3 sm:mt-4 text-xs sm:text-sm font-light text-ink/70">{c.avocat.l1}</p>
@@ -305,15 +263,6 @@ export function Parcours() {
           </ul>
         </div>
       </div>
-
-      {lightboxImg && (
-        <LightboxModal
-          item={lightboxImg}
-          items={[lightboxImg]}
-          onClose={() => setLightboxImg(null)}
-          onSelect={(i) => setLightboxImg(i)}
-        />
-      )}
     </section>
   );
 }
