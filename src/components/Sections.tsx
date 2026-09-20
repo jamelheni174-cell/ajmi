@@ -58,11 +58,6 @@ export function Hero() {
       >
         <img src="/images/hero.jpg" alt="" className="absolute inset-0 h-full w-full object-cover opacity-35 transition duration-500 group-hover:scale-105" />
         <div className="absolute inset-0 bg-gradient-to-r from-navy via-navy/70 to-ink/80" />
-        <div className="absolute top-4 right-4 z-10 opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition duration-300">
-          <span className="rounded-full bg-black/60 px-3 py-1 text-[10px] uppercase tracking-wider text-amber-300 backdrop-blur-sm border border-amber-500/20">
-            Agrandir en HD ↗
-          </span>
-        </div>
         <div className="absolute inset-x-0 bottom-0 overflow-hidden border-t border-paper/10 py-3 sm:py-4">
           <div className="marquee flex whitespace-nowrap text-[10px] sm:text-[11px] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-blue/80">
             {[...c.competences, ...c.competences].map((x, i) => (
