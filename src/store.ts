@@ -54,7 +54,7 @@ export const defaultContent: Content = {
     kicker: "Avocat près la Cour d'Appel — Monastir",
     titre: "Rigueur",
     titreItalic: "Engagement",
-    sous: "Le partenaire stratégique des entrepreneurs, des professionnels de santé, des familles et des organisations.",
+    sous: "Le partenaire stratégique des entrepreneurs, des professionnels de santé et des organisations.",
   },
   contact: d.contact,
   cabinet: {
