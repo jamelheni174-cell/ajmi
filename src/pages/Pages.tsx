@@ -5,7 +5,7 @@ import { Img } from "../components/Img";
 import { PageCTA, PageHeader } from "../components/PageHeader";
 import { mediaUrl } from "../backend";
 import {
-  Cabinet, Chiffres, Clients, Competences, Contact, Domaines, Galerie, Hero, Publications, Valeurs,
+  Cabinet, Chiffres, Clients, Contact, Domaines, Galerie, Hero, Publications, Valeurs,
 } from "../components/Sections";
 import { PAGES } from "../router";
 
@@ -148,7 +148,6 @@ export function HomePage() {
       <Clients variant="marquee" />
       <Chiffres />
       <Domaines />
-      <Competences />
       <HomeExperiences />
       <HomePublications />
       <HomeGalerie />

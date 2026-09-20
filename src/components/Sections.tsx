@@ -212,25 +212,6 @@ export function Domaines() {
   );
 }
 
-export function Competences() {
-  const c = useContent();
-  return (
-    <section id="competences" className="border-t border-stone py-12 sm:py-20">
-      <Reveal className="mx-auto max-w-7xl px-4 sm:px-6">
-        <Label>Matières &amp; spécialités</Label>
-        <p className="font-serif text-xl sm:text-2xl leading-relaxed text-ink/90 md:text-3xl">
-          {c.competences.map((x, i) => (
-            <span key={i}>
-              {x}
-              {i < c.competences.length - 1 && <span className="mx-2 sm:mx-3 text-navy">/</span>}
-            </span>
-          ))}
-        </p>
-      </Reveal>
-    </section>
-  );
-}
-
 export function Parcours() {
   const c = useContent();
 
