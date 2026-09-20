@@ -31,21 +31,23 @@ export function Hero() {
     <section id="top" className="flex min-h-screen flex-col bg-paper text-ink">
       <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-4 sm:px-6 pb-10 sm:pb-14 pt-28 sm:pt-36 md:pt-44">
         <Reveal>
-          <div className="max-w-3xl">
-            <p className="mb-6 sm:mb-8 flex items-center gap-2 sm:gap-3 text-[10px] sm:text-[11px] uppercase tracking-[0.25em] sm:tracking-[0.35em] text-ink/60">
-              <span className="h-px w-6 sm:w-10 bg-navy shrink-0" />
-              <span className="truncate">{c.hero.kicker}</span>
+          <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
+            {/* Kicker minimisé */}
+            <p className="flex items-center gap-2 sm:gap-3 text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.28em] text-ink/60">
+              <span className="h-px w-5 sm:w-8 bg-navy shrink-0" />
+              <span>{c.hero.kicker}</span>
             </p>
-            <h1 className="font-serif text-[9vw] sm:text-4xl md:text-5xl lg:text-[3.4rem] leading-[1.04] sm:leading-[1.02] tracking-tight break-words">
+            {/* Titre minimisé */}
+            <h1 className="mt-3 sm:mt-4 font-serif text-lg sm:text-xl md:text-2xl leading-tight tracking-tight text-ink">
               {c.hero.titre}
               <span className="italic text-navy"> &amp; </span>
               <span className="break-words">{c.hero.titreItalic}</span>
             </h1>
+            {/* Accroche centrée : traitement typographique de l'ancien grand titre */}
+            <p className="mt-6 sm:mt-8 max-w-3xl text-balance font-serif text-[6vw] sm:text-3xl md:text-4xl lg:text-[3.4rem] font-semibold leading-[1.08] tracking-tight text-ink">
+              {c.hero.sous}
+            </p>
           </div>
-          {/* Accroche centrée, en gras (Cormorant Garamond 600) */}
-          <p className="mx-auto mt-10 sm:mt-14 max-w-3xl text-center font-serif text-lg sm:text-xl md:text-2xl font-semibold leading-snug text-ink">
-            {c.hero.sous}
-          </p>
         </Reveal>
       </div>
 
