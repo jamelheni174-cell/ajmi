@@ -91,12 +91,6 @@ export function Cabinet() {
           </div>
           <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-3">
             <a
-              href="#/avocat"
-              className="w-full sm:w-auto text-center rounded-xl bg-navy px-6 py-3 text-[11px] uppercase tracking-[0.2em] text-paper transition hover:bg-ink shadow-sm"
-            >
-              Profil complet
-            </a>
-            <a
               href={c.contact.linkedin}
               target="_blank"
               rel="noreferrer"

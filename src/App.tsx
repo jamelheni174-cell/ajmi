@@ -35,11 +35,9 @@ export default function App() {
     const page = ROUTES[route] ? route : "/";
     const titres: Record<string, string> = {
       "/": "Cabinet d'Avocat Ajmi | Affaires · Médical · Famille · Contentieux",
-      "/cabinet": "Le Cabinet | Cabinet d'Avocat Ajmi",
       "/competences": "Compétences | Cabinet d'Avocat Ajmi",
       "/services": "Domaines d'intervention | Cabinet d'Avocat Ajmi",
       "/experiences": "Expériences | Cabinet d'Avocat Ajmi",
-      "/avocat": "Maître Mohamed Anouar Ajmi | Avocat à Monastir",
       "/actualites": "Publications & Actualités | Cabinet d'Avocat Ajmi",
       "/suivi": "Suivi de Commande | Cabinet d'Avocat Ajmi",
       "/contact": "Contact | Cabinet d'Avocat Ajmi",

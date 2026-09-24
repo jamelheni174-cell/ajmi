@@ -2,11 +2,9 @@ import { useEffect, useState } from "react";
 
 export const PAGES = [
   { path: "/", label: "Accueil" },
-  { path: "/cabinet", label: "Le Cabinet" },
   { path: "/services", label: "Domaines" },
   { path: "/competences", label: "Compétences" },
   { path: "/experiences", label: "Expériences" },
-  { path: "/avocat", label: "L'Avocat" },
   { path: "/actualites", label: "Actualités" },
   { path: "/suivi", label: "Suivi de Commande" },
   { path: "/contact", label: "Contact" },
