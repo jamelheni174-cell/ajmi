@@ -96,7 +96,7 @@ export const defaultContent: Content = {
 };
 
 /** Bump key to invalidate stale localStorage after structure / assets changes */
-const KEY = "ajmi-content-v4";
+const KEY = "ajmi-content-v5";
 
 export function loadContent(): Content {
   try {

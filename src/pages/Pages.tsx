@@ -87,8 +87,8 @@ function HomeGalerie() {
           {photos.map((g, i) => (
             <Reveal key={i} delay={i * 80}>
               <a href="#/experiences" className="group block overflow-hidden rounded-xl bg-stone/20">
-                <Img src={mediaUrl(g.src)} alt={g.legende} className={i === 0 ? "aspect-[3/4] object-cover transition duration-300 group-hover:scale-105" : "aspect-[3/4] sm:aspect-square object-cover transition duration-300 group-hover:scale-105"} />
-                <p className="p-2 line-clamp-2 text-[9px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.18em] text-ink/65 leading-tight">{g.legende}</p>
+                <Img src={mediaUrl(g.src)} alt={g.legende || g.categoryLabel || ""} className={i === 0 ? "aspect-[3/4] object-cover transition duration-300 group-hover:scale-105" : "aspect-[3/4] sm:aspect-square object-cover transition duration-300 group-hover:scale-105"} />
+                <p className="p-2 line-clamp-2 text-[9px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.18em] text-ink/65 leading-tight">{g.legende || g.categoryLabel}</p>
               </a>
             </Reveal>
           ))}

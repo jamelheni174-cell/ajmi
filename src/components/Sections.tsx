@@ -404,7 +404,7 @@ export function Galerie() {
     id: g.id || `photo-${i}`,
     src: g.src,
     legende: g.legende,
-    category: (g.category as GalerieItem["category"]) || "tribunaux",
+    category: (g.category as GalerieItem["category"]) || "tribunal",
     categoryLabel: g.categoryLabel || "Galerie",
     tall: !!g.tall,
   });
@@ -450,7 +450,7 @@ export function Galerie() {
               >
                 <Img
                   src={mediaUrl(g.src)}
-                  alt={g.legende}
+                  alt={g.legende || g.categoryLabel}
                   className={`w-full object-cover transition duration-500 group-hover:scale-105 ${
                     g.tall ? "aspect-[4/3] sm:aspect-[3/4] md:aspect-[3/5]" : "aspect-[4/3]"
                   }`}

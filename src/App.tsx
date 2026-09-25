@@ -18,6 +18,8 @@ export default function App() {
     try {
       localStorage.removeItem("ajmi-content-v1");
       localStorage.removeItem("ajmi-content-v2");
+      localStorage.removeItem("ajmi-content-v3");
+      localStorage.removeItem("ajmi-content-v4");
     } catch {
       /* ignore */
     }
