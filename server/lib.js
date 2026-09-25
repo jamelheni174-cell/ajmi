@@ -93,6 +93,14 @@ export function verifyToken(token) {
 
 const hits = new Map();
 
+// Vérifie le quota SANS l'incrémenter (utile pour ne compter que les échecs).
+export function rateLimitPeek(ip, max = 30, windowMs = 60000) {
+  const now = Date.now();
+  const entry = hits.get(ip);
+  if (!entry || now - entry.start > windowMs) return true;
+  return entry.count < max;
+}
+
 export function rateLimit(ip, max = 30, windowMs = 60000) {
   const now = Date.now();
   const entry = hits.get(ip) ?? { count: 0, start: now };

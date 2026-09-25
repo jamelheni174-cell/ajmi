@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import {
   DATA_DIR, UPLOAD_DIR, ensureDirs,
-  createToken, verifyToken, verifyPassword, rateLimit,
+  createToken, verifyToken, verifyPassword, rateLimit, rateLimitPeek,
 } from "./lib.js";
 import { ContentStore, Media, Messages, Stats, Users } from "./db.js";
 
@@ -77,12 +77,15 @@ const server = http.createServer(async (req, res) => {
 
       // Connexion
       if (p === "/api/login" && req.method === "POST") {
-        if (!rateLimit(`login:${ipOf(req)}`, 8, 300000))
+        const cle = `login:${ipOf(req)}`;
+        if (!rateLimitPeek(cle, 8, 300000))
           return json(res, 429, { error: "Trop de tentatives. Réessayez dans 5 minutes." });
         const { email, password } = await body(req, 4096);
         const u = Users.byEmail(String(email || ""));
-        if (!u || !verifyPassword(String(password || ""), u.password))
+        if (!u || !verifyPassword(String(password || ""), u.password)) {
+          rateLimit(cle, 8, 300000); // seuls les échecs consomment le quota
           return json(res, 401, { error: "Identifiants incorrects." });
+        }
         return json(res, 200, { token: createToken({ sub: u.email, nom: u.nom }), user: { email: u.email, nom: u.nom } });
       }
 
