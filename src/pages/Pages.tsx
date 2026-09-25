@@ -5,7 +5,7 @@ import { Img } from "../components/Img";
 import { PageCTA, PageHeader } from "../components/PageHeader";
 import { mediaUrl } from "../backend";
 import {
-  Cabinet, Chiffres, Clients, Competences, Contact, Domaines, Galerie, Hero, Publications, Valeurs,
+  Cabinet, Chiffres, Clients, Contact, Domaines, Galerie, Hero, Publications, Valeurs,
 } from "../components/Sections";
 import { PAGES } from "../router";
 
@@ -87,8 +87,8 @@ function HomeGalerie() {
           {photos.map((g, i) => (
             <Reveal key={i} delay={i * 80}>
               <a href="#/experiences" className="group block overflow-hidden rounded-xl bg-stone/20">
-                <Img src={mediaUrl(g.src)} alt={g.legende} className={i === 0 ? "aspect-[3/4] object-cover transition duration-300 group-hover:scale-105" : "aspect-[3/4] sm:aspect-square object-cover transition duration-300 group-hover:scale-105"} />
-                <p className="p-2 line-clamp-2 text-[9px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.18em] text-ink/65 leading-tight">{g.legende}</p>
+                <Img src={mediaUrl(g.src)} alt={g.legende || g.categoryLabel || ""} className={i === 0 ? "aspect-[3/4] object-cover transition duration-300 group-hover:scale-105" : "aspect-[3/4] sm:aspect-square object-cover transition duration-300 group-hover:scale-105"} />
+                <p className="p-2 line-clamp-2 text-[9px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.18em] text-ink/65 leading-tight">{g.legende || g.categoryLabel}</p>
               </a>
             </Reveal>
           ))}
@@ -148,7 +148,6 @@ export function HomePage() {
       <Clients variant="marquee" />
       <Chiffres />
       <Domaines />
-      <Competences />
       <HomeExperiences />
       <HomePublications />
       <HomeGalerie />
@@ -156,54 +155,6 @@ export function HomePage() {
       <section className="bg-ink py-14 sm:py-20 px-4 text-center text-paper">
         <p className="font-serif text-xl sm:text-2xl md:text-3xl italic">« {c.cabinet.citation} »</p>
       </section>
-    </>
-  );
-}
-
-/* ------------------------------ Le Cabinet ------------------------------ */
-
-export function CabinetPage() {
-  const c = useContent();
-  return (
-    <>
-      <PageHeader kicker="Présentation" titre={c.cabinet.titre} intro={`${c.avocat.nom} — ${c.avocat.l1}`} />
-      {/* Présentation unifiée Cabinet + Avocat avec photo en haut */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 py-14 sm:py-20">
-        <div className="grid items-start gap-8 sm:gap-12 md:grid-cols-12">
-          <Reveal className="md:col-span-5">
-            <img
-              src="/images/portrait-avocat.jpg"
-              alt={c.avocat.nom}
-              className="aspect-[4/5] w-full rounded-2xl object-cover object-top shadow-lg ring-1 ring-stone/60"
-              loading="eager"
-            />
-            <div className="mt-4 sm:mt-6 space-y-1">
-              <p className="font-serif text-xl sm:text-2xl">{c.avocat.nom}</p>
-              <p className="text-xs sm:text-sm font-light text-ink/70">{c.avocat.l1}</p>
-              <p className="text-xs sm:text-sm font-light text-ink/70">{c.avocat.l2}</p>
-              <a
-                href={c.contact.linkedin}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-3 sm:mt-4 inline-block border-b border-ink pb-1 text-[10px] sm:text-[11px] uppercase tracking-[0.25em]"
-              >
-                Profil LinkedIn ↗
-              </a>
-            </div>
-          </Reveal>
-          <Reveal delay={120} className="space-y-4 sm:space-y-6 text-sm sm:text-[15px] font-light leading-relaxed sm:leading-[1.95] text-ink/80 md:col-span-7 md:text-base">
-            <p>{c.cabinet.p1}</p>
-            <p>{c.cabinet.p2}</p>
-            <p className="border-l-2 border-navy pl-4 sm:pl-6 font-serif text-xl sm:text-2xl italic leading-snug text-ink">
-              « {c.cabinet.citation} »
-            </p>
-          </Reveal>
-        </div>
-      </section>
-      <Clients variant="marquee" />
-      <Chiffres />
-      <Valeurs />
-      <PageCTA />
     </>
   );
 }
@@ -311,56 +262,6 @@ export function ExperiencesPage() {
   );
 }
 
-/* -------------------------------- L'Avocat ------------------------------- */
-
-export function AvocatPage() {
-  const c = useContent();
-  return (
-    <>
-      <PageHeader kicker="L'avocat" titre={c.avocat.nom} intro={`${c.avocat.l1} — ${c.avocat.l2}`} />
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 py-14 sm:py-24">
-        <div className="grid gap-8 sm:gap-14 md:grid-cols-12">
-          <Reveal className="md:col-span-5">
-            <img
-              src="/images/portrait-avocat.jpg"
-              alt={c.avocat.nom}
-              className="aspect-[4/5] w-full max-w-sm mx-auto md:mx-0 rounded-2xl object-cover object-top shadow-lg ring-1 ring-stone/60"
-              loading="eager"
-            />
-            <div className="text-center md:text-left">
-              <a
-                href={c.contact.linkedin}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-4 sm:mt-6 inline-block border-b border-ink pb-1 text-[10px] sm:text-[11px] uppercase tracking-[0.25em]"
-              >
-                Profil LinkedIn ↗
-              </a>
-            </div>
-          </Reveal>
-          <Reveal delay={150} className="space-y-4 sm:space-y-6 text-sm sm:text-[15px] font-light leading-relaxed sm:leading-[1.95] text-ink/80 md:col-span-6 md:col-start-7">
-            <p>{c.cabinet.p1}</p>
-            <p>{c.cabinet.p2}</p>
-            <div className="border-t border-stone pt-6 sm:pt-8">
-              <p className="mb-4 sm:mb-5 text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-navy font-semibold">Engagements</p>
-              <ul className="space-y-3 sm:space-y-4">
-                {c.experiences.map((e, i) => (
-                  <li key={i}>
-                    <p className="font-serif text-base sm:text-lg text-ink">{e.role}</p>
-                    <p className="text-xs sm:text-sm text-ink/60">{e.org}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-      <Valeurs />
-      <PageCTA />
-    </>
-  );
-}
-
 /* ------------------------------- Actualités ------------------------------ */
 
 export function ActualitesPage() {
@@ -433,11 +334,9 @@ import { SuiviPage } from "./SuiviPage";
 
 export const ROUTES: Record<string, () => ReactElement> = {
   "/": HomePage,
-  "/cabinet": CabinetPage,
   "/competences": CompetencesPage,
   "/services": ServicesPage,
   "/experiences": ExperiencesPage,
-  "/avocat": AvocatPage,
   "/actualites": ActualitesPage,
   "/suivi": SuiviPage,
   "/contact": ContactPage,

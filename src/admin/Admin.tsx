@@ -537,7 +537,7 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
                   <div className="mt-3 space-y-2">
                     <Field label="Légende"><input className={inputCls} value={g.legende} onChange={(e) => gc.edit(i, { legende: e.target.value })} /></Field>
                     <Field label="Catégorie (moscou | tribunaux | conferences)">
-                      <input className={inputCls} value={g.category || "tribunaux"} onChange={(e) => gc.edit(i, { category: e.target.value as GalerieItem["category"] })} />
+                      <input className={inputCls} value={g.category || "tribunal"} onChange={(e) => gc.edit(i, { category: e.target.value as GalerieItem["category"] })} />
                     </Field>
                     <Field label="Chemin / source"><input className={inputCls} value={g.src.startsWith("data:") ? "(image téléversée)" : g.src} readOnly={g.src.startsWith("data:")} onChange={(e) => gc.edit(i, { src: e.target.value })} /></Field>
                     <label className="flex items-center gap-2 text-xs text-[#1e2766]/80 font-medium">

@@ -1,6 +1,6 @@
 import readline from "node:readline/promises";
 import { stdin, stdout } from "node:process";
-import { Users } from "./db.js";
+import { Users, closeDb } from "./db.js";
 
 console.log("\n  Création d'un compte administrateur — Cabinet Ajmi\n");
 
@@ -26,5 +26,9 @@ if (!email || password.length < 8) {
 }
 
 Users.create(nom, email, password);
+
+// Ferme la base : garantit que l'écriture est bien dans le fichier principal
+// avant l'arrêt du processus.
+closeDb();
 
 console.log(`\n  ✓ Compte « ${email} » enregistré. Connectez-vous sur /#/admin\n`);

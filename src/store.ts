@@ -54,7 +54,7 @@ export const defaultContent: Content = {
     kicker: "Avocat près la Cour d'Appel — Monastir",
     titre: "Rigueur",
     titreItalic: "Engagement",
-    sous: "Cabinet d'Avocat Ajmi — le partenaire stratégique des entrepreneurs, des professionnels de santé, des familles et des organisations.",
+    sous: "Le partenaire stratégique des entrepreneurs, des professionnels de santé et des organisations.",
   },
   contact: d.contact,
   cabinet: {
@@ -96,7 +96,7 @@ export const defaultContent: Content = {
 };
 
 /** Bump key to invalidate stale localStorage after structure / assets changes */
-const KEY = "ajmi-content-v4";
+const KEY = "ajmi-content-v5";
 
 export function loadContent(): Content {
   try {

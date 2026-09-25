@@ -1,13 +1,72 @@
-import Database from "better-sqlite3";
 import fs from "node:fs";
 import path from "node:path";
 import { DATA_DIR, ensureDirs, hashPassword } from "./lib.js";
 
 ensureDirs();
 
-export const db = new Database(path.join(DATA_DIR, "ajmi.db"));
-db.pragma("journal_mode = WAL");
-db.pragma("foreign_keys = ON");
+/* --------------------------- Moteur SQLite ---------------------------
+   better-sqlite3 est utilisé quand il est installé (binaire pré-compilé
+   ou compilation locale). Sinon, repli sur le module SQLite intégré de
+   Node.js 22+ (`node:sqlite`), ce qui permet de faire tourner le backend
+   sans outillage de compilation native.
+--------------------------------------------------------------------- */
+
+async function openDatabase(file) {
+  try {
+    const { default: Database } = await import("better-sqlite3");
+    const d = new Database(file);
+    d.pragma("journal_mode = WAL");
+    d.pragma("foreign_keys = ON");
+    return d;
+  } catch {
+    const { DatabaseSync } = await import("node:sqlite");
+    await repareWAL(file);
+    const d = new DatabaseSync(file);
+    // Journal en mode TRUNCATE plutôt que WAL : toutes les écritures validées
+    // sont dans le fichier principal, et non dans un fichier -wal annexe. Avec
+    // le module node:sqlite (expérimental), le WAL peut ne pas être relu par une
+    // connexion ultérieure — une écriture devenait alors invisible, ce qui
+    // provoquait des refus de connexion aléatoires.
+    d.exec("PRAGMA journal_mode = TRUNCATE; PRAGMA foreign_keys = ON;");
+    if (typeof d.pragma !== "function") d.pragma = (s) => d.exec(`PRAGMA ${s}`);
+    return d;
+  }
+}
+
+/* Récupère les données d'un éventuel fichier -wal laissé par une session
+   précédente, puis le supprime pour repartir sur un journal propre. */
+async function repareWAL(file) {
+  const wal = `${file}-wal`;
+  const shm = `${file}-shm`;
+  try {
+    if (!fs.existsSync(file)) return;
+    if (fs.existsSync(wal) && fs.statSync(wal).size > 0) {
+      // Une connexion dédiée force SQLite à rejouer le journal puis à le vider.
+      const { DatabaseSync } = await import("node:sqlite");
+      const tmp = new DatabaseSync(file);
+      try {
+        tmp.exec("PRAGMA journal_mode = DELETE;");
+      } finally {
+        tmp.close();
+      }
+    }
+    fs.rmSync(wal, { force: true });
+    fs.rmSync(shm, { force: true });
+  } catch {
+    /* le fichier sera simplement rouvert tel quel */
+  }
+}
+
+export const db = await openDatabase(path.join(DATA_DIR, "ajmi.db"));
+
+/** Ferme la base — utile aux scripts qui se terminent (création d'admin). */
+export function closeDb() {
+  try {
+    db.close?.();
+  } catch {
+    /* déjà fermée */
+  }
+}
 
 db.exec(`
   create table if not exists users (

@@ -94,7 +94,9 @@ export function LightboxModal({ item, items, onClose, onSelect }: LightboxModalP
             <span className="inline-block rounded-full bg-navy/80 px-2 sm:px-2.5 py-0.5 text-[9px] sm:text-[10px] font-medium uppercase tracking-widest text-amber-200/90 border border-amber-500/20 mb-1">
               {item.categoryLabel}
             </span>
-            <p className="font-serif text-xs sm:text-base font-light text-paper/90 leading-snug line-clamp-2">{item.legende}</p>
+            {item.legende ? (
+              <p className="font-serif text-xs sm:text-base font-light text-paper/90 leading-snug line-clamp-2">{item.legende}</p>
+            ) : null}
           </div>
           <span className="text-[10px] sm:text-[11px] text-paper/50 font-mono shrink-0">
             {currentIndex + 1} / {items.length}

@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import {
   DATA_DIR, UPLOAD_DIR, ensureDirs,
-  createToken, verifyToken, verifyPassword, rateLimit,
+  createToken, verifyToken, verifyPassword, rateLimit, rateLimitPeek,
 } from "./lib.js";
 import { ContentStore, Media, Messages, Stats, Users } from "./db.js";
 
@@ -77,12 +77,15 @@ const server = http.createServer(async (req, res) => {
 
       // Connexion
       if (p === "/api/login" && req.method === "POST") {
-        if (!rateLimit(`login:${ipOf(req)}`, 8, 300000))
+        const cle = `login:${ipOf(req)}`;
+        if (!rateLimitPeek(cle, 8, 300000))
           return json(res, 429, { error: "Trop de tentatives. Réessayez dans 5 minutes." });
         const { email, password } = await body(req, 4096);
         const u = Users.byEmail(String(email || ""));
-        if (!u || !verifyPassword(String(password || ""), u.password))
+        if (!u || !verifyPassword(String(password || ""), u.password)) {
+          rateLimit(cle, 8, 300000); // seuls les échecs consomment le quota
           return json(res, 401, { error: "Identifiants incorrects." });
+        }
         return json(res, 200, { token: createToken({ sub: u.email, nom: u.nom }), user: { email: u.email, nom: u.nom } });
       }
 
@@ -224,7 +227,21 @@ const server = http.createServer(async (req, res) => {
     if (!file.startsWith(PUBLIC_DIR)) file = path.join(PUBLIC_DIR, "index.html");
     if (!fs.existsSync(file) || fs.statSync(file).isDirectory()) file = path.join(PUBLIC_DIR, "index.html");
     if (!fs.existsSync(file)) return json(res, 404, { error: "Site non déployé (dossier dist absent)" });
-    res.writeHead(200, { "Content-Type": MIME[path.extname(file).toLowerCase()] || "text/plain" });
+    // Fichiers du site revalidés à chaque visite : une image remplacée n'est
+    // jamais resservie depuis le cache du navigateur.
+    const st = fs.statSync(file);
+    const etag = `W/"${st.size}-${Math.floor(st.mtimeMs)}"`;
+    const entetes = {
+      "Content-Type": MIME[path.extname(file).toLowerCase()] || "text/plain",
+      "Cache-Control": "no-cache",
+      ETag: etag,
+      "Last-Modified": st.mtime.toUTCString(),
+    };
+    if (req.headers["if-none-match"] === etag) {
+      res.writeHead(304, entetes);
+      return res.end();
+    }
+    res.writeHead(200, entetes);
     fs.createReadStream(file).pipe(res);
   } catch (e) {
     json(res, e.message === "too large" ? 413 : 400, { error: e.message === "too large" ? "Fichier trop volumineux (8 Mo max)." : "Requête invalide." });

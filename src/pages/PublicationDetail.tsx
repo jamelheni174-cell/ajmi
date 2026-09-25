@@ -30,7 +30,7 @@ export function PublicationDetail({ publicationId }: PublicationDetailProps) {
         id: pub.id,
         src: pub.coverImage,
         legende: pub.title,
-        category: "tribunaux",
+        category: "tribunal",
         categoryLabel: "Ouvrage Majeur",
       });
     }

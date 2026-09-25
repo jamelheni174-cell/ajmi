@@ -15,67 +15,35 @@ const Label = ({ children }: { children: string }) => (
 
 export function Hero() {
   const c = useContent();
-  const [lightboxImg, setLightboxImg] = useState<GalerieItem | null>(null);
-
-  const handleOpenHeroImage = () => {
-    setLightboxImg({
-      id: "hero-img",
-      src: "/images/hero.jpg",
-      legende: "Cabinet d'Avocat Me Mohamed Anouar Ajmi — Rigueur, Engagement & Expertise",
-      category: "tribunaux",
-      categoryLabel: "Cabinet Ajmi",
-    });
-  };
 
   return (
     <section id="top" className="flex min-h-screen flex-col bg-paper text-ink">
       <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col justify-center px-4 sm:px-6 pb-10 sm:pb-14 pt-28 sm:pt-36 md:pt-44">
         <Reveal>
-          <div className="grid items-end gap-8 sm:gap-10 md:grid-cols-12">
-            <div className="md:col-span-8">
-              <p className="mb-6 sm:mb-8 flex items-center gap-2 sm:gap-3 text-[10px] sm:text-[11px] uppercase tracking-[0.25em] sm:tracking-[0.35em] text-ink/60">
-                <span className="h-px w-6 sm:w-10 bg-navy shrink-0" />
-                <span className="truncate">{c.hero.kicker}</span>
-              </p>
-              <h1 className="font-serif text-[12vw] sm:text-6xl md:text-7xl lg:text-[5.6rem] leading-[0.98] sm:leading-[0.95] tracking-tight break-words">
-                {c.hero.titre}
-                <span className="italic text-navy"> &amp; </span>
-                <span className="break-words">{c.hero.titreItalic}</span>
-              </h1>
-            </div>
-            <div className="md:col-span-4">
-              <p className="max-w-sm font-serif text-lg sm:text-xl md:text-2xl leading-snug text-ink/80">{c.hero.sous}</p>
-              <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row sm:items-center gap-3">
-                <a
-                  href="#/contact"
-                  className="w-full sm:w-auto text-center rounded-xl bg-navy px-7 py-3.5 text-[11px] uppercase tracking-[0.22em] text-paper transition hover:bg-ink shadow-sm"
-                >
-                  Prendre RDV
-                </a>
-                <a
-                  href={c.contact.phoneHref}
-                  className="w-full sm:w-auto text-center rounded-full border border-ink px-6 py-3.5 text-sm transition hover:bg-ink hover:text-paper"
-                >
-                  {c.contact.phone}
-                </a>
-              </div>
-            </div>
+          <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
+            {/* Kicker minimisé */}
+            <p className="flex items-center gap-2 sm:gap-3 text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.28em] text-ink/60">
+              <span className="h-px w-5 sm:w-8 bg-navy shrink-0" />
+              <span>{c.hero.kicker}</span>
+            </p>
+            {/* Titre minimisé */}
+            <h1 className="mt-3 sm:mt-4 font-serif text-lg sm:text-xl md:text-2xl leading-tight tracking-tight text-ink">
+              {c.hero.titre}
+              <span className="italic text-navy"> &amp; </span>
+              <span className="break-words">{c.hero.titreItalic}</span>
+            </h1>
+            {/* Accroche centrée : traitement typographique de l'ancien grand titre */}
+            <p className="mt-6 sm:mt-8 max-w-3xl text-balance font-serif text-[6vw] sm:text-3xl md:text-4xl lg:text-[3.4rem] font-semibold leading-[1.08] tracking-tight text-ink">
+              {c.hero.sous}
+            </p>
           </div>
         </Reveal>
       </div>
 
-      {/* Bande visuelle bleu royal */}
-      <div
-        className="relative h-[26vh] sm:h-[34vh] min-h-[200px] sm:min-h-[240px] cursor-pointer overflow-hidden bg-navy md:h-[40vh] group"
-        onClick={handleOpenHeroImage}
-      >
-        <img src="/images/hero.jpg" alt="" className="absolute inset-0 h-full w-full object-cover opacity-35 transition duration-500 group-hover:scale-105" />
+      {/* Bande visuelle bleu royal — purement décorative (aucun agrandissement au clic) */}
+      <div className="relative h-[26vh] sm:h-[34vh] min-h-[200px] sm:min-h-[240px] overflow-hidden bg-navy md:h-[40vh]">
+        <img src="/images/hero.jpg" alt="" className="absolute inset-0 h-full w-full object-cover opacity-35" />
         <div className="absolute inset-0 bg-gradient-to-r from-navy via-navy/70 to-ink/80" />
-        <div className="absolute top-4 right-4 z-10 opacity-90 sm:opacity-0 sm:group-hover:opacity-100 transition duration-300">
-          <span className="rounded-full bg-black/60 px-3 py-1 text-[10px] uppercase tracking-wider text-amber-300 backdrop-blur-sm border border-amber-500/20">
-            Agrandir en HD ↗
-          </span>
-        </div>
         <div className="absolute inset-x-0 bottom-0 overflow-hidden border-t border-paper/10 py-3 sm:py-4">
           <div className="marquee flex whitespace-nowrap text-[10px] sm:text-[11px] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-blue/80">
             {[...c.competences, ...c.competences].map((x, i) => (
@@ -86,35 +54,17 @@ export function Hero() {
           </div>
         </div>
       </div>
-
-      {lightboxImg && (
-        <LightboxModal
-          item={lightboxImg}
-          items={[lightboxImg]}
-          onClose={() => setLightboxImg(null)}
-          onSelect={(i) => setLightboxImg(i)}
-        />
-      )}
     </section>
   );
 }
 
 export function Cabinet() {
   const c = useContent();
-  const [lightboxImg, setLightboxImg] = useState<GalerieItem | null>(null);
 
-  /** Portrait réel : images/portrait-avocat.jpg (robe d'avocat) */
-  const portraitSrc = "/images/portrait-avocat.jpg";
-
-  const openPortrait = () => {
-    setLightboxImg({
-      id: "cabinet-portrait",
-      src: portraitSrc,
-      legende: `${c.avocat.nom} — ${c.avocat.l1}`,
-      category: "tribunaux",
-      categoryLabel: "Cabinet Ajmi",
-    });
-  };
+  /** Portrait réel : portrait-avocat-2026.jpg (robe d'avocat, en audience).
+      Nom de fichier daté : les navigateurs ne peuvent pas resservir une
+      ancienne photo gardée en cache sous l'ancienne adresse. */
+  const portraitSrc = "/images/portrait-avocat-2026.jpg";
 
   return (
     <section id="cabinet" className="mx-auto max-w-7xl px-4 sm:px-6 py-14 sm:py-20 md:py-28">
@@ -123,16 +73,13 @@ export function Cabinet() {
       </Reveal>
 
       <div className="mt-6 sm:mt-8 grid items-start gap-8 sm:gap-12 md:grid-cols-12 md:gap-16">
-        {/* Portrait réel (portrait-avocat.jpg) en évidence */}
+        {/* Portrait réel (portrait-avocat-2026.jpg) en évidence */}
         <Reveal className="md:col-span-5">
-          <div
-            className="group relative cursor-pointer overflow-hidden rounded-2xl bg-stone/30 shadow-lg ring-1 ring-stone/60"
-            onClick={openPortrait}
-          >
+          <div className="relative overflow-hidden rounded-2xl bg-stone/30 shadow-lg ring-1 ring-stone/60">
             <img
               src={portraitSrc}
               alt={c.avocat.nom}
-              className="aspect-[4/5] w-full object-cover object-top transition duration-500 group-hover:scale-[1.03]"
+              className="aspect-[4/5] w-full object-cover object-top"
               loading="eager"
               decoding="async"
             />
@@ -143,17 +90,8 @@ export function Cabinet() {
               <p className="mt-1 text-xs sm:text-sm font-light text-paper/80">{c.avocat.l1}</p>
               <p className="text-xs sm:text-sm font-light text-paper/70">{c.avocat.l2}</p>
             </div>
-            <span className="absolute right-3 top-3 sm:right-4 sm:top-4 rounded-full bg-black/50 px-3 py-1 text-[10px] uppercase tracking-wider text-paper opacity-90 sm:opacity-0 backdrop-blur transition sm:group-hover:opacity-100">
-              Agrandir ↗
-            </span>
           </div>
           <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-3">
-            <a
-              href="#/avocat"
-              className="w-full sm:w-auto text-center rounded-xl bg-navy px-6 py-3 text-[11px] uppercase tracking-[0.2em] text-paper transition hover:bg-ink shadow-sm"
-            >
-              Profil complet
-            </a>
             <a
               href={c.contact.linkedin}
               target="_blank"
@@ -189,15 +127,6 @@ export function Cabinet() {
           </div>
         </Reveal>
       </div>
-
-      {lightboxImg && (
-        <LightboxModal
-          item={lightboxImg}
-          items={[lightboxImg]}
-          onClose={() => setLightboxImg(null)}
-          onSelect={(i) => setLightboxImg(i)}
-        />
-      )}
     </section>
   );
 }
@@ -279,51 +208,16 @@ export function Domaines() {
   );
 }
 
-export function Competences() {
-  const c = useContent();
-  return (
-    <section id="competences" className="border-t border-stone py-12 sm:py-20">
-      <Reveal className="mx-auto max-w-7xl px-4 sm:px-6">
-        <Label>Matières &amp; spécialités</Label>
-        <p className="font-serif text-xl sm:text-2xl leading-relaxed text-ink/90 md:text-3xl">
-          {c.competences.map((x, i) => (
-            <span key={i}>
-              {x}
-              {i < c.competences.length - 1 && <span className="mx-2 sm:mx-3 text-navy">/</span>}
-            </span>
-          ))}
-        </p>
-      </Reveal>
-    </section>
-  );
-}
-
 export function Parcours() {
   const c = useContent();
-  const [lightboxImg, setLightboxImg] = useState<GalerieItem | null>(null);
-
-  const handleZoomPortrait = () => {
-    setLightboxImg({
-      id: "portrait-img",
-      src: mediaUrl(c.avocat.portrait),
-      legende: c.avocat.nom + " — " + c.avocat.l1,
-      category: "tribunaux",
-      categoryLabel: "Avocat",
-    });
-  };
 
   return (
     <section id="parcours" className="border-t border-stone">
       <div className="mx-auto grid max-w-7xl gap-10 sm:gap-16 px-4 sm:px-6 py-16 sm:py-28 md:grid-cols-12 md:py-36">
         <Reveal className="md:col-span-4">
           <Label>L'avocat</Label>
-          <div className="cursor-pointer group relative overflow-hidden rounded-xl mb-6 sm:mb-8 max-w-xs mx-auto md:mx-0" onClick={handleZoomPortrait}>
-            <Img src={mediaUrl(c.avocat.portrait)} alt={c.avocat.nom} className="aspect-[4/5] w-full transition duration-500 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-black/30 opacity-90 sm:opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
-              <span className="rounded-full bg-white/90 px-3 py-1.5 text-[10px] font-medium uppercase tracking-wider text-black">
-                Zoomer HD ↗
-              </span>
-            </div>
+          <div className="relative overflow-hidden rounded-xl mb-6 sm:mb-8 max-w-xs mx-auto md:mx-0">
+            <Img src={mediaUrl(c.avocat.portrait)} alt={c.avocat.nom} className="aspect-[4/5] w-full" />
           </div>
           <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl">{c.avocat.nom}</h2>
           <p className="mt-3 sm:mt-4 text-xs sm:text-sm font-light text-ink/70">{c.avocat.l1}</p>
@@ -346,15 +240,6 @@ export function Parcours() {
           </ul>
         </div>
       </div>
-
-      {lightboxImg && (
-        <LightboxModal
-          item={lightboxImg}
-          items={[lightboxImg]}
-          onClose={() => setLightboxImg(null)}
-          onSelect={(i) => setLightboxImg(i)}
-        />
-      )}
     </section>
   );
 }
@@ -521,7 +406,7 @@ export function Galerie() {
     id: g.id || `photo-${i}`,
     src: g.src,
     legende: g.legende,
-    category: (g.category as GalerieItem["category"]) || "tribunaux",
+    category: (g.category as GalerieItem["category"]) || "tribunal",
     categoryLabel: g.categoryLabel || "Galerie",
     tall: !!g.tall,
   });
@@ -567,7 +452,7 @@ export function Galerie() {
               >
                 <Img
                   src={mediaUrl(g.src)}
-                  alt={g.legende}
+                  alt={g.legende || g.categoryLabel}
                   className={`w-full object-cover transition duration-500 group-hover:scale-105 ${
                     g.tall ? "aspect-[4/3] sm:aspect-[3/4] md:aspect-[3/5]" : "aspect-[4/3]"
                   }`}
@@ -576,7 +461,9 @@ export function Galerie() {
                   <span className="inline-block rounded-full bg-amber-400/90 px-2.5 py-0.5 text-[9px] uppercase tracking-wider text-black font-semibold w-fit mb-1">
                     {g.categoryLabel}
                   </span>
-                  <p className="text-xs text-paper font-light line-clamp-2">{g.legende}</p>
+                  {g.legende ? (
+                    <p className="text-xs text-paper font-light line-clamp-2">{g.legende}</p>
+                  ) : null}
                 </div>
               </figure>
             </Reveal>
