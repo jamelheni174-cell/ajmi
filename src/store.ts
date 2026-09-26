@@ -59,7 +59,7 @@ export const defaultContent: Content = {
   contact: d.contact,
   cabinet: {
     titre: "Le Cabinet & Maître Mohamed Anouar Ajmi",
-    p1: "Le Cabinet d'Avocat Ajmi, fondé par Maître Mohamed Anouar Ajmi, Avocat près la Cour d'Appel et expert en droits humains et politiques publiques, propose une approche juridique rigoureuse, moderne et personnalisée. Véritable partenaire stratégique des entrepreneurs, des investisseurs et des entreprises, le cabinet vous accompagne dès la genèse de vos projets : création de startups, structuration, choix de la forme sociale et sécurisation juridique de vos implantations.",
+    p1: "Le Cabinet d'Avocat Ajmi, fondé par Maître Mohamed Anouar Ajmi, Avocat près la Cour d'Appel et expert en droits humains et politiques publiques, propose une approche juridique rigoureuse. Véritable partenaire stratégique des entrepreneurs, des investisseurs et des entreprises, le cabinet vous accompagne dès la genèse de vos projets : création de startups, structuration, choix de la forme sociale et sécurisation juridique de vos implantations.",
     p2: "Fort d'une double expertise en conseil et en contentieux, Maître Ajmi accompagne également les particuliers et les organisations nationales et internationales. Ses domaines d'intervention privilégiés couvrent le droit des affaires, le droit de la famille, le droit médical, le droit des biens et la rédaction des contrats — en combinant une solide maîtrise technique du droit positif avec une vision stratégique ancrée dans la défense des droits humains et des politiques publiques.",
     citation:
       "En nous plaçant au cœur de votre stratégie, nous faisons de la disponibilité, de la réactivité et de la rigueur analytique les maîtres-mots de notre engagement.",

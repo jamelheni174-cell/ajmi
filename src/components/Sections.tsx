@@ -6,7 +6,7 @@ import { PAGES, go } from "../router";
 import { isOnline, mediaUrl, sendMessage } from "../backend";
 import { LightboxModal } from "./LightboxModal";
 import { ReservationModal } from "./ReservationModal";
-import { galerieCategories, type GalerieItem, type PublicationItem } from "../data";
+import { galerieCategories, portrait, type GalerieItem, type PublicationItem } from "../data";
 import { cn } from "../utils/cn";
 
 const Label = ({ children }: { children: string }) => (
@@ -61,10 +61,9 @@ export function Hero() {
 export function Cabinet() {
   const c = useContent();
 
-  /** Portrait réel : portrait-avocat-2026.jpg (robe d'avocat, en audience).
-      Nom de fichier daté : les navigateurs ne peuvent pas resservir une
-      ancienne photo gardée en cache sous l'ancienne adresse. */
-  const portraitSrc = "/images/portrait-avocat-2026.jpg";
+  /** Portrait institutionnel (robe d'avocat) — même source que la section
+      Expériences : le nom de fichier unique évite le cache navigateur. */
+  const portraitSrc = portrait;
 
   return (
     <section id="cabinet" className="mx-auto max-w-7xl px-4 sm:px-6 py-14 sm:py-20 md:py-28">
@@ -73,7 +72,7 @@ export function Cabinet() {
       </Reveal>
 
       <div className="mt-6 sm:mt-8 grid items-start gap-8 sm:gap-12 md:grid-cols-12 md:gap-16">
-        {/* Portrait réel (portrait-avocat-2026.jpg) en évidence */}
+        {/* Portrait réel en évidence */}
         <Reveal className="md:col-span-5">
           <div className="relative overflow-hidden rounded-2xl bg-stone/30 shadow-lg ring-1 ring-stone/60">
             <img

@@ -11,11 +11,11 @@ import { PAGES } from "../router";
 
 /* -------------------------- Sections d'accueil -------------------------- */
 
-function SectionHead({ num, titre, lien }: { num: string; titre: string; lien?: { l: string; t: string } }) {
+function SectionHead({ num, titre, lien }: { num?: string; titre: string; lien?: { l: string; t: string } }) {
   return (
     <div className="mb-8 sm:mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-6">
       <div className="flex items-baseline gap-3 sm:gap-5">
-        <span className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-navy/50 font-semibold">{num}</span>
+        {num && <span className="text-[10px] sm:text-[11px] tracking-[0.25em] sm:tracking-[0.3em] text-navy/50 font-semibold">{num}</span>}
         <h2 className="font-serif text-2xl sm:text-3xl md:text-5xl leading-tight text-ink">{titre}</h2>
       </div>
       {lien && (
@@ -57,7 +57,7 @@ function HomePublications() {
   return (
     <section className="bg-stone/25">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 py-16 sm:py-24 md:py-32">
-        <SectionHead num="02" titre="Réflexions & publications" lien={{ l: "#/actualites", t: "Toutes les actualités" }} />
+        <SectionHead titre="Publications" />
         <div className="grid gap-px bg-stone grid-cols-1 md:grid-cols-3">
           {c.publications.slice(0, 3).map((p, i) => (
             <Reveal key={i} delay={i * 80} className="bg-paper">
@@ -74,16 +74,25 @@ function HomePublications() {
   );
 }
 
-/** Aperçu galerie (4 images, mosaïque). */
+/** Aperçu galerie (une photo par catégorie, mosaïque). */
 function HomeGalerie() {
   const c = useContent();
-  const photos = c.galerie.slice(0, 4);
+  // Une photo par catégorie : évite de répéter un libellé dans la mosaïque.
+  const seen = new Set<string>();
+  const photos: (typeof c.galerie)[number][] = [];
+  for (const g of c.galerie) {
+    const cat = g.category ?? "";
+    if (!seen.has(cat)) {
+      seen.add(cat);
+      photos.push(g);
+    }
+  }
   if (!photos.length) return null;
   return (
     <section className="bg-paper">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 py-16 sm:py-24 md:py-32">
         <SectionHead num="03" titre="En images" lien={{ l: "#/experiences", t: "Toutes les photos" }} />
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
           {photos.map((g, i) => (
             <Reveal key={i} delay={i * 80}>
               <a href="#/experiences" className="group block overflow-hidden rounded-xl bg-stone/20">
