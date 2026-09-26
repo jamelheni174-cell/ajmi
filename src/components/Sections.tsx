@@ -75,12 +75,11 @@ export function Cabinet() {
         {/* Portrait réel en évidence */}
         <Reveal className="md:col-span-5">
           <div className="relative overflow-hidden rounded-2xl bg-stone/30 shadow-lg ring-1 ring-stone/60">
-            <img
+            <Img
               src={portraitSrc}
               alt={c.avocat.nom}
-              className="aspect-[4/5] w-full object-cover object-top"
-              loading="eager"
-              decoding="async"
+              className="aspect-[4/5] w-full"
+              imgClassName="object-top"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/10 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 text-paper">
