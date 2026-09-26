@@ -202,8 +202,8 @@ export const clients: ClientItem[] = [
 
 export const valeurs = ["Disponibilité", "Réactivité", "Rigueur", "Indépendance", "Engagement"];
 
-/** Portrait institutionnel (robe d'avocat) — photo réelle portrait-avocat-2026.jpg */
-export const portrait = "/images/portrait-avocat-2026.jpg";
+/** Portrait institutionnel (robe d'avocat) — photo réelle images/portrait/4fed839f… */
+export const portrait = "/images/portrait/4fed839f-c068-4201-8c9a-1336e06ab758.jpg";
 /** Logo cabinet — PNG dark (teal) pour fonds clairs */
 export const logoCabinet = "/images/logo-cabinet-dark.png";
 /** Logo cabinet — PNG light (blanc) pour fonds sombres */
@@ -261,8 +261,8 @@ export const galerie: GalerieItem[] = [
     id: "g5",
     src: "/images/82f1ccdd-f76b-487e-957d-9736166c7fb8.jpg",
     legende: "",
-    category: "tribunal",
-    categoryLabel: "Tribunal et expertise",
+    category: "russie",
+    categoryLabel: "Russie et roscongress",
   },
   {
     id: "g6",
@@ -283,8 +283,8 @@ export const galerie: GalerieItem[] = [
     id: "g8",
     src: "/images/2a7f28e5-87e9-4a1f-831a-7f87822e8bcc.jpg",
     legende: "",
-    category: "tribunal",
-    categoryLabel: "Tribunal et expertise",
+    category: "russie",
+    categoryLabel: "Russie et roscongress",
     tall: true,
   },
   {
@@ -298,6 +298,13 @@ export const galerie: GalerieItem[] = [
   {
     id: "g10",
     src: "/images/b0bde2f1-f9a2-480a-8a0a-22527183da9a.jpg",
+    legende: "",
+    category: "russie",
+    categoryLabel: "Russie et roscongress",
+  },
+  {
+    id: "g11",
+    src: "/images/4fed839f-c068-4201-8c9a-1336e06ab758.jpg",
     legende: "",
     category: "tribunal",
     categoryLabel: "Tribunal et expertise",
