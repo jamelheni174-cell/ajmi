@@ -3,7 +3,7 @@ export const contact = {
   phoneHref: "tel:+21654311937",
   email: "contact.anouarajmi@gmail.com",
   address: "Beb Brikcha – Résidence El Mabrouk, Bureau n°9, Monastir",
-  linkedin: "https://www.linkedin.com/in/mohamed-anouar-ajmi",
+  linkedin: "https://tn.linkedin.com/in/mohamed-anouar-ajmi-428b29213",
   domain: "avocatmedanouarajmi.com",
 };
 
