@@ -41,10 +41,10 @@ export function Hero() {
       </div>
 
       {/* Bande visuelle bleu royal — purement décorative (aucun agrandissement au clic) */}
-      <div className="relative h-[26vh] sm:h-[34vh] min-h-[200px] sm:min-h-[240px] overflow-hidden bg-navy md:h-[40vh]">
+      <div className="relative overflow-hidden bg-navy">
         <img src="/images/hero.jpg" alt="" className="absolute inset-0 h-full w-full object-cover opacity-35" />
         <div className="absolute inset-0 bg-gradient-to-r from-navy via-navy/70 to-ink/80" />
-        <div className="absolute inset-x-0 bottom-0 overflow-hidden border-t border-paper/10 py-3 sm:py-4">
+        <div className="relative overflow-hidden py-3 sm:py-4">
           <div className="marquee flex whitespace-nowrap text-[10px] sm:text-[11px] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-blue/80">
             {[...c.competences, ...c.competences].map((x, i) => (
               <span key={i} className="px-4 sm:px-8">
@@ -109,20 +109,6 @@ export function Cabinet() {
           <p className="border-l-2 border-navy pl-4 sm:pl-6 font-serif text-lg sm:text-2xl italic leading-snug text-ink">
             « {c.cabinet.citation} »
           </p>
-
-          <div className="grid gap-3 sm:gap-4 border-t border-stone pt-6 sm:pt-8 grid-cols-1 sm:grid-cols-2">
-            {[
-              { t: "Conseil", d: "Startups, sociétés, contrats & investissement" },
-              { t: "Contentieux", d: "Représentation devant les juridictions" },
-              { t: "Droit médical", d: "Responsabilité & indemnisation (Loi 32-2024)" },
-              { t: "Engagement", d: "Droits humains & politiques publiques" },
-            ].map((x) => (
-              <div key={x.t} className="rounded-xl bg-stone/40 p-4 sm:px-5 sm:py-4">
-                <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-navy font-semibold">{x.t}</p>
-                <p className="mt-1 text-xs sm:text-sm text-ink/75 leading-relaxed">{x.d}</p>
-              </div>
-            ))}
-          </div>
         </Reveal>
       </div>
     </section>
@@ -718,7 +704,7 @@ export function Footer() {
           <div>
             <p className="mb-3 sm:mb-4 text-[10px] uppercase tracking-[0.25em] text-gold font-semibold">Navigation</p>
             <ul className="space-y-2 text-xs sm:text-sm font-light">
-              {PAGES.map((p) => (
+              {PAGES.filter((p) => p.path !== "/actualites" && p.path !== "/suivi").map((p) => (
                 <li key={p.path}><a href={`#${p.path}`} className="hover:text-paper">{p.label}</a></li>
               ))}
             </ul>
@@ -742,9 +728,8 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 sm:mt-12 flex flex-col items-center justify-between gap-4 border-t border-paper/10 pt-8 text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.25em] md:flex-row text-center md:text-left">
+        <div className="mt-10 sm:mt-12 flex flex-col items-center justify-center gap-4 border-t border-paper/10 pt-8 text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.25em] text-center">
           <span>© {new Date().getFullYear()} Cabinet d'Avocat Ajmi — Monastir</span>
-          <a href="#/admin" className="hover:text-paper font-semibold">Administration</a>
         </div>
       </div>
     </footer>
