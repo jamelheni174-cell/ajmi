@@ -121,7 +121,14 @@ if (!LOCAL) {
   const res = wrangler(["r2", "bucket", "create", bucket]);
   if (res.status === 0) ok("bucket créé");
   else if (/already exists|already owned|10004/i.test(res.text)) ok("bucket existant");
-  else {
+  else if (/10042|enable R2|not enabled|subscription/i.test(res.text)) {
+    fail(
+      "R2 (stockage des images) n'est pas encore activé sur ce compte.\n\n" +
+        "  Ouvrez le tableau de bord → R2 → « Enable R2 » (gratuit, sans carte),\n" +
+        "  puis relancez « npm run cf:setup ». Le plan gratuit inclut 10 Go.\n",
+    );
+    process.exit(1);
+  } else {
     fail(`création du bucket impossible :\n\n${res.text.trim()}`);
     process.exit(1);
   }
@@ -142,19 +149,18 @@ ok("tables en place (users, content, history, messages, media, reservations)");
 
 /* --------------------------- 5. Secret JWT ------------------------------ */
 
+let jwtSecret = null;
+
 if (LOCAL) {
+  step("Secret de signature des jetons");
   if (!fs.existsSync(".dev.vars")) {
     fs.writeFileSync(".dev.vars", `JWT_SECRET=${randomSecret()}\n`);
     ok("secret local écrit dans .dev.vars");
   } else ok("secret local déjà présent (.dev.vars)");
 } else {
   step("Secret de signature des jetons");
-  const res = wrangler(["secret", "put", "JWT_SECRET"], { input: `${randomSecret()}\n` });
-  if (res.status === 0) ok("JWT_SECRET enregistré (invisible dans le code)");
-  else {
-    warn("enregistrement automatique impossible.");
-    warn("Lancez à la main :  npx wrangler secret put JWT_SECRET");
-  }
+  jwtSecret = randomSecret();
+  ok("secret généré — il partira avec le premier déploiement");
 }
 
 /* ------------------------- 6. Compte administrateur --------------------- */
@@ -195,38 +201,33 @@ if (!SKIP_ADMIN) {
 
 /* --------------------------- 7. Build + deploy -------------------------- */
 
-if (!SKIP_DEPLOY) {
-  step("Construction du site");
-  const build = wrangler(["--version"]); // garde-fou : wrangler présent
-  if (build.status !== 0) {
-    fail("wrangler introuvable : lancez « npm install ».");
-    process.exit(1);
-  }
+const { spawnSync } = await import("node:child_process");
 
-  const { spawnSync } = await import("node:child_process");
-  const compiled = spawnSync(process.platform === "win32" ? "npm.cmd" : "npm", ["run", "build"], {
+if (LOCAL) {
+  step("Construction du site");
+  const build = spawnSync(process.platform === "win32" ? "npm.cmd" : "npm", ["run", "build"], {
     stdio: "inherit",
     shell: process.platform === "win32",
   });
-  if (compiled.status !== 0) {
+  if (build.status !== 0) {
     fail("la construction du site a échoué.");
     process.exit(1);
   }
   ok("site construit dans dist/");
-
-  if (LOCAL) {
-    console.log(`\n  ${C.bold("Tout est prêt en local.")} Lancez :\n\n    ${C.bold("npm run cf:dev")}\n`);
-  } else {
-    step("Déploiement sur Cloudflare");
-    const deployed = wrangler(["deploy"]);
-    if (deployed.status !== 0) {
-      fail(`déploiement impossible :\n\n${deployed.text.trim()}`);
-      process.exit(1);
-    }
-    const url = /https:\/\/[a-z0-9.-]+\.workers\.dev/i.exec(deployed.text)?.[0] ?? "";
-    console.log(`\n  ${C.green("✓ Site en ligne")}${url ? ` : ${C.bold(url)}` : ""}`);
-    console.log(`  ${C.dim("Espace d'administration : ")}${url}/#/admin\n`);
+  console.log(`\n  ${C.bold("Tout est prêt en local.")} Lancez :\n\n    ${C.bold("npm run cf:dev")}\n`);
+} else if (SKIP_DEPLOY) {
+  if (jwtSecret) {
+    // Cloudflare n'accepte un secret que pour un Worker déjà existant :
+    // il partira avec le premier « npm run cf:deploy ».
+    fs.writeFileSync(".secrets.env", `JWT_SECRET=${jwtSecret}\n`, { mode: 0o600 });
+    warn("secret mis de côté dans .secrets.env : il sera envoyé par « npm run cf:deploy ».");
   }
-} else {
   console.log(`\n  ${C.bold("Installation terminée.")} Déployez avec : ${C.bold("npm run cf:deploy")}\n`);
+} else {
+  if (jwtSecret) fs.writeFileSync(".secrets.env", `JWT_SECRET=${jwtSecret}\n`, { mode: 0o600 });
+  const deployed = spawnSync(process.execPath, ["scripts/cf-deploy.mjs"], { stdio: "inherit" });
+  if (deployed.status !== 0) {
+    fail("le déploiement a échoué (voir le message ci-dessus).");
+    process.exit(1);
+  }
 }

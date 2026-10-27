@@ -3,12 +3,15 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
     "cf:dev": "wrangler dev",
-    "cf:deploy": "npm run build && wrangler deploy",
+    "cf:deploy": "node scripts/cf-deploy.mjs",
     "cf:setup": "node scripts/cf-setup.mjs",
     "cf:admin": "node scripts/cf-admin.mjs",
     "cf:import": "node scripts/cf-import.mjs"

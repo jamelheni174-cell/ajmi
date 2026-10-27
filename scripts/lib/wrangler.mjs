@@ -1,4 +1,4 @@
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import path from "node:path";
 
@@ -9,17 +9,20 @@ const BIN = path.resolve(
   process.platform === "win32" ? "wrangler.cmd" : "wrangler",
 );
 
+export const WRANGLER_BIN = existsSync(BIN) ? BIN : "wrangler";
+
+const shellOpt = () => process.platform === "win32" && WRANGLER_BIN.endsWith(".cmd");
+
 /**
  * Exécute wrangler et renvoie { status, stdout, stderr }.
  * Les sorties sont capturées : l'appelant décide de ce qu'il affiche.
  */
 export function wrangler(args, { input, timeout = 10 * 60 * 1000 } = {}) {
-  const command = existsSync(BIN) ? BIN : "wrangler";
-  const res = spawnSync(command, args, {
+  const res = spawnSync(WRANGLER_BIN, args, {
     input,
     encoding: "utf8",
     timeout,
-    shell: process.platform === "win32" && command.endsWith(".cmd"),
+    shell: shellOpt(),
   });
   return {
     status: res.status ?? 1,
@@ -62,4 +65,45 @@ export function warn(message) {
 
 export function fail(message) {
   console.error(`\n  ${C.red("✗")} ${message}\n`);
+}
+
+/**
+ * Exécute wrangler en laissant la main à l'utilisateur (questions de
+ * Cloudflare au premier déploiement) tout en capturant la sortie.
+ * Renvoie { status, text }.
+ */
+export function wranglerInteractive(args, { timeout = 30 * 60 * 1000 } = {}) {
+  return new Promise((resolve) => {
+    const child = spawn(WRANGLER_BIN, args, {
+      stdio: ["inherit", "pipe", "pipe"],
+      shell: shellOpt(),
+    });
+
+    let text = "";
+    const relay = (stream, target) =>
+      stream.on("data", (chunk) => {
+        const value = chunk.toString();
+        text += value;
+        target.write(value);
+      });
+
+    relay(child.stdout, process.stdout);
+    relay(child.stderr, process.stderr);
+
+    const timer = setTimeout(() => {
+      child.kill("SIGTERM");
+      text += "\n(délai dépassé)";
+    }, timeout);
+
+    const finish = (status) => {
+      clearTimeout(timer);
+      resolve({ status: status ?? 1, text });
+    };
+
+    child.on("error", (error) => {
+      text += `\n${error.message}`;
+      finish(1);
+    });
+    child.on("close", (code) => finish(code));
+  });
 }

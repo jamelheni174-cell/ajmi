@@ -10,49 +10,89 @@ carte bancaire. Le plan gratuit de Cloudflare autorise un usage commercial
 
 ---
 
-## 1. Déploiement Cloudflare (une commande)
+## 1. Déploiement Cloudflare — pas à pas
 
-Prérequis : Node.js 20 ou plus, et un compte Cloudflare gratuit.
+**Avant de commencer :** Node.js **22 ou plus** (`node -v`) et un compte Cloudflare
+gratuit (aucune carte bancaire demandée).
+
+### 1.1 Récupérer le code
+
+```bash
+git clone https://github.com/jamelheni174-cell/ajmi.git
+cd ajmi
+git checkout main && git pull
+```
+
+### 1.2 Installer les dépendances
 
 ```bash
 npm install
-npx wrangler login      # ouvre le navigateur, une seule fois
-npm run cf:setup        # fait tout le reste
 ```
 
-`npm run cf:setup` :
+### 1.3 Se connecter à Cloudflare (une seule fois)
 
-1. crée la base **D1** (`cabinet-ajmi`) et le stockage d'images **R2** ;
-2. enregistre l'identifiant de la base dans `wrangler.jsonc` ;
-3. applique le schéma SQL (`migrations/0001_init.sql`) ;
-4. génère le secret de signature des jetons (`JWT_SECRET`) ;
-5. demande le nom, l'email et le mot de passe de l'administrateur ;
-6. construit le site et le déploie.
+```bash
+npx wrangler login
+```
 
-À la fin, la commande affiche l'adresse du site :
+Le navigateur s'ouvre : autorisez Wrangler. Vérification possible avec
+`npx wrangler whoami`.
+
+### 1.4 Lancer l'installation
+
+```bash
+npm run cf:setup
+```
+
+La commande enchaîne, et s'arrête avec un message clair au premier problème :
+
+| Étape | Ce qui se passe |
+|---|---|
+| Base D1 | crée `cabinet-ajmi` et écrit son identifiant dans `wrangler.jsonc` |
+| Stockage R2 | crée `cabinet-ajmi-media` (sert les images du site) |
+| Schéma SQL | crée les tables `users, content, history, messages, media, reservations` |
+| Secret | génère `JWT_SECRET` (il part avec le premier déploiement) |
+| Administrateur | demande **nom**, **email**, **mot de passe** (8 caractères min.) |
+| Déploiement | construit `dist/` puis publie le Worker |
+
+> **Premier déploiement :** Cloudflare demande de choisir le sous-domaine
+> `*.workers.dev` du compte (une fois par compte) — répondez dans le terminal.
+
+À la fin :
 
 ```
   ✓ Site en ligne : https://cabinet-ajmi.<compte>.workers.dev
-  Espace d'administration : https://cabinet-ajmi.<compte>.workers.dev/#/admin
+  ✓ API en ligne (JWT_SECRET et base de données opérationnels)
+  Administration : https://cabinet-ajmi.<compte>.workers.dev/#/admin
 ```
 
-> Le nom `cabinet-ajmi` doit être libre sur `workers.dev` : pour le changer,
-> modifiez `name` dans `wrangler.jsonc` (et `database_name` si vous le souhaitez).
+> Si `cabinet-ajmi` est déjà pris sur `workers.dev`, changez `name` dans
+> `wrangler.jsonc`, puis relancez la commande.
 
-### Domaine personnalisé
+### 1.5 Se connecter à l'administration
 
-Cloudflare → **Workers & Pages** → votre Worker → **Settings** → **Domains & Routes**
-→ **Add custom domain** → `cabinet-ajmi.tn`. Le certificat HTTPS est automatique et
-gratuit, à condition que le domaine soit géré par Cloudflare (nameservers gratuits).
+Ouvrez `https://…/#/admin` et utilisez l'email et le mot de passe saisis à
+l'étape 1.4. Le bandeau doit indiquer « Backend connecté ».
 
-### Mettre à jour le site
+### 1.6 Reprendre les données existantes (si besoin)
+
+Voir la section 2 ci-dessous, puis `npm run cf:admin` pour le compte administrateur.
+
+### 1.7 Brancher le nom de domaine
+
+Cloudflare → **Workers & Pages** → `cabinet-ajmi` → **Settings** →
+**Domains & Routes** → **Add custom domain** → `cabinet-ajmi.tn`.
+HTTPS est automatique et gratuit, à condition que le domaine utilise les
+nameservers Cloudflare (gratuit, quel que soit le registrar).
+
+### 1.8 Mettre à jour le site plus tard
 
 ```bash
-npm run cf:deploy       # construit dist/ puis déploie
+npm run cf:deploy           # reconstruction + déploiement
 ```
 
-Les modifications de contenu faites depuis `/#/admin` sont enregistrées en base :
-elles n'exigent **aucun** redéploiement.
+Les modifications faites depuis `/#/admin` (textes, images, messages) sont en
+base : elles ne demandent **aucun** redéploiement.
 
 ---
 

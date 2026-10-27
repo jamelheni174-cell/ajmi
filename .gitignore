@@ -7,3 +7,4 @@ server/data/
 # Cloudflare (wrangler)
 .dev.vars
 .wrangler/
+.secrets.env
