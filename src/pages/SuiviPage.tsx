@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchReservations, type Reservation, type ReservationStatus } from "../backend";
+import { trackReservation, type Reservation, type ReservationStatus } from "../backend";
 import { go } from "../router";
 
 const STEPS: { status: ReservationStatus; label: string; desc: string }[] = [
@@ -13,57 +13,45 @@ export function SuiviPage() {
   const [searching, setSearching] = useState(false);
   const [result, setResult] = useState<Reservation | null>(null);
   const [searched, setSearched] = useState(false);
-  const [allReservations, setAllReservations] = useState<Reservation[]>([]);
-
-  useEffect(() => {
-    // Check URL query param code or hash code
-    const updateFromUrl = async () => {
-      const data = await fetchReservations();
-      setAllReservations(data);
-
-      const urlParams = new URLSearchParams(window.location.search);
-      const queryCode = urlParams.get("code");
-      const hash = window.location.hash;
-      let targetCode = queryCode;
-
-      if (!targetCode && hash.includes("code=")) {
-        const parts = hash.split("code=");
-        targetCode = decodeURIComponent(parts[1] || "");
-      }
-
-      if (targetCode) {
-        setCode(targetCode);
-        performSearch(targetCode, data);
-      }
-    };
-
-    void updateFromUrl();
-  }, []);
 
   const normalizeCode = (str: string) => str.replace(/[^A-Z0-9]/gi, "").toUpperCase();
 
-  const performSearch = (inputCode: string, list: Reservation[] = allReservations) => {
+  // Le serveur ne renvoie que la réservation correspondant au code saisi :
+  // les autres dossiers du cabinet restent confidentiels.
+  const performSearch = async (inputCode: string) => {
     setSearching(true);
     setSearched(true);
 
-    const normInput = normalizeCode(inputCode);
-    if (!normInput) {
+    if (!normalizeCode(inputCode)) {
       setResult(null);
       setSearching(false);
       return;
     }
 
-    const found = list.find(
-      (r) => normalizeCode(r.id) === normInput || normalizeCode(r.id).includes(normInput)
-    );
-
-    setResult(found || null);
+    setResult(await trackReservation(inputCode));
     setSearching(false);
   };
 
+  useEffect(() => {
+    // Code fourni dans l'URL : ?code=… ou #/suivi?code=…
+    const urlParams = new URLSearchParams(window.location.search);
+    let targetCode = urlParams.get("code");
+    const hash = window.location.hash;
+
+    if (!targetCode && hash.includes("code=")) {
+      targetCode = decodeURIComponent(hash.split("code=")[1] || "");
+    }
+
+    if (targetCode) {
+      setCode(targetCode);
+      void performSearch(targetCode);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    performSearch(code);
+    void performSearch(code);
   };
 
   const getStepIndex = (status: ReservationStatus) => {

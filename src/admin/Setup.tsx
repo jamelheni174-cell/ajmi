@@ -38,8 +38,9 @@ export function Setup() {
             </h2>
           </div>
           <p className="mt-3 text-xs sm:text-sm text-ink/70 leading-relaxed">
-            Le backend est un serveur <strong>Node.js autonome</strong> fourni dans le dossier <code>server/</code>. Aucun service
-            tiers, aucune dépendance externe : vos données restent sur votre propre hébergement.
+            Le site fonctionne avec <strong>Cloudflare</strong> (recommandé : un seul tableau de bord, gratuit, sans mise en veille)
+            ou avec le <strong>serveur Node.js</strong> autonome du dossier <code>server/</code> pour un VPS. Dans les deux cas,
+            les données restent sur votre hébergement.
           </p>
           <div className="mt-5">
             <Field label="Adresse de l'API (vide = même serveur que le site)">
@@ -55,14 +56,14 @@ export function Setup() {
 
         <Card>
           <h2 className="font-serif text-xl sm:text-2xl">Démarrage rapide</h2>
-          <pre className="mt-4 overflow-x-auto rounded-xl bg-ink p-3 sm:p-4 text-[11px] sm:text-xs leading-relaxed text-stone">{`# 1 — construire le site
+          <pre className="mt-4 overflow-x-auto rounded-xl bg-ink p-3 sm:p-4 text-[11px] sm:text-xs leading-relaxed text-stone">{`# Cloudflare — recommandé, gratuit
+npm install
+npx wrangler login
+npm run cf:setup        # base, images, schéma, compte admin, déploiement
+
+# Serveur Node (VPS)
 npm install && npm run build
-
-# 2 — créer le compte de Maître Ajmi
-cd server && npm run admin
-
-# 3 — démarrer le serveur (API + site)
-npm start        →  http://localhost:4000`}</pre>
+cd server && npm install && npm run admin && npm start`}</pre>
         </Card>
 
         <Card>
@@ -76,11 +77,12 @@ npm start        →  http://localhost:4000`}</pre>
         <Card>
           <h2 className="font-serif text-xl sm:text-2xl">Ce que contient le backend</h2>
           <ul className="mt-4 space-y-2 text-xs sm:text-sm leading-relaxed text-ink/75">
-            <li>• <strong>Authentification</strong> : mots de passe chiffrés (scrypt), jetons JWT signés, limitation des tentatives de connexion.</li>
-            <li>• <strong>Contenu</strong> : stocké en JSON sur disque, avec historique des 10 dernières versions restaurables.</li>
+            <li>• <strong>Authentification</strong> : mots de passe hachés (PBKDF2 sur Cloudflare, scrypt sur serveur Node), jetons JWT signés, limitation des tentatives de connexion.</li>
+            <li>• <strong>Contenu</strong> : stocké en base (D1 ou SQLite), avec historique des 20 dernières versions restaurables.</li>
             <li>• <strong>Messages</strong> : formulaire de contact enregistré en base, protection anti-robot et anti-spam.</li>
-            <li>• <strong>Médias</strong> : images téléversées sur le serveur dans <code>data/uploads/</code>, servies avec cache long.</li>
-            <li>• <strong>Sauvegarde</strong> : tout le site tient dans le dossier <code>data/</code> — une simple archive suffit.</li>
+            <li>• <strong>Médias</strong> : images téléversées dans R2 (Cloudflare) ou <code>data/uploads/</code> (Node), servies avec cache long.</li>
+            <li>• <strong>Réservations</strong> : enregistrées en base et suivies par le client avec son code, sans exposer les autres dossiers.</li>
+            <li>• <strong>Sauvegarde</strong> : export complet en JSON depuis l'administration (<code>/api/export</code>).</li>
           </ul>
         </Card>
       </main>

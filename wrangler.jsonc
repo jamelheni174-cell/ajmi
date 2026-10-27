@@ -1,0 +1,39 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "cabinet-ajmi",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+
+  /* Le site (dist/) est servi par le réseau Cloudflare, sans requête facturée.
+     Seules /api/* et /uploads/* réveillent le Worker. */
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*", "/uploads/*"]
+  },
+
+  /* Base SQLite managée par Cloudflare (remplie par `npm run cf:setup`). */
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "cabinet-ajmi",
+      "database_id": "A_REMPLACER_PAR_CF_SETUP",
+      "migrations_dir": "migrations"
+    }
+  ],
+
+  /* Images téléversées depuis l'espace d'administration. */
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "cabinet-ajmi-media"
+    }
+  ],
+
+  "vars": {
+    "PBKDF2_ITERATIONS": "25000"
+  }
+}

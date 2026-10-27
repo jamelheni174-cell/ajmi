@@ -6,7 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "cf:dev": "wrangler dev",
+    "cf:deploy": "npm run build && wrangler deploy",
+    "cf:setup": "node scripts/cf-setup.mjs",
+    "cf:admin": "node scripts/cf-admin.mjs",
+    "cf:import": "node scripts/cf-import.mjs"
   },
   "dependencies": {
     "clsx": "2.1.1",
@@ -23,6 +28,7 @@
     "tailwindcss": "4.1.17",
     "typescript": "5.9.3",
     "vite": "7.3.2",
-    "vite-plugin-singlefile": "2.3.0"
+    "vite-plugin-singlefile": "2.3.0",
+    "wrangler": "^4.154.0"
   }
 }
