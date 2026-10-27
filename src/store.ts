@@ -98,34 +98,39 @@ export const defaultContent: Content = {
 /** Bump key to invalidate stale localStorage after structure / assets changes */
 const KEY = "ajmi-content-v5";
 
+/** Complète un contenu partiel (ancienne sauvegarde, import) avec les valeurs par défaut. */
+export function mergeContent(parsed: Partial<Content> | null | undefined): Content {
+  if (!parsed) return defaultContent;
+  return {
+    ...defaultContent,
+    ...parsed,
+    // Always prefer fresh domaines / clients / assets from code defaults when merging
+    domaines: parsed.domaines?.length ? parsed.domaines : defaultContent.domaines,
+    clients: defaultContent.clients,
+    logo: defaultContent.logo,
+    logoLight: defaultContent.logoLight,
+    avocat: {
+      ...defaultContent.avocat,
+      ...(parsed.avocat ?? {}),
+      // Keep the real portrait unless admin uploaded a custom one (data:/http)
+      portrait:
+        parsed.avocat?.portrait &&
+        (parsed.avocat.portrait.startsWith("data:") ||
+          parsed.avocat.portrait.startsWith("http"))
+          ? parsed.avocat.portrait
+          : defaultContent.avocat.portrait,
+    },
+    publications: defaultContent.publications,
+    cabinet: { ...defaultContent.cabinet, ...(parsed.cabinet ?? {}) },
+    contact: { ...defaultContent.contact, ...(parsed.contact ?? {}) },
+  };
+}
+
 export function loadContent(): Content {
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return defaultContent;
-    const parsed = JSON.parse(raw) as Partial<Content>;
-    return {
-      ...defaultContent,
-      ...parsed,
-      // Always prefer fresh domaines / clients / assets from code defaults when merging
-      domaines: parsed.domaines?.length ? parsed.domaines : defaultContent.domaines,
-      clients: defaultContent.clients,
-      logo: defaultContent.logo,
-      logoLight: defaultContent.logoLight,
-      avocat: {
-        ...defaultContent.avocat,
-        ...(parsed.avocat ?? {}),
-        // Keep the real portrait unless admin uploaded a custom one (data:/http)
-        portrait:
-          parsed.avocat?.portrait &&
-          (parsed.avocat.portrait.startsWith("data:") ||
-            parsed.avocat.portrait.startsWith("http"))
-            ? parsed.avocat.portrait
-            : defaultContent.avocat.portrait,
-      },
-      publications: defaultContent.publications,
-      cabinet: { ...defaultContent.cabinet, ...(parsed.cabinet ?? {}) },
-      contact: { ...defaultContent.contact, ...(parsed.contact ?? {}) },
-    };
+    return mergeContent(JSON.parse(raw) as Partial<Content>);
   } catch {
     return defaultContent;
   }

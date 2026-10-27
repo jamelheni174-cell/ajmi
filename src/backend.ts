@@ -184,19 +184,19 @@ export function deleteLocalReservation(id: string) {
   return list;
 }
 
-export async function createReservation(resData: Omit<Reservation, "id" | "created_at" | "statut">): Promise<{ reservation: Reservation; error?: string }> {
-  const hex = Math.random().toString(16).substring(2, 8).toUpperCase();
-  const newRes: Reservation = {
-    ...resData,
-    id: `RÉSER-#${hex}`,
-    created_at: new Date().toISOString(),
-    statut: "en_attente",
-  };
+const localReservation = (resData: Omit<Reservation, "id" | "created_at" | "statut">): Reservation => ({
+  ...resData,
+  id: `RÉSER-#${Math.random().toString(16).substring(2, 8).toUpperCase()}`,
+  created_at: new Date().toISOString(),
+  statut: "en_attente",
+});
 
+export async function createReservation(resData: Omit<Reservation, "id" | "created_at" | "statut">): Promise<{ reservation: Reservation; error?: string }> {
   if (isOnline()) {
+    // Le serveur attribue lui-même la référence (unique, visible par le cabinet).
     const { data } = await call<Reservation>("/reservations", {
       method: "POST",
-      body: JSON.stringify(newRes),
+      body: JSON.stringify(resData),
     });
     if (data) {
       saveLocalReservation(data);
@@ -204,10 +204,13 @@ export async function createReservation(resData: Omit<Reservation, "id" | "creat
     }
   }
 
+  // Hors ligne : la demande reste dans le navigateur et part en copie locale.
+  const newRes = localReservation(resData);
   saveLocalReservation(newRes);
   return { reservation: newRes };
 }
 
+/** Liste complète — réservée à l'administration (jeton requis). */
 export async function fetchReservations(): Promise<Reservation[]> {
   if (isOnline()) {
     const { data } = await call<Reservation[]>("/reservations");
@@ -216,19 +219,39 @@ export async function fetchReservations(): Promise<Reservation[]> {
   return getLocalReservations();
 }
 
+/** Suivi public : renvoie uniquement la réservation correspondant au code. */
+export async function trackReservation(code: string): Promise<Reservation | null> {
+  if (isOnline()) {
+    const { data } = await call<Reservation>(`/reservations/track/${encodeURIComponent(code)}`);
+    if (data) return data;
+  }
+  const norm = (v: string) => v.replace(/[^A-Z0-9]/gi, "").toUpperCase();
+  const target = norm(code);
+  if (!target) return null;
+  return getLocalReservations().find((r) => norm(r.id) === target || norm(r.id).includes(target)) ?? null;
+}
+
 export async function updateReservationStatus(id: string, statut: ReservationStatus) {
   if (isOnline()) {
-    await call(`/reservations/${encodeURIComponent(id)}`, {
+    const { error } = await call(`/reservations/${encodeURIComponent(id)}`, {
       method: "PUT",
       body: JSON.stringify({ statut }),
     });
+    if (!error) {
+      updateLocalReservationStatus(id, statut);
+      return fetchReservations();
+    }
   }
   return updateLocalReservationStatus(id, statut);
 }
 
 export async function deleteReservationApi(id: string) {
   if (isOnline()) {
-    await call(`/reservations/${encodeURIComponent(id)}`, { method: "DELETE" });
+    const { error } = await call(`/reservations/${encodeURIComponent(id)}`, { method: "DELETE" });
+    if (!error) {
+      deleteLocalReservation(id);
+      return fetchReservations();
+    }
   }
   return deleteLocalReservation(id);
 }
@@ -252,18 +275,33 @@ export const deleteImage = (name: string) => call(`/media/${encodeURIComponent(n
 
 /* ---------------------- Notice d'installation serveur --------------------- */
 
-export const INSTALL_DOC = `# Déploiement du backend — Cabinet Ajmi
+export const INSTALL_DOC = `# Déploiement — Cabinet Ajmi
 
-Aucune dépendance externe : Node.js 18+ suffit.
+## Option 1 — Cloudflare (recommandé, gratuit)
 
-## 1. Construire le site
     npm install
-    npm run build          # génère dist/
+    npx wrangler login        # une seule fois
+    npm run cf:setup          # D1 + R2 + schéma + secret + admin + déploiement
 
-## 2. Créer le compte administrateur
-    cd server
-    npm run admin          # demande nom, email, mot de passe
+Mise à jour du site   :  npm run cf:deploy
+Reprise des données   :  npm run cf:import -- ./server/data
+Compte administrateur :  npm run cf:admin
 
-## 3. Lancer le serveur (API + site)
-    npm start              # http://localhost:4000
+Le Worker sert le site (dist/), l'API (/api/*) et les images (/uploads/*).
+Base D1, stockage R2, HTTPS et domaine personnalisé sont inclus dans le
+plan gratuit de Cloudflare, qui autorise un usage commercial.
+
+## Option 2 — Serveur Node (VPS, machine dédiée)
+
+    npm install && npm run build
+    cd server && npm install
+    npm run admin             # nom, email, mot de passe
+    npm start                 # http://localhost:4000
+
+Voir server/README.md (systemd + Nginx) pour la mise en production.
+
+## Variables d'environnement (Cloudflare)
+
+    JWT_SECRET          secret de signature (posé par npm run cf:setup)
+    PBKDF2_ITERATIONS   force du hachage (25 000 = plan gratuit)
 `;

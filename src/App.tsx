@@ -3,7 +3,7 @@ import { Nav } from "./components/Nav";
 import { Footer } from "./components/Sections";
 import { Admin } from "./admin/Admin";
 import { Setup } from "./admin/Setup";
-import { ContentCtx, loadContent, saveContent, type Content } from "./store";
+import { ContentCtx, loadContent, mergeContent, saveContent, type Content } from "./store";
 import { fetchContent, ping } from "./backend";
 import { NotFoundPage, ROUTES } from "./pages/Pages";
 import { getPublicationIdFromRoute, useRoute } from "./router";
@@ -27,8 +27,11 @@ export default function App() {
       if (!(await ping())) return;
       const c = await fetchContent();
       if (c) {
-        setContent(c);
-        saveContent(c);
+        // Un contenu incomplet (import, ancienne version) ne doit jamais
+        // empêcher l'affichage : on complète avec les valeurs par défaut.
+        const merged = mergeContent(c);
+        setContent(merged);
+        saveContent(merged);
       }
     })();
   }, []);

@@ -3,3 +3,8 @@ dist
 .DS_Store
 server/data/
 *.log
+
+# Cloudflare (wrangler)
+.dev.vars
+.wrangler/
+.secrets.env
