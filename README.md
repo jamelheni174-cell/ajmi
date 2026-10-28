@@ -214,3 +214,35 @@ Le site est alors servi par le même processus que l'API.
 
 Le suivi de commande (`/#/suivi`) n'expose **que** la réservation dont le code est
 saisi : la liste complète reste réservée à l'administration.
+
+---
+
+## 8. Dépannage
+
+**`git clone` échoue sous Windows — `error: invalid path 'images/…'`**
+Un ancien dossier `images/` à la racine contenait des noms de fichiers terminés par
+des espaces, que Windows refuse. Il a été supprimé (le site publie `public/images/`).
+Mettez à jour une copie existante :
+
+```powershell
+git fetch origin
+git reset --hard origin/main
+```
+
+Sinon, supprimez le dossier et relancez `git clone`.
+
+**`npm run cf:setup` → `Missing script: "cf:setup"`**
+La copie de travail est incomplète (clone interrompu) : npm lit alors un
+`package.json` situé plus haut dans l'arborescence. Après la mise à jour ci-dessus,
+`npm install` doit installer ~250 paquets (dont `wrangler`).
+
+**Vérifier soi-même les chemins**
+
+```bash
+npm run check:paths     # intégré à l'intégration continue (.github/workflows/ci.yml)
+```
+
+**`npm audit` signale des vulnérabilités**
+Elles concernent `wrangler` (outil de déploiement, `devDependencies`), jamais le site
+publié : `dist/` contient seulement React et le CSS. Mettez à jour avec
+`npm install wrangler@latest` lorsque c'est pratique.

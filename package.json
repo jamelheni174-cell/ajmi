@@ -14,7 +14,8 @@
     "cf:deploy": "node scripts/cf-deploy.mjs",
     "cf:setup": "node scripts/cf-setup.mjs",
     "cf:admin": "node scripts/cf-admin.mjs",
-    "cf:import": "node scripts/cf-import.mjs"
+    "cf:import": "node scripts/cf-import.mjs",
+    "check:paths": "node scripts/check-paths.mjs"
   },
   "dependencies": {
     "clsx": "2.1.1",
