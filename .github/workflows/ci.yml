@@ -1,0 +1,31 @@
+name: Vérifications
+
+# Bloque les régressions qui cassent le clone sur un autre système
+# (chemins invalides sous Windows) ou la construction du site.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Chemins compatibles Windows / macOS / Linux
+        run: npm run check:paths
+
+      - name: Types TypeScript
+        run: npx tsc --noEmit
+
+      - name: Construction du site
+        run: npm run build

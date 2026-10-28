@@ -8,3 +8,8 @@ server/data/
 .dev.vars
 .wrangler/
 .secrets.env
+
+# Dossier source des photos à la racine : le site publie public/images/.
+# Un dossier de même nom recréé ici casse le « git clone » sous Windows
+# (noms de fichiers avec espaces finaux).
+/images/
