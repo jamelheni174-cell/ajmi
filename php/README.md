@@ -217,6 +217,26 @@ accents, images, réservations), ainsi que `install.php` de bout en bout.
 Rien n'est ajouté au `package.json` : l'installation est ponctuelle, et
 `--no-save` évite de modifier le projet.
 
+### Voir le site tourner, sans rien installer sur le serveur
+
+Si PHP n'est pas installé sur votre machine, l'aperçu s'en passe : il
+exécute un vrai PHP 8.3 compilé en WebAssembly.
+
+```bash
+npm i --no-save @php-wasm/node @php-wasm/universal
+node php/tools/preview.mjs
+```
+
+Ouvrez `http://localhost:8080/`, l'administration est sur `/admin` et le
+compte est `admin@ajmi.tn` / `Ajmi2026!` (modifiable par les variables
+`AJMI_ADMIN_EMAIL` et `AJMI_ADMIN_PASS`).
+
+Le script installe le site tout seul, comme le ferait `install.php`, puis
+sert le site et l'API. Tout se passe dans un disque virtuel en mémoire :
+**aucun fichier du dossier `php/` n'est modifié**, et un redémarrage remet
+les données à zéro. C'est le moyen le plus rapide de vérifier une
+modification avant de l'envoyer par FTP.
+
 Sur une machine disposant de PHP en ligne de commande, le plus simple reste :
 
 ```bash
@@ -224,6 +244,9 @@ php -S localhost:8080 -t php/
 ```
 
 puis ouvrez `http://localhost:8080/install.php`.
+
+Les trois outils (`sync.mjs`, `test-api.mjs`, `preview.mjs`) ne servent
+qu'au développement : ils n'ont pas leur place sur l'hébergement.
 
 ---
 
@@ -248,7 +271,8 @@ php/
 │   └── schema/           sqlite.sql · mysql.sql
 └── tools/
     ├── sync.mjs          recopie dist/ → php/
-    └── test-api.mjs      73 vérifications avec un vrai PHP
+    ├── test-api.mjs      73 vérifications avec un vrai PHP
+    └── preview.mjs       aperçu local, sans installer PHP
 ```
 
 L'API expose exactement les mêmes routes que la version Cloudflare
