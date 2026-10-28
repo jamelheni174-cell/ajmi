@@ -1,0 +1,9 @@
+# Accès direct interdit : ces fichiers ne peuvent être exécutés que par
+# l'intermédiaire de api/index.php ou de install.php.
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+  Order allow,deny
+  Deny from all
+</IfModule>

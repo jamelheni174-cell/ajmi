@@ -1,0 +1,18 @@
+# Version PHP — fichiers générés ou propres au serveur
+
+# Configuration créée par install.php (contient le secret des jetons)
+app/config.php
+app/config.php.tmp
+
+# Base de données et compteurs (jamais versionnés)
+ajmi-data/
+data/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+rate.json
+
+# Images téléversées en production (conservées côté serveur, pas dans Git)
+uploads/*
+!uploads/.htaccess
+!uploads/.gitkeep

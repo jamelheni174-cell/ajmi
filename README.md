@@ -10,6 +10,20 @@ carte bancaire. Le plan gratuit de Cloudflare autorise un usage commercial
 
 ---
 
+## Deux façons d'héberger ce site
+
+| | **Cloudflare** (section 1) | **PHP** (dossier `php/`) |
+|---|---|---|
+| Où | Workers + D1 + R2 | n'importe quel hébergement PHP 8 |
+| Installation | `npx wrangler login` puis `npm run cf:setup` | envoyer `php/` par FTP, ouvrir `install.php` |
+| Coût | 0 €, aucune carte | 0 à 3 €/mois selon l'hébergeur |
+| Outils sur la machine | Node.js 22 + wrangler | un client FTP suffit |
+
+Le site web est identique dans les deux cas (même code React compilé) ;
+seule la partie serveur diffère. Voir `php/README.md` pour la version PHP.
+
+---
+
 ## 1. Déploiement Cloudflare — pas à pas
 
 **Avant de commencer :** Node.js **22 ou plus** (`node -v`) et un compte Cloudflare
