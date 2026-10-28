@@ -1,0 +1,23 @@
+# Dossier des images téléversées depuis l'administration.
+#
+# Sécurité : aucun script ne doit pouvoir s'exécuter ici, même si un
+# fichier .php parvenait à être déposé.
+
+Options -Indexes
+
+<IfModule mod_php.c>
+  php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+  php_flag engine off
+</IfModule>
+
+<FilesMatch "\.(php|phtml|phar|php[0-9]|cgi|pl|py|sh|htaccess)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>

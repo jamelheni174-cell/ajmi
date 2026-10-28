@@ -1,0 +1,62 @@
+# ---------------------------------------------------------------------
+#  Cabinet Ajmi — version PHP (hébergement mutualisé)
+#  Ce fichier suppose Apache avec mod_rewrite (cas de la quasi-totalité
+#  des hébergements mutualisés : cPanel, Plesk, Hostinger, InfinityFree…)
+#
+#  L'ordre des règles compte : la protection des dossiers privés vient
+#  en premier, avant la règle qui sert les fichiers existants.
+# ---------------------------------------------------------------------
+
+Options -Indexes
+DirectoryIndex index.html index.php
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Conserve l'en-tête Authorization (jeton de l'administration), que
+  # certains hébergements en CGI suppriment au passage.
+  RewriteCond %{HTTP:Authorization} .
+  RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+  # 1. Dossiers privés : jamais servis (base de données, configuration).
+  RewriteRule ^(app|data|ajmi-data)(/|$) - [F,L]
+
+  # 2. Fichiers et dossiers réels : servis tels quels (images, uploads…).
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # 3. API : toutes les routes passent par un contrôleur unique.
+  RewriteRule ^api(/.*)?$ api/index.php [L,QSA]
+
+  # 4. Site React : toute autre adresse renvoie index.html.
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Limites PHP (ignorées si l'hébergeur utilise PHP-FPM, voir README).
+<IfModule mod_php.c>
+  php_value post_max_size 16M
+  php_value upload_max_filesize 16M
+  php_value memory_limit 128M
+</IfModule>
+<IfModule mod_php7.c>
+  php_value post_max_size 16M
+  php_value upload_max_filesize 16M
+  php_value memory_limit 128M
+</IfModule>
+
+# Cache des images et des fichiers téléversés.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png  "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+</IfModule>
+
+# Le site est une page unique : pas de cache sur index.html, sinon les
+# mises à jour ne sont vues qu'après un vidage de cache du navigateur.
+<Files "index.html">
+  <IfModule mod_headers.c>
+    Header set Cache-Control "no-cache"
+  </IfModule>
+</Files>
