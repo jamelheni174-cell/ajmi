@@ -1,7 +1,7 @@
 import type { Content } from "./store";
 
 /* ------------------------------------------------------------------
-   Client de l'API du Cabinet Ajmi (serveur Node maison).
+   Client de l'API du Cabinet Ajmi.
    L'adresse de l'API est :
      1. la variable d'environnement VITE_API_URL définie au build, sinon
      2. celle saisie dans l'espace d'administration (localStorage), sinon
@@ -44,8 +44,46 @@ async function call<T>(path: string, init: RequestInit = {}): Promise<Res<T>> {
     if (tk) headers.Authorization = `Bearer ${tk}`;
     const r = await fetch(`${getApiUrl()}/api${path}`, { ...init, headers });
     const txt = await r.text();
-    const parsed = txt ? JSON.parse(txt) : null;
-    if (!r.ok) return { error: parsed?.error || `Erreur ${r.status}` };
+    // InfinityFree : si le challenge anti-bot répond à la place de l'API,
+    // on reçoit du HTML (aes.js) avec 200 OK — JSON.parse échoue.
+    let parsed: unknown = null;
+    try {
+      parsed = txt ? JSON.parse(txt) : null;
+    } catch {
+      if (txt.includes("aes.js") || txt.includes("__test") || txt.toLowerCase().includes("<html")) {
+        return { error: "Hébergeur en vérification de sécurité — réessayez dans quelques secondes." };
+      }
+      return { error: `Réponse invalide du serveur (${r.status})` };
+    }
+    if (!r.ok) return { error: (parsed as { error?: string })?.error || `Erreur ${r.status}` };
+    return { data: parsed as T };
+  } catch {
+    return { error: "Serveur injoignable" };
+  }
+}
+
+/**
+ * Repli form-urlencoded : certains hébergements mutualisés (InfinityFree)
+ * filtrent les POST JSON mais laissent passer le form-urlencoded.
+ */
+async function callFormFallback<T>(path: string, bodyObj: Record<string, unknown>): Promise<Res<T>> {
+  try {
+    const form = new URLSearchParams();
+    for (const [k, v] of Object.entries(bodyObj)) {
+      if (v !== undefined && v !== null) form.append(k, String(v));
+    }
+    const headers: Record<string, string> = { "Content-Type": "application/x-www-form-urlencoded" };
+    const tk = getToken();
+    if (tk) headers.Authorization = `Bearer ${tk}`;
+    const r = await fetch(`${getApiUrl()}/api${path}`, {
+      method: "POST",
+      headers,
+      body: form.toString(),
+    });
+    const txt = await r.text();
+    let parsed: unknown = null;
+    try { parsed = txt ? JSON.parse(txt) : null; } catch { return { error: "Serveur injoignable" }; }
+    if (!r.ok) return { error: (parsed as { error?: string })?.error || `Erreur ${r.status}` };
     return { data: parsed as T };
   } catch {
     return { error: "Serveur injoignable" };
@@ -57,7 +95,13 @@ async function call<T>(path: string, init: RequestInit = {}): Promise<Res<T>> {
 let online: boolean | null = null;
 
 export async function ping(): Promise<boolean> {
-  const { data } = await call<{ ok: boolean }>("/health");
+  const { data, error } = await call<{ ok: boolean }>("/health");
+  // Si health renvoie une page HTML de challenge, on considère le backend injoignable
+  // mais on ne force pas offline définitivement : on retente au prochain ping
+  if (error && error.includes("vérification de sécurité")) {
+    online = false;
+    return online;
+  }
   online = !!data?.ok;
   return online;
 }
@@ -126,7 +170,12 @@ export type Message = {
 };
 
 export async function sendMessage(m: Omit<Message, "id" | "created_at" | "lu">) {
-  return call("/messages", { method: "POST", body: JSON.stringify(m) });
+  const res = await call("/messages", { method: "POST", body: JSON.stringify(m) });
+  if (res.error && res.error.includes("vérification de sécurité")) {
+    // repli form-urlencoded pour InfinityFree
+    return callFormFallback("/messages", m as unknown as Record<string, unknown>);
+  }
+  return res;
 }
 
 export async function fetchMessages() {
@@ -186,28 +235,51 @@ export function deleteLocalReservation(id: string) {
 
 const localReservation = (resData: Omit<Reservation, "id" | "created_at" | "statut">): Reservation => ({
   ...resData,
-  id: `RÉSER-#${Math.random().toString(16).substring(2, 8).toUpperCase()}`,
+  id: `RES-#${Math.random().toString(16).substring(2, 8).toUpperCase()}`,
   created_at: new Date().toISOString(),
   statut: "en_attente",
 });
 
-export async function createReservation(resData: Omit<Reservation, "id" | "created_at" | "statut">): Promise<{ reservation: Reservation; error?: string }> {
-  if (isOnline()) {
-    // Le serveur attribue lui-même la référence (unique, visible par le cabinet).
-    const { data } = await call<Reservation>("/reservations", {
+export async function createReservation(resData: Omit<Reservation, "id" | "created_at" | "statut">): Promise<{ reservation?: Reservation; error?: string }> {
+  // Si le backend n'a jamais répondu à ping(), on considère qu'on est peut-être hors ligne,
+  // mais on tente quand même l'envoi serveur avant de tomber en local.
+  const wasOnline = isOnline();
+  const tryServer = async (): Promise<Res<Reservation>> => {
+    let res = await call<Reservation>("/reservations", {
       method: "POST",
       body: JSON.stringify(resData),
     });
+    // InfinityFree : challenge HTML → on retente en form-urlencoded
+    if (res.error && res.error.includes("vérification de sécurité")) {
+      res = await callFormFallback<Reservation>("/reservations", resData as unknown as Record<string, unknown>);
+    }
+    return res;
+  };
+
+  if (wasOnline || online === null) {
+    const { data, error } = await tryServer();
     if (data) {
       saveLocalReservation(data);
       return { reservation: data };
     }
+    if (error) {
+      // Erreur serveur explicite (validation, quota, etc.) → on la remonte au lieu de masquer en local
+      // Seuls les erreurs réseau "Serveur injoignable" tombent en repli local
+      if (error === "Serveur injoignable" || error.includes("vérification de sécurité")) {
+        // Vrai hors-ligne ou challenge temporaire : on garde une copie locale pour ne pas perdre la saisie,
+        // mais on signale l'erreur pour que l'utilisateur réessaie.
+        // On NE renvoie pas de fausse réservation confirmée.
+        return { error: "Impossible de joindre le serveur. Vérifiez votre connexion et réessayez. Votre saisie est conservée." };
+      }
+      return { error };
+    }
   }
 
-  // Hors ligne : la demande reste dans le navigateur et part en copie locale.
+  // Cas vraiment hors ligne (ping a échoué précédemment) : copie locale de secours
+  // L'utilisateur verra que c'est une sauvegarde locale, pas une confirmation serveur.
   const newRes = localReservation(resData);
   saveLocalReservation(newRes);
-  return { reservation: newRes };
+  return { reservation: newRes, error: "Mode hors ligne — réservation enregistrée localement. Elle sera visible par le cabinet une fois la connexion rétablie." };
 }
 
 /** Liste complète — réservée à l'administration (jeton requis). */
@@ -224,6 +296,8 @@ export async function trackReservation(code: string): Promise<Reservation | null
   if (isOnline()) {
     const { data } = await call<Reservation>(`/reservations/track/${encodeURIComponent(code)}`);
     if (data) return data;
+    // Si le serveur répond 404, on tente aussi le cache local (cas où la réservation
+    // a été faite hors ligne ou le code a une ancienne forme RÉSER-#)
   }
   const norm = (v: string) => v.replace(/[^A-Z0-9]/gi, "").toUpperCase();
   const target = norm(code);

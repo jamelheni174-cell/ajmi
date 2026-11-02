@@ -18,6 +18,7 @@ export function ReservationModal({ publication, onClose }: ReservationModalProps
 
   const [loading, setLoading] = useState(false);
   const [submittedRes, setSubmittedRes] = useState<Reservation | null>(null);
+  const [submittedWarning, setSubmittedWarning] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -42,13 +43,23 @@ export function ReservationModal({ publication, onClose }: ReservationModalProps
         remarques,
       });
 
+      if (res.error) {
+        setErrorMsg(res.error);
+        // Si une réservation locale a été créée malgré l'erreur (mode hors ligne),
+        // on ne l'affiche pas comme confirmée : l'utilisateur doit réessayer.
+        // Le backend actuel ne renvoie jamais reservation + error ensemble.
+        return;
+      }
+
       if (res.reservation) {
         setSubmittedRes(res.reservation);
+        // Affiche l'avertissement s'il y en a (ex: mode hors ligne)
+        if ((res as { error?: string }).error) setSubmittedWarning((res as { error?: string }).error || "");
       } else {
         setErrorMsg("Une erreur est survenue lors de l'enregistrement de votre commande.");
       }
     } catch {
-      setErrorMsg("Impossible de valider la réservation pour le moment.");
+      setErrorMsg("Impossible de valider la réservation pour le moment. Vérifiez votre connexion.");
     } finally {
       setLoading(false);
     }
@@ -92,6 +103,12 @@ export function ReservationModal({ publication, onClose }: ReservationModalProps
               <p className="mt-2 text-[10px] sm:text-[11px] text-paper/50">Conservez ce numéro pour le suivi de votre livraison.</p>
             </div>
 
+            {submittedWarning && (
+              <div className="mb-4 rounded-xl bg-amber-950/50 p-3 text-xs text-amber-200 border border-amber-500/30">
+                {submittedWarning}
+              </div>
+            )}
+
             <p className="text-xs text-paper/60">
               Le secrétariat du cabinet vous contactera au <strong>{submittedRes.telephone}</strong> pour finaliser les détails.
             </p>
@@ -127,7 +144,7 @@ export function ReservationModal({ publication, onClose }: ReservationModalProps
             </div>
 
             {errorMsg && (
-              <div className="mb-4 rounded-xl bg-red-950/60 p-3 text-xs text-red-300 border border-red-500/30">
+              <div className="mb-4 rounded-xl bg-red-950/60 p-3 text-xs text-red-300 border border-red-500/30 whitespace-pre-wrap">
                 {errorMsg}
               </div>
             )}

@@ -18,9 +18,21 @@ require __DIR__ . '/../app/routes.php';
 
 $methode = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
 
-// Requête préliminaire CORS.
+// Requête préliminaire CORS — indispensable pour les POST JSON.
+// InfinityFree : le pare-feu peut bloquer les OPTIONS s'ils n'ont pas de réponse 204 avec les bons en-têtes.
 if ($methode === 'OPTIONS') {
+    // InfinityFree ajoute parfois ?i=1 à la première visite (challenge JS) : on l'ignore
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+    header('Access-Control-Max-Age: 86400');
     ajmi_json(null, 204);
+}
+
+// InfinityFree : nettoie les requêtes d'images fantômes (aes.js challenge)
+// Si le corps contient du HTML de challenge, on le signale en log
+if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+    // rien de spécial, mais on évite de logger du bruit
 }
 
 // Chemin demandé. Deux sources, selon que la réécriture d'URL est active

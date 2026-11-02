@@ -14,9 +14,12 @@ DirectoryIndex index.html index.php
   RewriteEngine On
 
   # Conserve l'en-tête Authorization (jeton de l'administration), que
-  # certains hébergements en CGI suppriment au passage.
+  # certains hébergements en CGI/FastCGI suppriment au passage (InfinityFree, Hostinger…).
   RewriteCond %{HTTP:Authorization} .
   RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+  # InfinityFree : le header peut arriver en REDIRECT_HTTP_AUTHORIZATION
+  RewriteCond %{HTTP:REDIRECT_HTTP_AUTHORIZATION} .
+  RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:REDIRECT_HTTP_AUTHORIZATION}]
 
   # 1. Dossiers privés : jamais servis (base de données, configuration).
   RewriteRule ^(app|data|ajmi-data)(/|$) - [F,L]
