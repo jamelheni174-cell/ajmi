@@ -364,9 +364,7 @@ function ajmi_router(string $methode, string $chemin): void
         }
     }
 
-    // Debug temporaire InfinityFree : renvoyer le chemin pour diagnostiquer
-    // À retirer une fois le problème résolu
-    ajmi_json(['error' => 'Route inconnue', 'debug_chemin' => $chemin, 'debug_uri' => $_SERVER['REQUEST_URI'] ?? '', 'debug_method' => $methode], 404);
+    ajmi_json(['error' => 'Route inconnue'], 404);
 }
 
 /**
