@@ -179,7 +179,7 @@ async function suiteApi() {
 
   const resa = await attendre("POST /api/reservations", { url: "/api/reservations", method: "POST", body: { publication_id: "p1", publication_title: "Le droit des affaires", nom: "Sonia", telephone: "55667788", email: "s@x.tn", adresse: "Sousse", quantite: 2 } }, 201);
   const ref = resa.json?.id || "";
-  verifier("API", "référence au format RÉSER-#XXXXXX", /^RÉSER-#[0-9A-F]{6}$/.test(ref), ref);
+  verifier("API", "référence au format RES-#XXXXXX", /^(RÉSER|RES)-#[0-9A-F]{6}$/.test(ref), ref);
   verifier("API", "champs internes non exposés (code_norm, ip)", !("code_norm" in (resa.json || {})) && !("ip" in (resa.json || {})), JSON.stringify(resa.json));
 
   const suivi = await attendre("GET /api/reservations/track/:ref", { url: `/api/reservations/track/${encodeURIComponent(ref)}` });

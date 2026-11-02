@@ -254,15 +254,23 @@ function ajmi_router(string $methode, string $chemin): void
                 ajmi_json(['error' => 'Trop de demandes. Réessayez plus tard.'], 429);
             }
             $r = ajmi_body(32768);
+            // InfinityFree : log pour debug si corps vide (via error_log, visible dans cPanel → Journaux)
+            if (empty($r)) {
+                error_log('[ajmi] reservation POST corps vide — IP ' . $ip . ' UA ' . ($_SERVER['HTTP_USER_AGENT'] ?? '?'));
+            }
             if (empty($r['nom']) || empty($r['publication_title'])) {
-                ajmi_json(['error' => 'Champs obligatoires manquants.'], 400);
+                ajmi_json(['error' => 'Champs obligatoires manquants : nom et titre de la publication.'], 400);
+            }
+            if (empty($r['telephone']) && empty($r['email'])) {
+                ajmi_json(['error' => 'Veuillez renseigner au moins un téléphone ou un email.'], 400);
             }
 
+            // Génère un code unique ; réessaie une fois si collision (très rare)
             $id = ajmi_nouveau_code();
             $reservation = [
                 'id'                => $id,
                 'code_norm'         => ajmi_code_normalise($id),
-                'created_at'        => date('c'),
+                'created_at'        => ajmi_now(),
                 'publication_id'    => ajmi_texte($r['publication_id'] ?? '', 120),
                 'publication_title' => ajmi_texte($r['publication_title'], 240),
                 'nom'               => ajmi_texte($r['nom'], 120),
@@ -274,7 +282,18 @@ function ajmi_router(string $methode, string $chemin): void
                 'statut'            => 'en_attente',
                 'ip'                => $ip,
             ];
-            ajmi_reservation_ajouter($reservation);
+            try {
+                ajmi_reservation_ajouter($reservation);
+            } catch (PDOException $e) {
+                // Collision d'ID (ex: deux requêtes le même microseconde) → un seul réessai
+                if (str_contains($e->getMessage(), 'UNIQUE') || str_contains($e->getMessage(), 'Duplicate')) {
+                    $reservation['id'] = ajmi_nouveau_code();
+                    $reservation['code_norm'] = ajmi_code_normalise($reservation['id']);
+                    ajmi_reservation_ajouter($reservation);
+                } else {
+                    throw $e;
+                }
+            }
 
             unset($reservation['code_norm'], $reservation['ip']);
             ajmi_json($reservation, 201);
@@ -348,8 +367,16 @@ function ajmi_router(string $methode, string $chemin): void
     ajmi_json(['error' => 'Route inconnue'], 404);
 }
 
-/** Référence de réservation : RÉSER-#A1B2C3 */
+/**
+ * Référence de réservation.
+ * Historiquement « RÉSER-#A1B2C3 » (avec accent) pour le cabinet.
+ * On génère désormais « RES-#A1B2C3 » (ASCII pur) pour éviter tout
+ * problème d'encodage d'URL sur les hébergements mutualisés les plus
+ * stricts (InfinityFree) ; les deux formes restent recherchables via
+ * ajmi_code_normalise() qui supprime les accents.
+ */
 function ajmi_nouveau_code(): string
 {
-    return 'RÉSER-#' . strtoupper(bin2hex(random_bytes(3)));
+    // ASCII pur : ne pose jamais de problème d'URL/JSON/DB
+    return 'RES-#' . strtoupper(bin2hex(random_bytes(3)));
 }

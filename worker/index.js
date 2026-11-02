@@ -309,5 +309,5 @@ function iterations(env) {
 function makeCode() {
   const bytes = crypto.getRandomValues(new Uint8Array(3));
   const hex = [...bytes].map((b) => b.toString(16).padStart(2, "0")).join("").toUpperCase();
-  return `RÉSER-#${hex}`;
+  return `RES-#${hex}`;
 }

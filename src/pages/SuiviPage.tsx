@@ -82,7 +82,7 @@ export function SuiviPage() {
             Suivi de votre Commande d'Ouvrage
           </h1>
           <p className="mt-3 sm:mt-4 max-w-lg mx-auto text-xs sm:text-sm font-light leading-relaxed text-ink/70">
-            Saisissez le numéro de réservation reçu lors de votre commande (ex: <code className="font-mono bg-stone/40 px-1.5 py-0.5 rounded text-navy break-all">RÉSER-#C68F9C</code> ou simplement <code className="font-mono bg-stone/40 px-1.5 py-0.5 rounded text-navy">C68F9C</code>).
+            Saisissez le numéro de réservation reçu lors de votre commande (ex: <code className="font-mono bg-stone/40 px-1.5 py-0.5 rounded text-navy break-all">RES-#C68F9C</code> ou simplement <code className="font-mono bg-stone/40 px-1.5 py-0.5 rounded text-navy">C68F9C</code> — les anciens codes RÉSER-# restent valables).
           </p>
         </div>
 
@@ -94,7 +94,7 @@ export function SuiviPage() {
               required
               value={code}
               onChange={(e) => setCode(e.target.value)}
-              placeholder="Code de réservation (ex: RÉSER-#C68F9C)..."
+              placeholder="Code de réservation (ex: RES-#C68F9C)..."
               className="flex-1 rounded-xl sm:rounded-2xl border border-stone bg-paper/30 px-4 sm:px-5 py-3 sm:py-4 font-mono text-base text-ink outline-none transition focus:border-navy focus:bg-white"
             />
             <button

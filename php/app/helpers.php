@@ -30,7 +30,9 @@ function ajmi_error(string $message, int $status = 400): void
 }
 
 /**
- * Corps JSON de la requête (tableau vide si le corps est vide).
+ * Corps de la requête — accepte JSON (cas standard) et
+ * application/x-www-form-urlencoded (repli pour certains hébergements
+ * mutualisés qui filtrent le Content-Type JSON, dont InfinityFree).
  *
  * La constante AJMI_INPUT n'existe que pour les tests automatisés, qui
  * exécutent le contrôleur hors d'un serveur web ; elle n'est jamais définie
@@ -39,17 +41,48 @@ function ajmi_error(string $message, int $status = 400): void
 function ajmi_body(int $limit = 1048576): array
 {
     $raw = defined('AJMI_INPUT') ? (string) AJMI_INPUT : file_get_contents('php://input');
+
+    // InfinityFree / certains hébergements : le corps JSON peut être vidé
+    // par un module de sécurité, mais $_POST reste rempli pour du form-urlencoded.
+    if (($raw === false || $raw === '') && !empty($_POST)) {
+        return $_POST;
+    }
     if ($raw === false || $raw === '') {
         return [];
     }
     if (strlen($raw) > $limit) {
         ajmi_error('Fichier trop volumineux.', 413);
     }
+
+    // 1. Tente JSON (cas nominal : fetch avec Content-Type: application/json)
     $data = json_decode($raw, true);
-    if (!is_array($data)) {
-        ajmi_error('Requête invalide.', 400);
+    if (is_array($data)) {
+        return $data;
     }
-    return $data;
+
+    // 2. Repli form-urlencoded (ex: InfinityFree bloquant le JSON)
+    //    parse_str décode %C3%A9 → É correctement.
+    $form = [];
+    parse_str($raw, $form);
+    if (is_array($form) && !empty($form)) {
+        // parse_str peut produire un tableau avec une seule clé vide si le
+        // corps était du JSON non parsé : on évite de le renvoyer tel quel.
+        // Si le corps commençait par { ou [, c'était bien du JSON invalide.
+        $trim = ltrim($raw);
+        if ($trim !== '' && ($trim[0] === '{' || $trim[0] === '[')) {
+            ajmi_error('Requête invalide.', 400);
+        }
+        return $form;
+    }
+
+    // 3. Dernier recours : $_POST (certains serveurs remplissent $_POST
+    //    même quand php://input a été consommé).
+    if (!empty($_POST)) {
+        return $_POST;
+    }
+
+    ajmi_error('Requête invalide.', 400);
+    return []; // inatteignable
 }
 
 /** Adresse IP du visiteur. */
@@ -132,11 +165,24 @@ function ajmi_rate(string $cle, int $max = 30, int $fenetre = 60, bool $compter 
  * « RÉSER-#… ». C'est un peu plus tolérant que la version Cloudflare, qui
  * supprime l'accent ; ajmi_code_variantes() accepte les deux formes pour
  * rester compatible avec des références créées à l'époque de Cloudflare.
+ *
+ * InfinityFree : iconv avec TRANSLIT peut être désactivé. On prévoit un
+ * remplacement manuel des caractères accentués les plus courants.
  */
 function ajmi_code_normalise(string $code): string
 {
-    $ascii = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $code);
-    $base = $ascii !== false ? $ascii : $code;
+    // Remplacement manuel si iconv échoue (InfinityFree free tier)
+    $manuel = strtr($code, [
+        'É' => 'E', 'È' => 'E', 'Ê' => 'E', 'Ë' => 'E',
+        'é' => 'e', 'è' => 'e', 'ê' => 'e', 'ë' => 'e',
+        'À' => 'A', 'Â' => 'A', 'Ä' => 'A', 'à' => 'a', 'â' => 'a', 'ä' => 'a',
+        'Î' => 'I', 'Ï' => 'I', 'î' => 'i', 'ï' => 'i',
+        'Ô' => 'O', 'Ö' => 'O', 'ô' => 'o', 'ö' => 'o',
+        'Ù' => 'U', 'Û' => 'U', 'Ü' => 'U', 'ù' => 'u', 'û' => 'u', 'ü' => 'u',
+        'Ç' => 'C', 'ç' => 'c',
+    ]);
+    $ascii = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $manuel);
+    $base = $ascii !== false && $ascii !== '' ? $ascii : $manuel;
     return strtoupper(preg_replace('/[^A-Za-z0-9]/', '', $base) ?? '');
 }
 

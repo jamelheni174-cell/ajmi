@@ -106,8 +106,8 @@ if ($installe) {
         // Enregistrement d'une réservation de test, puis suppression.
         $code = 'TEST-#' . strtoupper(bin2hex(random_bytes(3)));
         ajmi_reservation_ajouter([
-            'id' => $code, 'code_norm' => ajmi_code_normalise($code), 'created_at' => date('c'),
-            'publication_id' => 'test', 'publication_title' => 'Test', 'nom' => 'Test', 'telephone' => '',
+            'id' => $code, 'code_norm' => ajmi_code_normalise($code), 'created_at' => ajmi_now(),
+            'publication_id' => 'test', 'publication_title' => 'Test', 'nom' => 'Test', 'telephone' => '55667788',
             'email' => '', 'adresse' => '', 'quantite' => 1, 'remarques' => '', 'statut' => 'en_attente', 'ip' => '127.0.0.1',
         ]);
         $retrouvee = ajmi_reservation_par_code(ajmi_code_normalise($code));
