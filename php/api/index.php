@@ -35,11 +35,17 @@ if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH
     // rien de spécial, mais on évite de logger du bruit
 }
 
-// Chemin demandé. Deux sources, selon que la réécriture d'URL est active
-// ou non (certains hébergements désactivent mod_rewrite) :
-//   1. /api/health              (réécriture .htaccess)
-//   2. /api/index.php?r=/health (repli sans réécriture)
+// Chemin demandé. Plusieurs sources selon hébergement (InfinityFree, Hostinger, etc.) :
+//   1. /api/health                     (réécriture .htaccess)
+//   2. /api/index.php/health           (appel direct)
+//   3. /api/index.php?r=/health         (repli sans mod_rewrite)
+//   4. REDIRECT_URL / PATH_INFO (certains CGI)
 $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+// InfinityFree peut remplir REDIRECT_URL même quand REQUEST_URI est réécrit
+if (empty($uri) || $uri === '/') {
+    $uri = $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ?? '/';
+    $uri = parse_url($uri, PHP_URL_PATH) ?: '/';
+}
 $position = strpos($uri, '/api/');
 
 if ($position !== false) {
@@ -48,14 +54,21 @@ if ($position !== false) {
     // Appel direct du contrôleur : /api/index.php/health
     $chemin = preg_replace('#^/index\.php#', '', $chemin) ?? $chemin;
 } elseif (isset($_GET['r'])) {
-    // Repli prévu par .htaccess pour les hébergements sans réécriture :
+    // Repli prévu pour hébergements sans réécriture :
     // /api/index.php?r=/health
     $chemin = '/' . ltrim((string) $_GET['r'], '/');
+} elseif (!empty($_SERVER['PATH_INFO'])) {
+    $chemin = $_SERVER['PATH_INFO'];
+} elseif (!empty($_SERVER['ORIG_PATH_INFO'])) {
+    $chemin = $_SERVER['ORIG_PATH_INFO'];
 } else {
-    $chemin = $_SERVER['PATH_INFO'] ?? '/';
+    $chemin = '/';
 }
 
 $chemin = '/' . trim($chemin, '/');
+// InfinityFree ajoute ?i=1 au premier passage (challenge JS) — déjà retiré par parse_url,
+// mais on nettoie au cas où un proxy l'aurait laissé dans PATH_INFO
+$chemin = strtok($chemin, '?') ?: $chemin;
 
 try {
     ajmi_router($methode, $chemin);
