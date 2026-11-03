@@ -27,8 +27,10 @@ BLUE = HexColor("#3b82f6")
 GREY = HexColor("#64748b")
 
 OUTPUT = "/home/user/ajmi/guide-administrateur-ajmi.pdf"
-IMG_DIR = "/tmp/guide_imgs"
+IMG_DIR = "/tmp/guide_imgs"  # now contains satori real-rendered screenshots
 os.makedirs(IMG_DIR, exist_ok=True)
+# Satori real screenshots (generated via tools/render_admin_satori.mjs + satori2.mjs)
+# If they exist, we use them directly; otherwise fallback to Pillow placeholders below
 
 def make_screenshot(filename, title, subtitle, bullets=None, badge=""):
     """Generate a placeholder screenshot image"""
@@ -98,56 +100,46 @@ def make_screenshot(filename, title, subtitle, bullets=None, badge=""):
     img.save(path, "PNG", quality=95)
     return path
 
-# Generate screenshots
+# Use high-fidelity Satori screenshots (real-rendered) — fallback to Pillow if missing
+def use_or_make(name, title, subtitle, bullets=None, badge=""):
+    satori_map = {
+        'login': '00_login.png',
+        'accueil': '01_accueil.png',
+        'publications': '02_publications.png',
+        'reservations': '03_reservations.png',
+        'domaines': '04_domaines.png',
+        'cabinet': '05_cabinet.png',
+        'galerie': '06_galerie.png',
+        'messages': '07_messages.png',
+        'contact': '08_contact.png',
+        'mediatheque': '09_mediatheque.png',
+    }
+    fname = satori_map.get(name)
+    satori_path = os.path.join(IMG_DIR, fname) if fname else None
+    if satori_path and os.path.exists(satori_path):
+        return satori_path
+    return make_screenshot(f"{name}.png", title, subtitle, bullets, badge)
+
 screenshots = {}
-screenshots['login'] = make_screenshot("login.png", "Connexion Administrateur", "Accès sécurisé au tableau de bord", [
-    "1. Allez sur cabinetmaitreajmi.tn/#/admin",
-    "2. Saisissez Email + Mot de passe",
-    "3. Cliquez sur Se connecter",
-    "Bandeau bleu = Backend connecté"
-], badge="Login")
-screenshots['accueil'] = make_screenshot("accueil.png", "Tableau de bord — Accueil", "Hero, chiffres clés et historique", [
-    "Modifier le Sur-titre (Kicker), Titre et Sous-titre du Hero",
-    "Ajouter / modifier les 4 chiffres clés (ex: 5 domaines d'expertise)",
-    "Bouton Publier en ligne = visible immédiatement pour tous",
-    "Historique : restaurer une ancienne version en 1 clic"
-])
-screenshots['publications'] = make_screenshot("publications.png", "Publications & Ouvrages", "Gestion de l'ouvrage 2026 et des articles", [
-    "+ Ajouter une publication → Remplir Type, Titre FR/AR, ISBN, Prix",
-    "Cocher Mettre en vedette pour la carte d'accueil",
-    "Image couverture : /images/book-cover.jpg",
-    "Glisser : ↑ Monter / ↓ Descendre pour réordonner"
-], badge="Important")
-screenshots['reservations'] = make_screenshot("reservations.png", "Réservations — Tableau de bord", "Suivi des commandes d'ouvrages", [
-    "Filtres : Toutes / En attente / Confirmée / Livrée / Annulée",
-    "Recherche par nom, téléphone ou référence RES-#",
-    "Changer l'état → le client voit la mise à jour sur /#/suivi",
-    "Téléphone cliquable → appel direct, Email → réponse"
-], badge="RES-#")
-screenshots['messages'] = make_screenshot("messages.png", "Messages de Contact", "Formulaire du site → boîte de réception", [
-    "Voir les non-lus → bouton Marquer lu / Non lu",
-    "Bouton Répondre → ouvre votre messagerie",
-    "Supprimer après traitement",
-    "Champ Compétence = domaine sélectionné par le visiteur"
-])
-screenshots['galerie'] = make_screenshot("galerie.png", "Galerie Photos", "Mosaïque d'images du cabinet", [
-    "Titre et texte d'introduction de la section",
-    "+ Téléverser des photos → redimensionnement auto (1400px max)",
-    "Légende + Catégorie : tribunal / conference / russie",
-    "Format portrait = grande vignette, ← → pour réordonner"
-])
-screenshots['domaines'] = make_screenshot("domaines.png", "Domaines d'Intervention", "5 domaines : Affaires, Famille, Médical...", [
-    "N° (01-05), Titre, Description détaillée",
-    "Sous-rubriques : une par ligne (ex: Création de sociétés)",
-    "Boutons ↑ ↓ pour réordonner, Supprimer",
-    "+ Ajouter un domaine → Publier"
-])
-screenshots['contact'] = make_screenshot("contact.png", "Coordonnées & Contact", "Pied de page et page Contact", [
-    "Téléphone affiché + lien tel: (clic → appel)",
-    "Email, LinkedIn, Adresse du cabinet à Monastir",
-    "Citation de pied de page + auteur",
-    "Toutes les pages utilisent ces infos automatiquement"
-])
+screenshots['login'] = use_or_make('login', "Connexion Administrateur", "Accès sécurisé au tableau de bord", [
+    "1. Allez sur cabinetmaitreajmi.tn/#/admin", "2. Saisissez Email + Mot de passe", "3. Cliquez sur Se connecter", "Bandeau bleu = Backend connecté"], badge="Login")
+screenshots['accueil'] = use_or_make('accueil', "Tableau de bord — Accueil", "Hero, chiffres clés et historique", [
+    "Modifier le Sur-titre (Kicker), Titre et Sous-titre du Hero", "Ajouter / modifier les 4 chiffres clés (ex: 5 domaines d'expertise)", "Bouton Publier en ligne = visible immédiatement pour tous", "Historique : restaurer une ancienne version en 1 clic"])
+screenshots['publications'] = use_or_make('publications', "Publications & Ouvrages", "Gestion de l'ouvrage 2026 et des articles", [
+    "+ Ajouter une publication → Remplir Type, Titre FR/AR, ISBN, Prix", "Cocher Mettre en vedette pour la carte d'accueil", "Image couverture : /images/book-cover.jpg", "Glisser : ↑ Monter / ↓ Descendre pour réordonner"], badge="Important")
+screenshots['reservations'] = use_or_make('reservations', "Réservations — Tableau de bord", "Suivi des commandes d'ouvrages", [
+    "Filtres : Toutes / En attente / Confirmée / Livrée / Annulée", "Recherche par nom, téléphone ou référence RES-#", "Changer l'état → le client voit la mise à jour sur /#/suivi", "Téléphone cliquable → appel direct, Email → réponse"], badge="RES-#")
+screenshots['messages'] = use_or_make('messages', "Messages de Contact", "Formulaire du site → boîte de réception", [
+    "Voir les non-lus → bouton Marquer lu / Non lu", "Bouton Répondre → ouvre votre messagerie", "Supprimer après traitement", "Champ Compétence = domaine sélectionné par le visiteur"])
+screenshots['galerie'] = use_or_make('galerie', "Galerie Photos", "Mosaïque d'images du cabinet", [
+    "Titre et texte d'introduction de la section", "+ Téléverser des photos → redimensionnement auto (1400px max)", "Légende + Catégorie : tribunal / conference / russie", "Format portrait = grande vignette, ← → pour réordonner"])
+screenshots['domaines'] = use_or_make('domaines', "Domaines d'Intervention", "5 domaines : Affaires, Famille, Médical...", [
+    "N° (01-05), Titre, Description détaillée", "Sous-rubriques : une par ligne (ex: Création de sociétés)", "Boutons ↑ ↓ pour réordonner, Supprimer", "+ Ajouter un domaine → Publier"])
+screenshots['contact'] = use_or_make('contact', "Coordonnées & Contact", "Pied de page et page Contact", [
+    "Téléphone affiché + lien tel: (clic → appel)", "Email, LinkedIn, Adresse du cabinet à Monastir", "Citation de pied de page + auteur", "Toutes les pages utilisent ces infos automatiquement"])
+# Extra satori-only screenshots
+screenshots['cabinet'] = use_or_make('cabinet', "Cabinet", "Présentation", [])
+screenshots['mediatheque'] = use_or_make('mediatheque', "Médiathèque", "Fichiers", [])
 
 # PDF generation
 styles = getSampleStyleSheet()
@@ -341,7 +333,7 @@ story.append(Paragraph("Historique des publications", s_h2))
 story.append(Paragraph("En mode En ligne, cliquez sur <b>Charger l’historique</b> : les 10 dernières versions publiées s’affichent. Cliquez sur <b>Restaurer</b> pour recharger une ancienne version, puis <b>Publier en ligne</b> pour la remettre en ligne. Utile en cas d’erreur.", s_body))
 
 # 4. Cabinet
-add_section("04", "Gérer le Cabinet & la citation", "Cette section présente le cabinet et Maître Ajmi juste sous le Hero. Elle est cruciale pour le référencement et la confiance.", screenshots['contact'], "Figure 4 — Onglet Cabinet : textes de présentation et citation")
+add_section("04", "Gérer le Cabinet & la citation", "Cette section présente le cabinet et Maître Ajmi juste sous le Hero. Elle est cruciale pour le référencement et la confiance.", screenshots['cabinet'], "Figure 4 — Onglet Cabinet : textes de présentation, valeurs et photo")
 story.append(Paragraph("Onglet <b>Cabinet</b>", s_h2))
 story.append(Paragraph("• <b>Titre de section</b> : ex : Le Cabinet & Maître Mohamed Anouar Ajmi<br/>• <b>Paragraphe 1 & 2</b> : texte de présentation (copiez-collez depuis Word, le gras est conservé)<br/>• <b>Citation mise en avant</b> : phrase en italique affichée en grand au milieu de la page<br/><br/>Astuce : gardez des paragraphes de 4-5 lignes maximum pour la lecture sur mobile.", s_body))
 story.append(Paragraph("Onglet <b>Avocat</b> (profil)", s_h2))
