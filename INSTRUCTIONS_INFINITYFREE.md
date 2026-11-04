@@ -1,13 +1,21 @@
-# InfinityFree — Mise à jour Réservations (fix du 02/11/2026)
+# InfinityFree — Mise à jour SEO complète (04/11/2026)
 
-Ce ZIP contient la version PHP corrigée (réservations qui ne passaient pas).
+Ce ZIP contient la version PHP avec **SEO complet** + **routing propre (sans #)** + fix réservations.
 
 ## Fichiers
 - `ajmi-infinityfree-htdocs.zip` → **à dézipper directement dans `htdocs/`** (recommandé)
 - `ajmi-infinityfree.zip` → même contenu avec dossier parent
 
-Contenu : `index.html` (compilé), `images/`, `.htaccess`, `api/`, `app/`, `uploads/`, `check.php`, `install.php`, `README.md`
-Empreinte : `aa2809ccc25d` — taille `434479`
+Contenu : `index.html` (compilé SEO), `images/`, `robots.txt`, `sitemap.xml`, `sitemap.php`, `.htaccess`, `api/`, `app/`, `uploads/`, `check.php`, `install.php`, `README.md`
+
+Empreinte : `98cd4b1419b0` — taille `443076` — 04/11/2026
+
+### Nouveautés SEO 04/11
+- **URLs propres** sans `#` : `/services`, `/competences`, `/actualites`, `/publication/ouvrage-2026` (ancien `/#/services` redirigé automatiquement)
+- **robots.txt** + **sitemap.xml** (13 URLs) + **sitemap.php** dynamique
+- **Meta SEO** par page : title, description, canonical, OG (Facebook/LinkedIn), Twitter Card
+- **JSON-LD** : LegalService (Monastir), Book (ouvrage 2026 avec ISBN), Breadcrumb
+- **Performance** : cache 1 an sur images, `no-cache` sur `index.html`
 
 ---
 
@@ -27,16 +35,22 @@ Empreinte : `aa2809ccc25d` — taille `434479`
 
 ---
 
-## Vérification (2 minutes)
+## Vérification SEO (3 minutes)
 
-1. Ouvre `https://ton-domaine.rf.gd/install.php` → doit afficher **"Déjà installé"** (ne réinstalle pas, juste pour vérifier)
-2. Ouvre `https://ton-domaine.rf.gd/check.php` → **tout doit être vert**, surtout "Écriture et lecture en base"
-3. Ouvre `https://ton-domaine.rf.gd/api/health` → doit afficher `{"ok":true,"version":1}`
-4. Teste une réservation **en navigation privée** → vérifie dans `/#/admin` → **Réservations** : elle doit apparaître
-5. Supprime `install.php` et `check.php` après test (File Manager → Delete)
+1. `https://ton-domaine.rf.gd/robots.txt` → doit afficher `Sitemap: https://cabinetmaitreajmi.tn/sitemap.xml`
+2. `https://ton-domaine.rf.gd/sitemap.xml` → 13 URLs (dont `/publication/ouvrage-2026`)
+3. `https://ton-domaine.rf.gd/api/health` → `{"ok":true,"version":1}`
+4. Ouvre `https://ton-domaine.rf.gd/services` (sans #) → doit afficher Domaines
+5. Partage `https://ton-domaine.rf.gd/publication/ouvrage-2026` sur WhatsApp → doit montrer couverture + titre (test OG)
+6. Google Search Console → Soumettre `sitemap.xml` → Demander indexation
+
+### Réservations
+Teste une réservation **en navigation privée** → vérifie dans `/admin` → **Réservations** : elle doit apparaître.
+La modale affiche le vrai message d'erreur serveur (pas de faux succès local).
+Anciens liens `/#/services` restent valides (redirection auto vers `/services`).
+
+Supprime `install.php` et `check.php` après test (File Manager → Delete).
 
 ## Si ça ne passe toujours pas
-La modale affiche maintenant le **vrai message d'erreur serveur** (au lieu de l'ancien faux succès local). Copie ce message.
-Vérifie aussi : `uploads/` en 755, `.htaccess` bien présent, pas de `ad blocker`.
-
-Le fix : le front détecte la page HTML `aes.js` d'InfinityFree et retente en `form-urlencoded` quand `application/json` est bloqué. Le back accepte les 2 formats.
+Copie le message d'erreur exact de la modale + vérifie : `uploads/` en 755, `.htaccess` présent, pas d'ad blocker.
+Le fix réservations : détection `aes.js` + retry `form-urlencoded` côté back (accepte les 2 formats).

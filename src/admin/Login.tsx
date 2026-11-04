@@ -121,10 +121,10 @@ export function Login({ onOk }: { onOk: () => void }) {
           </div>
 
           <div className="mt-6 sm:mt-8 border-t border-[#dcd8cb] pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-[10px] sm:text-[11px] uppercase tracking-wider text-[#1e2766]/60 text-center sm:text-left">
-            <a href="#/" className="hover:text-[#2e3d91] transition flex items-center justify-center sm:justify-start gap-1">
+            <a href="/" className="hover:text-[#2e3d91] transition flex items-center justify-center sm:justify-start gap-1">
               ← Retour au site
             </a>
-            <a href="#/admin/setup" className="hover:text-[#2e3d91] transition">
+            <a href="/admin/setup" className="hover:text-[#2e3d91] transition">
               Configuration Serveur
             </a>
           </div>

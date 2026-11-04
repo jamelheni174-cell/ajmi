@@ -211,13 +211,13 @@ export function Admin({ content, setContent }: { content: Content; setContent: (
               Réinitialiser
             </Btn>
             <a
-              href="#/admin/setup"
+              href="/admin/setup"
               className="rounded-xl border border-white/20 bg-white/10 px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.12em] sm:tracking-[0.15em] text-white hover:bg-white/20 transition"
             >
               Serveur
             </a>
             <a
-              href="#/"
+              href="/"
               className="rounded-xl border border-[#aeb9ec]/40 bg-white/10 px-3 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.12em] sm:tracking-[0.15em] text-[#aeb9ec] hover:bg-white/20 transition"
             >
               Voir le site ↗

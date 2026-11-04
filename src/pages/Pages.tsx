@@ -95,7 +95,7 @@ function HomeGalerie() {
         <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
           {photos.map((g, i) => (
             <Reveal key={i} delay={i * 80}>
-              <a href="#/experiences" className="group block overflow-hidden rounded-xl bg-stone/20">
+              <a href="/experiences" className="group block overflow-hidden rounded-xl bg-stone/20">
                 <Img src={mediaUrl(g.src)} alt={g.legende || g.categoryLabel || ""} className={i === 0 ? "aspect-[3/4] object-cover transition duration-300 group-hover:scale-105" : "aspect-[3/4] sm:aspect-square object-cover transition duration-300 group-hover:scale-105"} />
                 <p className="p-2 line-clamp-2 text-[9px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.18em] text-ink/65 leading-tight">{g.legende || g.categoryLabel}</p>
               </a>
@@ -135,7 +135,7 @@ function HomeContact() {
             <span className="pt-1 text-[10px] sm:text-[11px] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-blue font-medium shrink-0">Cabinet</span>
             <span className="text-right text-xs sm:text-sm leading-relaxed">{c.contact.address}</span>
           </div>
-          <a href="#/contact" className="inline-block w-full sm:w-auto text-center rounded-xl bg-paper px-8 py-3.5 sm:py-4 text-[11px] uppercase tracking-[0.22em] text-navy transition hover:bg-blue font-semibold shadow-sm">
+          <a href="/contact" className="inline-block w-full sm:w-auto text-center rounded-xl bg-paper px-8 py-3.5 sm:py-4 text-[11px] uppercase tracking-[0.22em] text-navy transition hover:bg-blue font-semibold shadow-sm">
             Écrire au cabinet
           </a>
         </Reveal>
@@ -329,7 +329,7 @@ export function NotFoundPage() {
       <section className="mx-auto max-w-7xl px-4 sm:px-6 py-14 sm:py-24">
         <div className="flex flex-wrap gap-2.5 sm:gap-4">
           {PAGES.map((p) => (
-            <a key={p.path} href={`#${p.path}`} className="border border-stone px-4 py-2.5 sm:px-6 sm:py-3 text-[10px] sm:text-[11px] uppercase tracking-[0.2em] hover:bg-navy hover:text-paper transition">
+            <a key={p.path} href={p.path} className="border border-stone px-4 py-2.5 sm:px-6 sm:py-3 text-[10px] sm:text-[11px] uppercase tracking-[0.2em] hover:bg-navy hover:text-paper transition">
               {p.label}
             </a>
           ))}

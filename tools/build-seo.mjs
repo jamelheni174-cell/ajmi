@@ -26,7 +26,9 @@ const headInject = `
 for (const p of ['php/index.html', 'dist/index.html']) {
   if (!fs.existsSync(p)) continue;
   let html = fs.readFileSync(p, 'utf8');
-  if (html.includes('og:title')) { console.log(`skip ${p} (already SEO)`); continue; }
+  // Only check head section for static OG (not JS bundle)
+  const head = html.slice(0, html.indexOf('</head>'));
+  if (head.includes('property="og:title"')) { console.log(`skip ${p} (already SEO)`); continue; }
   html = html.replace('</title>', `</title>${headInject}`);
   fs.writeFileSync(p, html);
   console.log(`SEO injected → ${p}`);
