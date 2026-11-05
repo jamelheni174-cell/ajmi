@@ -43,7 +43,7 @@ export default function App() {
       title: "Cabinet d'Avocat Ajmi — Avocat Monastir",
       description:
         "Me Mohamed Anouar Ajmi, Avocat près la Cour d'Appel à Monastir. Droit des affaires, famille, médical, biens et contrats. 5 domaines, 25 ans d'expertise. Devis gratuit au +216 54 311 937.",
-      ogImage: "/images/hero.jpg",
+      ogImage: "/images/og-image.jpg",
     },
     "/services": {
       title: "Domaines d'intervention",

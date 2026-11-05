@@ -65,7 +65,7 @@ export function SEO({
     description ||
     "Cabinet d'Avocat Ajmi — Me Mohamed Anouar Ajmi, Avocat près la Cour d'Appel à Monastir. Droit des affaires, famille, médical, biens et contrats. +216 54 311 937.";
   const canonical = `${SITE_URL}${canonicalPath}`;
-  const image = ogImage?.startsWith("http") ? ogImage : `${SITE_URL}${ogImage || "/images/hero.jpg"}`;
+  const image = ogImage?.startsWith("http") ? ogImage : `${SITE_URL}${ogImage || "/images/og-image.jpg"}`;
 
   useEffect(() => {
     document.title = fullTitle;
@@ -78,6 +78,18 @@ export function SEO({
     upsertMeta("og:url", canonical, "property");
     upsertMeta("og:type", ogType, "property");
     upsertMeta("og:image", image, "property");
+    // Dimensions and MIME type below apply only to our default share image.
+    // Publication covers can have different sizes and formats.
+    for (const property of ["og:image:secure_url", "og:image:width", "og:image:height", "og:image:type"]) {
+      document.querySelector(`meta[property="${property}"]`)?.remove();
+    }
+    if (image === `${SITE_URL}/images/og-image.jpg`) {
+      upsertMeta("og:image:secure_url", image, "property");
+      upsertMeta("og:image:width", "1200", "property");
+      upsertMeta("og:image:height", "630", "property");
+      upsertMeta("og:image:type", "image/jpeg", "property");
+    }
+    upsertMeta("og:image:alt", fullTitle, "property");
     upsertMeta("og:site_name", "Cabinet Ajmi", "property");
     upsertMeta("og:locale", "fr_TN", "property");
 
@@ -86,6 +98,7 @@ export function SEO({
     upsertMeta("twitter:title", fullTitle);
     upsertMeta("twitter:description", desc);
     upsertMeta("twitter:image", image);
+    upsertMeta("twitter:image:alt", fullTitle);
 
     // Robots
     if (noindex) upsertMeta("robots", "noindex, nofollow");

@@ -5,7 +5,8 @@
 export const SITE_URL = "https://cabinetmaitreajmi.tn";
 export const SITE_NAME = "Cabinet d'Avocat Me Mohamed Anouar Ajmi";
 export const LOGO = `${SITE_URL}/images/logo-cabinet-dark.png`;
-export const HERO = `${SITE_URL}/images/hero.jpg`;
+export const HERO = `${SITE_URL}/images/og-image.jpg`;
+export const OG_IMAGE = `${SITE_URL}/images/og-image.jpg`;
 
 export function legalServiceSchema() {
   return {

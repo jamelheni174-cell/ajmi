@@ -8,14 +8,17 @@ Ce ZIP contient la version PHP avec **SEO complet** + **routing propre (sans #)*
 
 Contenu : `index.html` (compilé SEO), `images/`, `robots.txt`, `sitemap.xml`, `sitemap.php`, `.htaccess`, `api/`, `app/`, `uploads/`, `check.php`, `install.php`, `README.md`
 
-Empreinte : `98cd4b1419b0` — taille `443076` — 04/11/2026
+Empreinte : `f122f5e8dea6` — taille `443948` — 05/11/2026
 
-### Nouveautés SEO 04/11
-- **URLs propres** sans `#` : `/services`, `/competences`, `/actualites`, `/publication/ouvrage-2026` (ancien `/#/services` redirigé automatiquement)
+### Nouveautés SEO 04-05/11
+- **URLs propres** sans `#` : `/services`, `/competences`, `/actualites`, `/publication/ouvrage-2026` (ancien `/#/services` redirigé auto)
 - **robots.txt** + **sitemap.xml** (13 URLs) + **sitemap.php** dynamique
 - **Meta SEO** par page : title, description, canonical, OG (Facebook/LinkedIn), Twitter Card
+- **OG Image 1200×630** : `images/og-image.jpg` avec titre et contact pour la page d’accueil
 - **JSON-LD** : LegalService (Monastir), Book (ouvrage 2026 avec ISBN), Breadcrumb
 - **Performance** : cache 1 an sur images, `no-cache` sur `index.html`
+
+> **Aperçu social :** les balises de la page d’accueil sont dans le HTML initial. Leur affichage dépend aussi de l’accès des robots à la page et à l’image. Le défi de sécurité InfinityFree peut les bloquer ; Cloudflare seul ne garantit pas de contourner ce problème. Les pages internes utilisent le même HTML initial : leurs balises spécifiques sont mises à jour en JavaScript et ne sont donc pas garanties pour les robots sociaux.
 
 ---
 
@@ -24,7 +27,7 @@ Empreinte : `98cd4b1419b0` — taille `443076` — 04/11/2026
 1. Va sur https://app.infinityfree.net → ton site → **File Manager**
 2. Ouvre `htdocs/` (ou `htdocs/ton-domaine` si domaine add-on)
 3. **Upload** → choisis `ajmi-infinityfree-htdocs.zip`
-4. Clic droit sur le ZIP → **Extract / Extraire** → destination `htdocs/` → **Replace / Remplacer tout**
+4. Sauvegarde d’abord les fichiers et données du site. Extrais le ZIP dans `htdocs/` et remplace les fichiers du site, sans effacer `app/config.php`, `ajmi-data/`, la base de données ni les fichiers existants dans `uploads/`.
 5. Vérifie que `.htaccess` est visible (Settings → coche "Show hidden files" si besoin)
 
 ### Option FTP (FileZilla)
@@ -41,7 +44,7 @@ Empreinte : `98cd4b1419b0` — taille `443076` — 04/11/2026
 2. `https://ton-domaine.rf.gd/sitemap.xml` → 13 URLs (dont `/publication/ouvrage-2026`)
 3. `https://ton-domaine.rf.gd/api/health` → `{"ok":true,"version":1}`
 4. Ouvre `https://ton-domaine.rf.gd/services` (sans #) → doit afficher Domaines
-5. Partage `https://ton-domaine.rf.gd/publication/ouvrage-2026` sur WhatsApp → doit montrer couverture + titre (test OG)
+5. Teste `https://cabinetmaitreajmi.tn/` avec Facebook Sharing Debugger ; vérifie que le robot reçoit le HTML et l’image, puis utilise « Scrape Again ». Les pages internes ne disposent pas encore de balises spécifiques dans le HTML initial.
 6. Google Search Console → Soumettre `sitemap.xml` → Demander indexation
 
 ### Réservations
