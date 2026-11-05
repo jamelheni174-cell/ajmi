@@ -3,8 +3,8 @@ import { cn } from "../utils/cn";
 import { PAGES } from "../router";
 import { useContent } from "../store";
 
-const LOGO_DARK = "/images/logo-cabinet-dark.png";
-const LOGO_LIGHT = "/images/logo-cabinet-light.png";
+const LOGO_DARK = "/images/optimized/logo-cabinet-dark.png";
+const LOGO_LIGHT = "/images/optimized/logo-cabinet-light.png";
 
 function Icon({ d }: { d: string }) {
   return (

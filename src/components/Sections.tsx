@@ -42,7 +42,10 @@ export function Hero() {
 
       {/* Bande visuelle bleu royal — purement décorative (aucun agrandissement au clic) */}
       <div className="relative overflow-hidden bg-navy">
-        <img src="/images/hero.jpg" alt="" className="absolute inset-0 h-full w-full object-cover opacity-35" />
+        <picture>
+          <source type="image/webp" srcSet="/images/optimized/hero-800.webp 800w, /images/optimized/hero.webp 1408w" sizes="100vw" />
+          <img src="/images/hero.jpg" alt="" decoding="async" className="absolute inset-0 h-full w-full object-cover opacity-35" />
+        </picture>
         <div className="absolute inset-0 bg-gradient-to-r from-navy via-navy/70 to-ink/80" />
         <div className="relative overflow-hidden py-3 sm:py-4">
           <div className="marquee flex whitespace-nowrap text-[10px] sm:text-[11px] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-blue/80">
@@ -689,7 +692,7 @@ export function Footer() {
             <div className="flex items-center gap-3">
               <span className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-paper/10 p-1.5 ring-1 ring-paper/20">
                 <img
-                  src="/images/logo-cabinet-light.png"
+                  src="/images/optimized/logo-cabinet-light.png"
                   alt="Logo Cabinet Ajmi"
                   className="h-full w-full object-contain"
                 />
