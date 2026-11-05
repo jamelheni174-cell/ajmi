@@ -13,6 +13,8 @@
     "cf:dev": "wrangler dev",
     "cf:deploy": "node scripts/cf-deploy.mjs",
     "cf:setup": "node scripts/cf-setup.mjs",
+    "cf:setup:d1": "node scripts/cf-setup.mjs --d1-media",
+    "cf:deploy:d1": "node scripts/cf-deploy.mjs --d1-media",
     "cf:admin": "node scripts/cf-admin.mjs",
     "cf:import": "node scripts/cf-import.mjs",
     "check:paths": "node scripts/check-paths.mjs"
