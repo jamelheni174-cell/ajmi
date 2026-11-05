@@ -28,6 +28,16 @@ if (build.status !== 0) {
 }
 ok("site construit dans dist/");
 
+// Social crawlers do not necessarily execute JavaScript. Inject the static
+// homepage metadata after every build, before uploading the assets.
+step("Ajout des métadonnées SEO statiques");
+const seo = spawnSync(process.execPath, ["tools/build-seo.mjs"], { stdio: "inherit" });
+if (seo.status !== 0) {
+  fail("l'ajout des métadonnées SEO a échoué.");
+  process.exit(1);
+}
+ok("métadonnées ajoutées");
+
 step("Déploiement sur Cloudflare");
 
 const firstDeploy = fs.existsSync(SECRETS_FILE);
