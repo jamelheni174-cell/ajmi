@@ -11,6 +11,9 @@ const BIN = path.resolve(
 
 export const WRANGLER_BIN = existsSync(BIN) ? BIN : "wrangler";
 
+const d1Only = () => process.argv.includes("--d1-media");
+const configured = (args) => d1Only() ? [...args, "--config", "wrangler.d1.jsonc"] : args;
+
 const shellOpt = () => process.platform === "win32" && WRANGLER_BIN.endsWith(".cmd");
 
 /**
@@ -18,7 +21,7 @@ const shellOpt = () => process.platform === "win32" && WRANGLER_BIN.endsWith(".c
  * Les sorties sont capturées : l'appelant décide de ce qu'il affiche.
  */
 export function wrangler(args, { input, timeout = 10 * 60 * 1000 } = {}) {
-  const res = spawnSync(WRANGLER_BIN, args, {
+  const res = spawnSync(WRANGLER_BIN, configured(args), {
     input,
     encoding: "utf8",
     timeout,
@@ -74,7 +77,7 @@ export function fail(message) {
  */
 export function wranglerInteractive(args, { timeout = 30 * 60 * 1000 } = {}) {
   return new Promise((resolve) => {
-    const child = spawn(WRANGLER_BIN, args, {
+    const child = spawn(WRANGLER_BIN, configured(args), {
       stdio: ["inherit", "pipe", "pipe"],
       shell: shellOpt(),
     });

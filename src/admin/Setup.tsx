@@ -23,7 +23,7 @@ export function Setup() {
             <p className="text-[10px] uppercase tracking-[0.3em] text-navy font-semibold">Installation</p>
             <h1 className="font-serif text-lg sm:text-xl">Serveur &amp; déploiement</h1>
           </div>
-          <a href="#/admin" className="rounded-xl border border-stone px-3.5 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-[11px] uppercase tracking-[0.15em] hover:bg-stone/40 font-semibold transition">
+          <a href="/admin" className="rounded-xl border border-stone px-3.5 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-[11px] uppercase tracking-[0.15em] hover:bg-stone/40 font-semibold transition">
             ← Administration
           </a>
         </div>

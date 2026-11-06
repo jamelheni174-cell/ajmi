@@ -12,6 +12,7 @@ DirectoryIndex index.html index.php
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  RewriteBase /
 
   # Conserve l'en-tête Authorization (jeton de l'administration), que
   # certains hébergements en CGI/FastCGI suppriment au passage (InfinityFree, Hostinger…).

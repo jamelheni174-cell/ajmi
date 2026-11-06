@@ -190,24 +190,24 @@ export interface ClientItem {
 }
 
 export const clients: ClientItem[] = [
-  { name: "Avocats Sans Frontières (ASF)", logo: "/images/logo-asf.jpg" },
-  { name: "Clinique Essouani Monastir", logo: "/images/logo-essouani.jpg" },
-  { name: "ATTALAKI Organization", logo: "/images/logo-attalaki.jpg" },
-  { name: "Association Tunisienne des Femmes Démocrates (ATFD)", logo: "/images/logo-atfd.jpg" },
-  { name: "Société Up Views", logo: "/images/logo-upviews.jpg" },
-  { name: "Santé Sud — Groupe SOS", logo: "/images/logo-santesud.jpg" },
+  { name: "Avocats Sans Frontières (ASF)", logo: "/images/optimized/logo-asf.jpg" },
+  { name: "Clinique Essouani Monastir", logo: "/images/optimized/logo-essouani.jpg" },
+  { name: "ATTALAKI Organization", logo: "/images/optimized/logo-attalaki.jpg" },
+  { name: "Association Tunisienne des Femmes Démocrates (ATFD)", logo: "/images/optimized/logo-atfd.jpg" },
+  { name: "Société Up Views", logo: "/images/optimized/logo-upviews.jpg" },
+  { name: "Santé Sud — Groupe SOS", logo: "/images/optimized/logo-santesud.jpg" },
   { name: "Société Nayssan pour la Création Théâtrale" },
-  { name: "Société VIP Clean", logo: "/images/logo-vipclean.jpg" },
+  { name: "Société VIP Clean", logo: "/images/optimized/logo-vipclean.jpg" },
 ];
 
 export const valeurs = ["Disponibilité", "Réactivité", "Rigueur", "Indépendance", "Engagement"];
 
 /** Portrait institutionnel (robe d'avocat) — photo réelle images/portrait/4fed839f… */
-export const portrait = "/images/portrait/4fed839f-c068-4201-8c9a-1336e06ab758.jpg";
+export const portrait = "/images/optimized/portrait-ajmi.jpg";
 /** Logo cabinet — PNG dark (teal) pour fonds clairs */
-export const logoCabinet = "/images/logo-cabinet-dark.png";
+export const logoCabinet = "/images/optimized/logo-cabinet-dark.png";
 /** Logo cabinet — PNG light (blanc) pour fonds sombres */
-export const logoCabinetLight = "/images/logo-cabinet-light.png";
+export const logoCabinetLight = "/images/optimized/logo-cabinet-light.png";
 
 export interface GalerieItem {
   id: string;

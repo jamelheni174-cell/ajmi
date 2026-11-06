@@ -42,7 +42,10 @@ export function Hero() {
 
       {/* Bande visuelle bleu royal — purement décorative (aucun agrandissement au clic) */}
       <div className="relative overflow-hidden bg-navy">
-        <img src="/images/hero.jpg" alt="" className="absolute inset-0 h-full w-full object-cover opacity-35" />
+        <picture>
+          <source type="image/webp" srcSet="/images/optimized/hero-800.webp 800w, /images/optimized/hero.webp 1408w" sizes="100vw" />
+          <img src="/images/hero.jpg" alt="" decoding="async" className="absolute inset-0 h-full w-full object-cover opacity-35" />
+        </picture>
         <div className="absolute inset-0 bg-gradient-to-r from-navy via-navy/70 to-ink/80" />
         <div className="relative overflow-hidden py-3 sm:py-4">
           <div className="marquee flex whitespace-nowrap text-[10px] sm:text-[11px] uppercase tracking-[0.25em] sm:tracking-[0.3em] text-blue/80">
@@ -162,7 +165,7 @@ export function Domaines() {
                 <div className="md:col-span-4">
                   <h3 className="font-serif text-xl sm:text-2xl leading-tight md:text-3xl">{d.title}</h3>
                   <a
-                    href="#/services"
+                    href="/services"
                     className="mt-3 sm:mt-4 inline-block border-b border-navy/40 pb-0.5 text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-navy/70 transition hover:border-navy hover:text-navy"
                   >
                     En savoir +
@@ -265,7 +268,7 @@ export function Publications() {
               <div className="lg:col-span-5 flex justify-center">
                 <div
                   className="group relative cursor-pointer overflow-hidden rounded-2xl bg-amber-500/10 p-2 sm:p-3 border border-amber-500/30 shadow-2xl transition duration-500 hover:border-amber-400 max-w-full"
-                  onClick={() => go(`#/publication/${featured.id}`)}
+                  onClick={() => go(`/publication/${featured.id}`)}
                 >
                   <img
                     src={featured.coverImage || "/images/book-cover.jpg"}
@@ -305,7 +308,7 @@ export function Publications() {
 
                 <h2
                   className="font-serif text-2xl sm:text-3xl font-bold md:text-4xl text-paper cursor-pointer hover:text-amber-300 transition break-words"
-                  onClick={() => go(`#/publication/${featured.id}`)}
+                  onClick={() => go(`/publication/${featured.id}`)}
                 >
                   {featured.title}
                 </h2>
@@ -327,7 +330,7 @@ export function Publications() {
                     Commander / Réserver l'ouvrage
                   </button>
                   <button
-                    onClick={() => go(`#/publication/${featured.id}`)}
+                    onClick={() => go(`/publication/${featured.id}`)}
                     className="w-full sm:w-auto text-center rounded-xl border border-white/30 px-5 sm:px-6 py-3.5 text-xs font-semibold uppercase tracking-wider sm:tracking-widest text-paper transition hover:bg-white/10"
                   >
                     En savoir plus &amp; Sommaire
@@ -346,7 +349,7 @@ export function Publications() {
                 <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.3em] text-navy font-semibold">{p.type}</span>
                 <h3
                   className="mt-4 sm:mt-6 font-serif text-xl sm:text-2xl leading-snug cursor-pointer hover:text-navy transition"
-                  onClick={() => go(`#/publication/${p.id || "pub-" + i}`)}
+                  onClick={() => go(`/publication/${p.id || "pub-" + i}`)}
                 >
                   {p.title}
                 </h3>
@@ -354,7 +357,7 @@ export function Publications() {
                 <div className="mt-auto pt-6 sm:pt-8 flex items-center justify-between text-xs text-ink/60">
                   <span className="font-serif italic">{p.meta}</span>
                   <button
-                    onClick={() => go(`#/publication/${p.id || "pub-" + i}`)}
+                    onClick={() => go(`/publication/${p.id || "pub-" + i}`)}
                     className="font-semibold text-navy uppercase tracking-wider hover:underline"
                   >
                     Fiche ➔
@@ -689,7 +692,7 @@ export function Footer() {
             <div className="flex items-center gap-3">
               <span className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-paper/10 p-1.5 ring-1 ring-paper/20">
                 <img
-                  src="/images/logo-cabinet-light.png"
+                  src="/images/optimized/logo-cabinet-light.png"
                   alt="Logo Cabinet Ajmi"
                   className="h-full w-full object-contain"
                 />
@@ -713,7 +716,7 @@ export function Footer() {
             <p className="mb-3 sm:mb-4 text-[10px] uppercase tracking-[0.25em] text-gold font-semibold">Domaines</p>
             <ul className="space-y-2 text-xs sm:text-sm font-light">
               {c.domaines.slice(0, 5).map((d, i) => (
-                <li key={i}><a href="#/services" className="hover:text-paper">{d.title}</a></li>
+                <li key={i}><a href="/services" className="hover:text-paper">{d.title}</a></li>
               ))}
             </ul>
           </div>

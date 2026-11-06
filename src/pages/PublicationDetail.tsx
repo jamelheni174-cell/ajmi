@@ -3,6 +3,7 @@ import { publications, type GalerieItem } from "../data";
 import { go } from "../router";
 import { ReservationModal } from "../components/ReservationModal";
 import { LightboxModal } from "../components/LightboxModal";
+import { SEO } from "../seo/SEO";
 
 interface PublicationDetailProps {
   publicationId: string;
@@ -38,6 +39,31 @@ export function PublicationDetail({ publicationId }: PublicationDetailProps) {
 
   return (
     <div className="min-h-screen bg-paper text-ink pt-24 sm:pt-32 pb-16 sm:pb-24">
+      <SEO
+        title={`${pub.title} — ${pub.type}`}
+        description={pub.summary || pub.meta}
+        canonicalPath={`/publication/${pub.id}`}
+        ogImage={pub.coverImage || "/images/book-cover.jpg"}
+        ogType="book"
+        publication={
+          {
+            id: pub.id,
+            title: pub.title,
+            titleAr: pub.titleAr,
+            meta: pub.meta,
+            isbn: pub.isbn,
+            publisher: pub.publisher,
+            coverImage: pub.coverImage,
+            summary: pub.summary,
+            price: pub.price,
+          } as unknown as Parameters<typeof import("../seo/SEO").SEO>[0] extends { publication?: infer P } ? P : never
+        }
+        breadcrumbs={[
+          { name: "Accueil", url: "https://cabinetmaitreajmi.tn/" },
+          { name: "Publications", url: "https://cabinetmaitreajmi.tn/actualites" },
+          { name: pub.title, url: `https://cabinetmaitreajmi.tn/publication/${pub.id}` },
+        ]}
+      />
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         {/* Fil d'ariane */}
         <div className="mb-6 sm:mb-8 flex flex-wrap items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs uppercase tracking-wider sm:tracking-widest text-ink/60">

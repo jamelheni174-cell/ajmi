@@ -20,7 +20,7 @@ export function PageCTA({ titre = "Un projet, un litige, une question ?" }: { ti
       <div className="mx-auto flex max-w-7xl flex-col items-start gap-6 sm:gap-8 px-4 sm:px-6 py-14 sm:py-20 md:flex-row md:items-center md:justify-between">
         <h2 className="max-w-xl font-serif text-2xl sm:text-3xl md:text-4xl leading-snug">{titre}</h2>
         <a
-          href="#/contact"
+          href="/contact"
           className="w-full sm:w-auto text-center rounded-xl bg-navy px-8 py-3.5 sm:py-4 text-[11px] uppercase tracking-[0.25em] text-paper transition hover:bg-ink font-semibold shadow-sm"
         >
           Prendre contact

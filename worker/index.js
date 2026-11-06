@@ -1,8 +1,8 @@
 /* ------------------------------------------------------------------
    Cabinet Ajmi — API et site, en un seul Worker Cloudflare.
 
-   • /api/*      → cette fonction (D1 pour les données, R2 pour les images)
-   • /uploads/*  → images téléversées, servies depuis R2
+   • /api/*      → cette fonction (D1, et R2 ou D1 pour les images)
+   • /uploads/*  → images téléversées, servies depuis R2 ou D1
    • le reste    → fichiers du site (dist/), servis par le réseau Cloudflare
 
    Portage fidèle de server/index.js ; seules les réservations d'ouvrages,
@@ -16,7 +16,8 @@ import {
   jwtSecret, MIME, normalizeCode, rateLimit, rateLimitPeek, readJson, verifyPassword, verifyToken,
 } from "./lib.js";
 
-const MAX_UPLOAD = 8 * 1024 * 1024; // 8 Mo
+const MAX_UPLOAD = 8 * 1024 * 1024; // R2 : 8 Mo
+const MAX_D1_UPLOAD = 1024 * 1024; // D1 : 1 Mo (base64 reste sous la limite de 2 Mo par ligne)
 const STATUTS = new Set(["en_attente", "confirmee", "livree", "annulee"]);
 
 export default {
@@ -181,14 +182,23 @@ async function api(request, env, path) {
       if (!match) return json({ error: "Format d'image non supporté." }, 400);
 
       const ext = { "image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp" }[match[1]];
-      const safe = `${Date.now()}-${String(name || "image")
+      const safe = `${Date.now()}-${crypto.randomUUID()}-${String(name || "image")
         .replace(/[^a-z0-9._-]/gi, "_")
         .replace(/\.[^.]*$/, "")}${ext}`;
       const bytes = Uint8Array.from(atob(match[3]), (c) => c.charCodeAt(0));
       if (bytes.byteLength > MAX_UPLOAD) return json({ error: "Fichier trop volumineux (8 Mo max)." }, 413);
 
-      await env.MEDIA.put(`uploads/${safe}`, bytes, { httpMetadata: { contentType: match[1] } });
-      await media.add(safe, bytes.byteLength);
+      if (env.MEDIA) {
+        await env.MEDIA.put(`uploads/${safe}`, bytes, { httpMetadata: { contentType: match[1] } });
+        await media.add(safe, bytes.byteLength);
+      } else {
+        if (bytes.byteLength > MAX_D1_UPLOAD) return json({ error: "Fichier trop volumineux (1 Mo maximum sur le stockage gratuit)." }, 413);
+        // D1 batch is atomic: never expose a metadata entry without its image.
+        await env.DB.batch([
+          env.DB.prepare("insert into media_files (name, content_type, base64) values (?, ?, ?)").bind(safe, match[1], match[3]),
+          env.DB.prepare("insert into media (name, taille) values (?, ?)").bind(safe, bytes.byteLength),
+        ]);
+      }
       return json({ name: safe, url: `/uploads/${safe}` }, 201);
     }
   }
@@ -196,8 +206,15 @@ async function api(request, env, path) {
   if (path.startsWith("/api/media/") && request.method === "DELETE") {
     if (!(await auth())) return json({ error: "Non authentifié" }, 401);
     const name = decodeURIComponent(path.split("/")[3] || "").replace(/^.*[\\/]/, "");
-    await env.MEDIA.delete(`uploads/${name}`);
-    await media.remove(name);
+    if (env.MEDIA) {
+      await env.MEDIA.delete(`uploads/${name}`);
+      await media.remove(name);
+    } else {
+      await env.DB.batch([
+        env.DB.prepare("delete from media_files where name = ?").bind(name),
+        env.DB.prepare("delete from media where name = ?").bind(name),
+      ]);
+    }
     return json({ ok: true });
   }
 
@@ -282,6 +299,20 @@ async function api(request, env, path) {
 async function uploaded(request, env, path) {
   const name = decodeURIComponent(path.slice("/uploads/".length)).replace(/^.*[\\/]/, "");
   if (!name) return json({ error: "Introuvable" }, 404);
+
+  if (!env.MEDIA) {
+    const row = await env.DB.prepare("select content_type, base64 from media_files where name = ?").bind(name).first();
+    if (!row) return json({ error: "Introuvable" }, 404);
+    const headers = {
+      "content-type": row.content_type,
+      "cache-control": "public, max-age=31536000, immutable",
+      "access-control-allow-origin": "*",
+      "x-content-type-options": "nosniff",
+    };
+    if (request.method === "HEAD") return new Response(null, { headers });
+    const bytes = Uint8Array.from(atob(row.base64), (c) => c.charCodeAt(0));
+    return new Response(bytes, { headers });
+  }
 
   const object = await env.MEDIA.get(`uploads/${name}`);
   if (!object) return json({ error: "Introuvable" }, 404);

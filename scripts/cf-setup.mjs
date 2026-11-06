@@ -25,11 +25,12 @@ import { C, fail, isLoggedIn, ok, sqlString, step, warn, wrangler } from "./lib/
 import { hashPassword, randomSecret } from "./lib/password.mjs";
 
 const ARGS = new Set(process.argv.slice(2));
+const D1_MEDIA = ARGS.has("--d1-media");
 const LOCAL = ARGS.has("--local");
 const SKIP_DEPLOY = ARGS.has("--skip-deploy");
 const SKIP_ADMIN = ARGS.has("--skip-admin");
 
-const CONFIG = path.join(process.cwd(), "wrangler.jsonc");
+const CONFIG = path.join(process.cwd(), D1_MEDIA ? "wrangler.d1.jsonc" : "wrangler.jsonc");
 
 if (!fs.existsSync(CONFIG)) {
   fail("wrangler.jsonc introuvable : lancez la commande depuis la racine du projet.");
@@ -43,7 +44,7 @@ const bucket = /"bucket_name":\s*"([^"]+)"/.exec(config)?.[1] ?? `${projectName}
 const ITERATIONS = Number(/"PBKDF2_ITERATIONS":\s*"(\d+)"/.exec(config)?.[1]) || 25000;
 
 console.log(`\n  ${C.bold("Cabinet Ajmi")} — installation sur Cloudflare`);
-console.log(`  ${C.dim(`projet : ${projectName} · base : ${dbName} · images : ${bucket}`)}`);
+console.log(`  ${C.dim(`projet : ${projectName} · base : ${dbName} · images : ${D1_MEDIA ? "D1 (sans R2)" : bucket}`)}`);
 
 /* ------------------------- 1. Compte Cloudflare ------------------------- */
 
@@ -116,7 +117,7 @@ if (LOCAL) {
 
 /* ------------------------- 3. Bucket R2 (images) ------------------------ */
 
-if (!LOCAL) {
+if (!LOCAL && !D1_MEDIA) {
   step(`Stockage des images R2 « ${bucket} »`);
   const res = wrangler(["r2", "bucket", "create", bucket]);
   if (res.status === 0) ok("bucket créé");
@@ -214,7 +215,7 @@ if (LOCAL) {
     process.exit(1);
   }
   ok("site construit dans dist/");
-  console.log(`\n  ${C.bold("Tout est prêt en local.")} Lancez :\n\n    ${C.bold("npm run cf:dev")}\n`);
+  console.log(`\n  ${C.bold("Tout est prêt en local.")} Lancez :\n\n    ${C.bold(D1_MEDIA ? "npx wrangler dev --local --config wrangler.d1.jsonc" : "npm run cf:dev")}\n`);
 } else if (SKIP_DEPLOY) {
   if (jwtSecret) {
     // Cloudflare n'accepte un secret que pour un Worker déjà existant :
@@ -222,10 +223,10 @@ if (LOCAL) {
     fs.writeFileSync(".secrets.env", `JWT_SECRET=${jwtSecret}\n`, { mode: 0o600 });
     warn("secret mis de côté dans .secrets.env : il sera envoyé par « npm run cf:deploy ».");
   }
-  console.log(`\n  ${C.bold("Installation terminée.")} Déployez avec : ${C.bold("npm run cf:deploy")}\n`);
+  console.log(`\n  ${C.bold("Installation terminée.")} Déployez avec : ${C.bold(D1_MEDIA ? "npm run cf:deploy:d1" : "npm run cf:deploy")}\n`);
 } else {
   if (jwtSecret) fs.writeFileSync(".secrets.env", `JWT_SECRET=${jwtSecret}\n`, { mode: 0o600 });
-  const deployed = spawnSync(process.execPath, ["scripts/cf-deploy.mjs"], { stdio: "inherit" });
+  const deployed = spawnSync(process.execPath, ["scripts/cf-deploy.mjs", ...(D1_MEDIA ? ["--d1-media"] : [])], { stdio: "inherit" });
   if (deployed.status !== 0) {
     fail("le déploiement a échoué (voir le message ci-dessus).");
     process.exit(1);

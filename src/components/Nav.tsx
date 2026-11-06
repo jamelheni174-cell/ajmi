@@ -3,8 +3,8 @@ import { cn } from "../utils/cn";
 import { PAGES } from "../router";
 import { useContent } from "../store";
 
-const LOGO_DARK = "/images/logo-cabinet-dark.png";
-const LOGO_LIGHT = "/images/logo-cabinet-light.png";
+const LOGO_DARK = "/images/optimized/logo-cabinet-dark.png";
+const LOGO_LIGHT = "/images/optimized/logo-cabinet-light.png";
 
 function Icon({ d }: { d: string }) {
   return (
@@ -64,7 +64,7 @@ function Brand({
   inverted?: boolean;
 }) {
   return (
-    <a href="#/" className="flex items-center gap-2 sm:gap-3 leading-none">
+    <a href="/" className="flex items-center gap-2 sm:gap-3 leading-none">
       <BrandLogo variant={variant} compact={compact} />
       <span>
         <span
@@ -144,7 +144,7 @@ export function Nav({ route }: { route: string }) {
               {c.contact.phone}
             </a>
             <a
-              href="#/contact"
+              href="/contact"
               className="rounded-xl bg-navy px-4 py-2 sm:px-6 sm:py-2.5 md:px-7 md:py-3 text-[10px] sm:text-[11px] uppercase tracking-[0.18em] sm:tracking-[0.2em] text-paper transition hover:bg-ink shadow-sm"
             >
               RDV
@@ -218,7 +218,7 @@ export function Nav({ route }: { route: string }) {
                 <span className="text-ink/60">{c.contact.address}</span>
               </div>
               <a
-                href="#/contact"
+                href="/contact"
                 onClick={() => setOpen(false)}
                 className="mt-2 sm:mt-0 inline-block w-full sm:w-auto text-center rounded-xl bg-navy px-5 py-2.5 text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-paper transition hover:bg-ink"
               >
