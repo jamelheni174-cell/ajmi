@@ -330,7 +330,7 @@ story.append(Paragraph("Support", s_h2))
 story.append(Paragraph("Pour toute modification technique (nom de domaine, HTTPS, mise à jour du site) : contactez le développeur avec une capture d’écran et l’URL exacte de la page. Conservez ce PDF dans un lieu sûr.", s_body))
 story.append(Paragraph("Merci pour votre confiance. Le Cabinet Ajmi est désormais autonome pour faire vivre son site.", ParagraphStyle('Thanks', parent=s_body, alignment=TA_CENTER, textColor=NAVY, fontName='Helvetica-Bold', spaceBefore=10)))
 story.append(Spacer(1, 4*mm))
-story.append(Paragraph("— Cabinet d’Avocat Me Mohamed Anouar Ajmi —<br/>Beb Brikcha – Résidence El Mabrouk, Bureau n°9, Monastir — Tunisie<br/>Tél. +216 54 311 937 — contact.anouarajmi@gmail.com — cabinetmaitreajmi.tn", ParagraphStyle('Foot', parent=s_caption, alignment=TA_CENTER, textColor=GREY)))
+story.append(Paragraph("— Cabinet d’Avocat Me Mohamed Anouar Ajmi —<br/>Beb Brikcha – Résidence El Mabrouk, Bureau n°9, Monastir — Tunisie<br/>Tél. +216 54 311 937 — ajmianouar259@gmail.com — cabinetmaitreajmi.tn", ParagraphStyle('Foot', parent=s_caption, alignment=TA_CENTER, textColor=GREY)))
 
 # Build PDF
 doc = SimpleDocTemplate(OUTPUT, pagesize=A4, leftMargin=15*mm, rightMargin=15*mm, topMargin=18*mm, bottomMargin=14*mm, title="Guide Administrateur - Cabinet Ajmi", author="Cabinet Me Mohamed Anouar Ajmi")
